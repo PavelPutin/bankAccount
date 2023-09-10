@@ -3,11 +3,8 @@ package edu.vsu.putinpa.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
-public class Account {
-    private final UUID uuid;
+public class Account extends EntityWithUUID {
     private String name;
     private final LocalDateTime whenOpened;
     private LocalDateTime whenClosed;
@@ -15,7 +12,6 @@ public class Account {
     private final List<Client> owners;
 
     {
-        uuid = UUID.randomUUID();
         whenOpened = LocalDateTime.now();
         owners = new ArrayList<>();
     }
@@ -23,10 +19,6 @@ public class Account {
     public Account(String name, Client creator) {
         this.name = name;
         this.creator = creator;
-    }
-
-    public UUID getUuid() {
-        return uuid;
     }
 
     public String getName() {
@@ -59,18 +51,5 @@ public class Account {
 
     public void addOwner(Client owner) {
         owners.add(owner);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Account account = (Account) o;
-        return Objects.equals(uuid, account.uuid);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(uuid);
     }
 }

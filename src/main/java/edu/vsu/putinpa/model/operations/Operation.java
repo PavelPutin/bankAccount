@@ -1,20 +1,15 @@
 package edu.vsu.putinpa.model.operations;
 
+import edu.vsu.putinpa.model.EntityWithUUID;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
-abstract public class Operation {
-    private final UUID uuid;
+abstract public class Operation extends EntityWithUUID {
     private final LocalDateTime timestamp;
 
     {
-        uuid = UUID.randomUUID();
         timestamp = LocalDateTime.now();
-    }
-
-    public UUID getUuid() {
-        return uuid;
     }
 
     public LocalDateTime getTimestamp() {
