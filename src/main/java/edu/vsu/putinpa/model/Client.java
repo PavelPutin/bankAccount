@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class Client {
-    UUID uuid;
-    String name;
-    List<Account> accounts;
-    List<Operation> operationsHistory;
+    private UUID uuid;
+    private String name;
+    private List<Account> accounts;
+    private List<Operation> operationsHistory;
 }

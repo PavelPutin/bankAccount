@@ -1,10 +1,10 @@
-package edu.vsu.putin_p_a.model.operations;
+package edu.vsu.putinpa.model.operations;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Operation {
+abstract public class Operation {
     private final UUID uuid;
     private final LocalDateTime timestamp;
 
