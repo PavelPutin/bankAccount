@@ -6,7 +6,6 @@ import edu.vsu.putinpa.repository.ClientRepository;
 import edu.vsu.putinpa.service.ClientService;
 
 import java.util.Collection;
-import java.util.List;
 
 public class ClientServiceImpl implements ClientService {
     private static ClientService INSTANCE;

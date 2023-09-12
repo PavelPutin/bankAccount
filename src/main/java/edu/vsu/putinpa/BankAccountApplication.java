@@ -1,13 +1,11 @@
 package edu.vsu.putinpa;
 
 import edu.vsu.putinpa.controller.CliInteractiveController;
-import edu.vsu.putinpa.model.Client;
 import edu.vsu.putinpa.repository.ClientRepository;
 import edu.vsu.putinpa.repository.impl.ClientRepositoryInMemory;
 import edu.vsu.putinpa.service.ClientService;
 import edu.vsu.putinpa.service.impl.ClientServiceImpl;
 
-import java.util.Collection;
 import java.util.Scanner;
 
 public class BankAccountApplication {

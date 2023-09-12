@@ -5,7 +5,10 @@ import edu.vsu.putinpa.model.Client;
 import edu.vsu.putinpa.service.ClientService;
 
 import java.io.PrintStream;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.function.Consumer;
 
 public class CliInteractiveController {
