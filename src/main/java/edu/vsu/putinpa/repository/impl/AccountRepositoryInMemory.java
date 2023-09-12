@@ -34,17 +34,17 @@ public class AccountRepositoryInMemory implements AccountRepository {
 
     @Override
     public Optional<Account> findByUUID(UUID uuid) {
-        return Optional.empty();
+        return Optional.ofNullable(accounts.get(uuid));
     }
 
     @Override
     public Collection<Account> findByName(String name) {
-        return null;
+        return accounts.values().stream().filter(account -> account.getName().equals(name)).toList();
     }
 
     @Override
-    public Collection<Account> findByClient(Client client) {
-        return null;
+    public Collection<Account> findByCreator(Client creator) {
+        return accounts.values().stream().filter(account -> account.getCreator().equals(creator)).toList();
     }
 
     @Override

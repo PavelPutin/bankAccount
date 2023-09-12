@@ -6,5 +6,5 @@ import edu.vsu.putinpa.model.Money;
 
 public interface AccountsService {
     Account open(String name, Client creator, Money initialValue);
-    Account close(Account account);
+    Account close(Account account, Account recipient);
 }

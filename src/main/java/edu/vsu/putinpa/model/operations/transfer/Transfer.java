@@ -2,8 +2,9 @@ package edu.vsu.putinpa.model.operations.transfer;
 
 import edu.vsu.putinpa.model.Account;
 import edu.vsu.putinpa.model.Money;
+import edu.vsu.putinpa.model.operations.Operation;
 
-abstract public class Transfer {
+abstract public class Transfer extends Operation {
     private final Account sender;
     private final Account recipient;
     private final Money value;

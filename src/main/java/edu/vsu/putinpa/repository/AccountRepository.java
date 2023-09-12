@@ -10,6 +10,6 @@ import java.util.UUID;
 public interface AccountRepository {
     Optional<Account> findByUUID(UUID uuid);
     Collection<Account> findByName(String name);
-    Collection<Account> findByClient(Client client);
+    Collection<Account> findByCreator(Client creator);
     Account save(Account account);
 }
