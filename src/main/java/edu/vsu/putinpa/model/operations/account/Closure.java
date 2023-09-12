@@ -6,8 +6,8 @@ import edu.vsu.putinpa.model.Money;
 final public class Closure extends OperationWithAccount {
     private final Account recipient;
 
-    public Closure(Account account, Account recipient, Money value) {
-        super(account, value);
+    public Closure(Account account, Account recipient) {
+        super(account);
         this.recipient = recipient;
     }
 
