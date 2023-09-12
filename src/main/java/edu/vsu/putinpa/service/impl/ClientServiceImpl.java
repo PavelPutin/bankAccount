@@ -5,6 +5,9 @@ import edu.vsu.putinpa.model.Client;
 import edu.vsu.putinpa.repository.ClientRepository;
 import edu.vsu.putinpa.service.ClientService;
 
+import java.util.Collection;
+import java.util.List;
+
 public class ClientServiceImpl implements ClientService {
     private static ClientService INSTANCE;
     private final ClientRepository clientRepository;
@@ -34,5 +37,10 @@ public class ClientServiceImpl implements ClientService {
         Client client = new Client(name);
         clientRepository.save(client);
         return client;
+    }
+
+    @Override
+    public Collection<Client> getAll() {
+        return clientRepository.getAll();
     }
 }

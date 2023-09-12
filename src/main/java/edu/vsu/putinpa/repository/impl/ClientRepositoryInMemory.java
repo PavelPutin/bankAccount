@@ -44,4 +44,14 @@ public class ClientRepositoryInMemory implements ClientRepository {
     public List<Client> getByName(String name) {
         return clients.values().stream().filter(client -> client.getName().equals(name)).toList();
     }
+
+    @Override
+    public Collection<Client> getAll() {
+        return clients.values();
+    }
+
+    @Override
+    public int count() {
+        return clients.values().size();
+    }
 }
