@@ -9,6 +9,7 @@ public class Account extends EntityWithUUID {
     private final LocalDateTime whenOpened;
     private LocalDateTime whenClosed;
     private final Client creator;
+    //todo: добвить баланс
     private final List<Client> owners;
 
     {

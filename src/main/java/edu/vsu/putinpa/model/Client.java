@@ -10,6 +10,8 @@ public class Client extends EntityWithUUID {
     private String name;
     private final LocalDateTime whenCreated;
     private final List<Account> accounts;
+    //todo: вынести в историю операций или менеджер
+    //todo: добавить аутентификацию
     private final List<Operation> operationsHistory;
 
     {
