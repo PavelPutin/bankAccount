@@ -1,23 +1,19 @@
 package edu.vsu.putinpa.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Account extends EntityWithUUID {
     private String name;
     private final LocalDateTime whenOpened;
     private LocalDateTime whenClosed;
     private final Client creator;
-    //todo: добвить баланс
-    private final List<Client> owners;
+    private Money balance;
 
     {
         whenOpened = LocalDateTime.now();
-        owners = new ArrayList<>();
     }
 
-    public Account(String name, Client creator) {
+    public Account(String name, String currency, Client creator) {
         this.name = name;
         this.creator = creator;
     }
@@ -46,11 +42,7 @@ public class Account extends EntityWithUUID {
         return creator;
     }
 
-    public List<Client> getOwners() {
-        return List.copyOf(owners);
-    }
-
-    public void addOwner(Client owner) {
-        owners.add(owner);
+    public Money getBalance() {
+        return balance;
     }
 }
