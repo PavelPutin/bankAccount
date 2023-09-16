@@ -21,9 +21,9 @@ public class AnnotationContext {
             try {
                 return (T) component;
             } catch (ClassCastException e) {
-                throw new RuntimeException("Incompatible class type for component with name %s".formatted(name), e);
+                throw new ComponentCastException("Incompatible class type for component with name %s".formatted(name), e);
             }
         }
-        throw new RuntimeException("No component with name %s".formatted(name));
+        throw new ComponentNotFoundException("No component with name %s".formatted(name));
     }
 }
