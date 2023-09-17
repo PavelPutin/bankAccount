@@ -1,10 +1,12 @@
 package edu.vsu.putinpa.infrastructure.di;
 
+import java.util.List;
+
 public class ComponentDefinition {
     private String componentName;
     private String componentClassName;
     private Object constructorArgumentValues;
-    private String[] dependsOn;
+    private List<String> dependsOn;
 
     public String getComponentName() {
         return componentName;
@@ -30,11 +32,11 @@ public class ComponentDefinition {
         this.constructorArgumentValues = constructorArgumentValues;
     }
 
-    public String[] getDependsOn() {
+    public List<String> getDependsOn() {
         return dependsOn;
     }
 
-    public void setDependsOn(String[] dependsOn) {
+    public void setDependsOn(List<String> dependsOn) {
         this.dependsOn = dependsOn;
     }
 }

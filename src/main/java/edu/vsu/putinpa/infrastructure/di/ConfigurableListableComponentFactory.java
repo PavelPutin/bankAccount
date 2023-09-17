@@ -17,4 +17,8 @@ public class ConfigurableListableComponentFactory {
     public Set<ComponentDefinition> getComponentDefinitions() {
         return (Set<ComponentDefinition>) componentDefinitions.values();
     }
+
+    public ComponentDefinition getComponentDefinition(String name) {
+        return componentDefinitions.get(name);
+    }
 }
