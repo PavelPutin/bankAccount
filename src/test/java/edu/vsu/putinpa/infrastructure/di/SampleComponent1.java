@@ -1,5 +1,5 @@
 package edu.vsu.putinpa.infrastructure.di;
 
-@ComponentConfiguration
-public class Conf1 {
+@Component
+public class SampleComponent1 {
 }

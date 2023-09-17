@@ -1,29 +1,20 @@
 package edu.vsu.putinpa.infrastructure.di;
 
 import java.util.HashMap;
-import java.util.Set;
 
 public class AnnotationContext {
-    private final HashMap<String, Object> singletonHash = new HashMap<>();
+    private final ConfigurableListableComponentFactory componentFactory = new ConfigurableListableComponentFactory();
 
-    {
-        singletonHash.put("c1", 5);
-        singletonHash.put("c2", "abc");
+    public AnnotationContext(String packageName) {
+        AnnotationComponentReader reader = new AnnotationComponentReader(this);
+        int foundComponentsAmount = reader.loadComponentDefinitions(packageName);
     }
 
-    public Set<String> componentNames() {
-        return singletonHash.keySet();
+    public void registryComponentDefinition(ComponentDefinition definition) {
+        componentFactory.registryComponentDefinition(definition);
     }
 
-    public <T> T getComponent(String name, Class<T> requiredType) {
-        Object component = singletonHash.get(name);
-        if (component != null) {
-            try {
-                return (T) component;
-            } catch (ClassCastException e) {
-                throw new ComponentCastException("Incompatible class type for component with name %s".formatted(name), e);
-            }
-        }
-        throw new ComponentNotFoundException("No component with name %s".formatted(name));
+    public ConfigurableListableComponentFactory getComponentFactory() {
+        return componentFactory;
     }
 }

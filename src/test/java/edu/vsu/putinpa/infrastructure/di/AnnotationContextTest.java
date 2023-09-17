@@ -1,21 +1,23 @@
 package edu.vsu.putinpa.infrastructure.di;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class AnnotationContextTest {
-    private AnnotationContext context = new AnnotationContext();
+    private AnnotationContext context;
     @BeforeEach
-    public void initContext() {
-        context = new AnnotationContext();
+    private void init() {
+        context = new AnnotationContext(this.getClass().getPackageName());
     }
 
     @Test
-    public void containerTest() {
-        assertEquals(5, context.getComponent("c1", Integer.class));
-        assertEquals("abc", context.getComponent("c2", String.class));
+    public void componentDefinitionNamesTest() {
+        Set<String> actualNames = context.getComponentFactory().getComponentDefinitionNames();
+        Set<String> expected = Set.of("SampleComponent1", "comp2");
+        assertEquals(expected, actualNames);
     }
 }
