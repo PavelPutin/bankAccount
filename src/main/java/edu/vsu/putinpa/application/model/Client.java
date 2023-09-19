@@ -1,7 +1,5 @@
 package edu.vsu.putinpa.application.model;
 
-import edu.vsu.putinpa.application.model.operations.Operation;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +8,10 @@ public class Client extends EntityWithUUID {
     private String name;
     private final LocalDateTime whenCreated;
     private final List<Account> accounts;
-    //todo: вынести в историю операций или менеджер
-    //todo: добавить аутентификацию
-    private final List<Operation> operationsHistory;
 
     {
         whenCreated = LocalDateTime.now();
         accounts = new ArrayList<>();
-        operationsHistory = new ArrayList<>();
     }
 
     public Client(String name) {
@@ -38,9 +32,5 @@ public class Client extends EntityWithUUID {
 
     public List<Account> getAccounts() {
         return accounts;
-    }
-
-    public List<Operation> getOperationsHistory() {
-        return operationsHistory;
     }
 }

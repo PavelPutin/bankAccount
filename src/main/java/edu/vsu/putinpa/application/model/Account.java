@@ -1,5 +1,6 @@
 package edu.vsu.putinpa.application.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Account extends EntityWithUUID {
@@ -16,6 +17,7 @@ public class Account extends EntityWithUUID {
     public Account(String name, String currency, Client creator) {
         this.name = name;
         this.creator = creator;
+        this.balance = new Money(currency, BigDecimal.ZERO);
     }
 
     public String getName() {
@@ -44,5 +46,9 @@ public class Account extends EntityWithUUID {
 
     public Money getBalance() {
         return balance;
+    }
+
+    public void setBalance(Money balance) {
+        this.balance = balance;
     }
 }
