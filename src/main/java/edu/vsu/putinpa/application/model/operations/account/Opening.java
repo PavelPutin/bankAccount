@@ -6,20 +6,15 @@ import edu.vsu.putinpa.application.model.operations.OperationType;
 
 import java.util.Set;
 
-final public class Opening extends OperationWithAccount {
-    private final Money value;
+public class Opening extends OperationImplWithAccount {
 
-    public Opening(Account account, Money value) {
-        super(account);
-        this.value = value;
+    public Opening(Account account, Money money) {
+        super(account, money);
     }
 
-    public Money getValue() {
-        return value;
-    }
 
     @Override
-    protected Set<OperationType> initTypes() {
-        return Set.of(OperationType.TRANSFER);
+    public void execute() {
+
     }
 }

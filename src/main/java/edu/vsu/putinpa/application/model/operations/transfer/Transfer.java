@@ -2,19 +2,16 @@ package edu.vsu.putinpa.application.model.operations.transfer;
 
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Money;
-import edu.vsu.putinpa.application.model.operations.Operation;
+import edu.vsu.putinpa.application.model.operations.OperationImpl;
 
-abstract public class Transfer extends Operation {
+ public class Transfer extends OperationImpl {
     private final Account sender;
     private final Account recipient;
-    private final Money value;
-    private final String description;
 
-    public Transfer(Account sender, Account recipient, Money value, String description) {
+    public Transfer(Account sender, Account recipient, Money money) {
+        super(money);
         this.sender = sender;
         this.recipient = recipient;
-        this.value = value;
-        this.description = description;
     }
 
     public Account getSender() {
@@ -25,11 +22,9 @@ abstract public class Transfer extends Operation {
         return recipient;
     }
 
-    public Money getValue() {
-        return value;
-    }
-
-    public String getDescription() {
-        return description;
+    @Override
+    public void execute() {
+        sender.getBalance().subtract(getMoney());
+        recipient.getBalance().add(getMoney());
     }
 }

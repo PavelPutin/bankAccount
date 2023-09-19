@@ -6,14 +6,14 @@ import edu.vsu.putinpa.application.model.operations.OperationType;
 
 import java.util.Set;
 
-public class Replenishment extends OperationWithOneSide {
+public class Replenishment extends OperationImplWithOneSide {
 
-    public Replenishment(Account account, Money value) {
-        super(account, value);
+    public Replenishment(Account account, Money money) {
+        super(account, money);
     }
 
     @Override
-    protected Set<OperationType> initTypes() {
-        return Set.of(OperationType.REPLENISHMENT);
+    public void execute() {
+        getAccount().getBalance().add(getMoney());
     }
 }

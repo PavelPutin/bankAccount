@@ -5,7 +5,7 @@ import edu.vsu.putinpa.application.model.operations.OperationType;
 
 import java.util.Set;
 
-final public class Closure extends OperationWithAccount {
+final public class Closure extends OperationImplWithAccount {
     private final Account recipient;
 
     public Closure(Account account, Account recipient) {
@@ -18,7 +18,7 @@ final public class Closure extends OperationWithAccount {
     }
 
     @Override
-    protected Set<OperationType> initTypes() {
-        return Set.of(OperationType.TRANSFER);
+    public void execute() {
+
     }
 }

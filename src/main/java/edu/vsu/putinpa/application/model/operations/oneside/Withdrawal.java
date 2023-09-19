@@ -6,14 +6,14 @@ import edu.vsu.putinpa.application.model.operations.OperationType;
 
 import java.util.Set;
 
-public class Withdrawal extends OperationWithOneSide {
+public class Withdrawal extends OperationImplWithOneSide {
 
-    public Withdrawal(Account account, Money value) {
-        super(account, value);
+    public Withdrawal(Account account, Money money) {
+        super(account, money);
     }
 
     @Override
-    protected Set<OperationType> initTypes() {
-        return Set.of(OperationType.WITHDRAWAL);
+    public void execute() {
+        getAccount().getBalance().subtract(getMoney())
     }
 }
