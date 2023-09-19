@@ -31,7 +31,7 @@ public class AutowireAnnotationComponentFactoryPostProcessorImpl implements Comp
                         }
 
                         List<String> candidate = new ArrayList<>(candidates);
-                        definition.addDependencyComponentName(candidate.get(0));
+                        definition.addDependencyComponentName(candidate.get(0), field.getName());
                     }
                 }
             } catch (ClassNotFoundException e) {

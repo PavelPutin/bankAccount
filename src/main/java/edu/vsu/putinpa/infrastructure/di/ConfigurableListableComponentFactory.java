@@ -25,11 +25,25 @@ public class ConfigurableListableComponentFactory {
         return componentDefinitions.get(name);
     }
 
-    public void refreshComponents() {
+    public void refreshComponents() throws Exception {
         registryComponentFactoryPostProcessors();
         for (ComponentFactoryPostProcessor postProcessor : componentFactoryPostProcessors) {
             postProcessor.postProcessComponentFactory(this);
         }
+
+        for (ComponentDefinition definition : componentDefinitions.values()) {
+            if (!components.containsKey(definition.getComponentName())) {
+                definition.createComponent(this);
+            }
+        }
+    }
+
+    public Object getComponent(String name) {
+        return components.get(name);
+    }
+
+    public void registryComponent(String name, Object component) {
+        components.put(name, component);
     }
 
     private void registryComponentFactoryPostProcessors() {

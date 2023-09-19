@@ -1,13 +1,15 @@
 package edu.vsu.putinpa.infrastructure.di;
 
-import java.util.HashSet;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class ComponentDefinition {
     private String componentName;
     private String componentClassName;
     private Object constructorArgumentValues;
-    private final Set<String> dependsOn = new HashSet<>();
+    private final Map<String, String> dependsOnAndFieldName = new HashMap<>();
 
     public String getComponentName() {
         return componentName;
@@ -34,10 +36,25 @@ public class ComponentDefinition {
     }
 
     public Set<String> getDependsOn() {
-        return dependsOn;
+        return dependsOnAndFieldName.keySet();
     }
 
-    public void addDependencyComponentName(String dependencyComponentName) {
-        this.dependsOn.add(dependencyComponentName);
+    public void addDependencyComponentName(String dependencyComponentName, String fieldName) {
+        this.dependsOnAndFieldName.put(dependencyComponentName, fieldName);
+    }
+
+    public void createComponent(ConfigurableListableComponentFactory componentFactory) throws Exception {
+        Class<?> componentClass = Class.forName(componentClassName);
+        Object instance = componentClass.getConstructor().newInstance();
+        for (Map.Entry<String, String> dependency : dependsOnAndFieldName.entrySet()) {
+            ComponentDefinition dependencyDefinition = componentFactory.getComponentDefinition(dependency.getKey());
+            dependencyDefinition.createComponent(componentFactory);
+
+            Object instanceDependency = componentFactory.getComponent(dependency.getKey());
+            Field injectTarget = componentClass.getDeclaredField(dependency.getValue());
+            injectTarget.setAccessible(true);
+            injectTarget.set(instance, instanceDependency);
+        }
+        componentFactory.registryComponent(componentName, instance);
     }
 }

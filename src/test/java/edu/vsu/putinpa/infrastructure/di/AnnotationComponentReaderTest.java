@@ -10,7 +10,7 @@ class AnnotationComponentReaderTest {
     private AnnotationContext context;
     private AnnotationComponentReader reader;
     @BeforeEach
-    public void init() {
+    public void init() throws Exception {
         context = new AnnotationContext(CURRENT_PACKAGE);
         reader = new AnnotationComponentReader(context);
     }
