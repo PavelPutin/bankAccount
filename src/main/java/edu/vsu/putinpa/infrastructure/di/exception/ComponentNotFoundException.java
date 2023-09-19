@@ -1,4 +1,4 @@
-package edu.vsu.putinpa.infrastructure.di;
+package edu.vsu.putinpa.infrastructure.di.exception;
 
 public class ComponentNotFoundException extends RuntimeException {
     public ComponentNotFoundException(String message) {

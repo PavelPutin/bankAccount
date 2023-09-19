@@ -1,12 +1,13 @@
 package edu.vsu.putinpa.infrastructure.di;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ComponentDefinition {
     private String componentName;
     private String componentClassName;
     private Object constructorArgumentValues;
-    private List<String> dependsOn;
+    private final Set<String> dependsOn = new HashSet<>();
 
     public String getComponentName() {
         return componentName;
@@ -32,11 +33,11 @@ public class ComponentDefinition {
         this.constructorArgumentValues = constructorArgumentValues;
     }
 
-    public List<String> getDependsOn() {
+    public Set<String> getDependsOn() {
         return dependsOn;
     }
 
-    public void setDependsOn(List<String> dependsOn) {
-        this.dependsOn = dependsOn;
+    public void addDependencyComponentName(String dependencyComponentName) {
+        this.dependsOn.add(dependencyComponentName);
     }
 }

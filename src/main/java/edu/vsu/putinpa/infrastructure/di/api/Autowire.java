@@ -1,4 +1,4 @@
-package edu.vsu.putinpa.infrastructure.di;
+package edu.vsu.putinpa.infrastructure.di.api;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

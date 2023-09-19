@@ -8,6 +8,8 @@ public class AnnotationContext {
     public AnnotationContext(String packageName) {
         AnnotationComponentReader reader = new AnnotationComponentReader(this);
         int foundComponentsAmount = reader.loadComponentDefinitions(packageName);
+        int defaultFoundComponentsAmount = reader.loadComponentDefinitions("edu.vsu.putinpa.infrastructure.di.defaultimpl");
+        componentFactory.refreshComponents();
     }
 
     public void registryComponentDefinition(ComponentDefinition definition) {

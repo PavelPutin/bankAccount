@@ -1,10 +1,10 @@
 package edu.vsu.putinpa.infrastructure.di;
 
+import edu.vsu.putinpa.infrastructure.di.api.Component;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
