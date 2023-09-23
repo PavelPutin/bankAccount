@@ -21,8 +21,10 @@ public class OpenAccount extends Operation<OpeningAccountingInfoDto> {
                 getInfo().getCurrency(),
                 getInfo().getInvoker()
         );
-        created.getBalance().add(getInfo().getMoney());
-        getInfo().getSender().getBalance().subtract(getInfo().getMoney());
+        if (getInfo().getSender() != null && getInfo().getMoney() != null) {
+            created.getBalance().add(getInfo().getMoney());
+            getInfo().getSender().getBalance().subtract(getInfo().getMoney());
+        }
         getService().getAccountRepository().save(created);
     }
 

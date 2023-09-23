@@ -11,5 +11,6 @@ public interface AccountsRepository {
     Optional<Account> findByUUID(UUID uuid);
     Collection<Account> findByName(String name);
     Collection<Account> findByCreator(Client creator);
+    Collection<Account> findAll();
     Account save(Account account);
 }
