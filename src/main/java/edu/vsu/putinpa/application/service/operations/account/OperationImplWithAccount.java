@@ -1,8 +1,8 @@
-package edu.vsu.putinpa.application.model.operations.account;
+package edu.vsu.putinpa.application.service.operations.account;
 
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Money;
-import edu.vsu.putinpa.application.model.operations.OperationImpl;
+import edu.vsu.putinpa.application.service.operations.OperationImpl;
 
 abstract public class OperationImplWithAccount extends OperationImpl {
     private final Account account;

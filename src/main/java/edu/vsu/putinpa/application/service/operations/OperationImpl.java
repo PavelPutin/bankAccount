@@ -1,9 +1,7 @@
-package edu.vsu.putinpa.application.model.operations;
+package edu.vsu.putinpa.application.service.operations;
 
 import edu.vsu.putinpa.application.model.Money;
-
-import java.util.Collections;
-import java.util.Set;
+import edu.vsu.putinpa.application.service.Operation;
 
 abstract public class OperationImpl implements Operation {
     private final Money money;

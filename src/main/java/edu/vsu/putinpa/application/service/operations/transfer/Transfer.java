@@ -1,10 +1,10 @@
-package edu.vsu.putinpa.application.model.operations.transfer;
+package edu.vsu.putinpa.application.service.operations.transfer;
 
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Money;
-import edu.vsu.putinpa.application.model.operations.OperationImpl;
+import edu.vsu.putinpa.application.service.operations.OperationImpl;
 
- public class Transfer extends OperationImpl {
+public class Transfer extends OperationImpl {
     private final Account sender;
     private final Account recipient;
 
