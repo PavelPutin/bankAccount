@@ -1,17 +1,17 @@
 package edu.vsu.putinpa.application.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class Account extends EntityWithUUID {
     private String name;
-    private final LocalDateTime whenOpened;
-    private LocalDateTime whenClosed;
+    private final Instant whenOpened;
+    private Instant whenClosed;
     private final Client creator;
     private Money balance;
 
     {
-        whenOpened = LocalDateTime.now();
+        whenOpened = Instant.now();
     }
 
     public Account(String name, String currency, Client creator) {
@@ -28,15 +28,15 @@ public class Account extends EntityWithUUID {
         this.name = name;
     }
 
-    public LocalDateTime getWhenOpened() {
+    public Instant getWhenOpened() {
         return whenOpened;
     }
 
-    public LocalDateTime getWhenClosed() {
+    public Instant getWhenClosed() {
         return whenClosed;
     }
 
-    public void setWhenClosed(LocalDateTime whenClosed) {
+    public void setWhenClosed(Instant whenClosed) {
         this.whenClosed = whenClosed;
     }
 

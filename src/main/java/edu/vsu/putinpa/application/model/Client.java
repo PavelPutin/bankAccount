@@ -1,16 +1,16 @@
 package edu.vsu.putinpa.application.model;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Client extends EntityWithUUID {
     private String name;
-    private final LocalDateTime whenCreated;
+    private final Instant whenCreated;
     private final List<Account> accounts;
 
     {
-        whenCreated = LocalDateTime.now();
+        whenCreated = Instant.now();
         accounts = new ArrayList<>();
     }
 
@@ -26,7 +26,7 @@ public class Client extends EntityWithUUID {
         this.name = name;
     }
 
-    public LocalDateTime getWhenCreated() {
+    public Instant getWhenCreated() {
         return whenCreated;
     }
 
