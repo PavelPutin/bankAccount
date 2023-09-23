@@ -25,6 +25,8 @@ public class Transfer extends OperationImpl {
     @Override
     public void execute() {
         sender.getBalance().subtract(getMoney());
+        getRepository().save(sender);
         recipient.getBalance().add(getMoney());
+        getRepository().save(recipient);
     }
 }

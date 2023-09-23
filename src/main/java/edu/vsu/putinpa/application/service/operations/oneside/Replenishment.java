@@ -12,5 +12,6 @@ public class Replenishment extends OperationImplWithOneSide {
     @Override
     public void execute() {
         getAccount().getBalance().add(getMoney());
+        getRepository().save(getAccount());
     }
 }

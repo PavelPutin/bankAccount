@@ -1,12 +1,14 @@
 package edu.vsu.putinpa.application.service.operations.account;
 
 import edu.vsu.putinpa.application.model.Account;
+import edu.vsu.putinpa.application.model.Money;
+import edu.vsu.putinpa.application.service.operations.OperationImpl;
 
-final public class Closure extends OperationImplWithAccount {
+final public class Closure extends OperationImpl {
     private final Account recipient;
 
-    public Closure(Account account, Account recipient) {
-        super(account);
+    public Closure(Account recipient, Money money) {
+        super(money);
         this.recipient = recipient;
     }
 

@@ -11,6 +11,7 @@ public class Withdrawal extends OperationImplWithOneSide {
 
     @Override
     public void execute() {
-        getAccount().getBalance().subtract(getMoney())
+        getAccount().getBalance().subtract(getMoney());
+        getRepository().save(getAccount());
     }
 }
