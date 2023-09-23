@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface AccountRepository {
+public interface AccountsRepository {
     Optional<Account> findByUUID(UUID uuid);
     Collection<Account> findByName(String name);
     Collection<Account> findByCreator(Client creator);

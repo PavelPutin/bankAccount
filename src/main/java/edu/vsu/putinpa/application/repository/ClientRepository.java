@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface ClientRepository {
     void save(Client client);
     Optional<Client> getByUUID(UUID uuid);
-    List<Client> getByName(String name);
+    Collection<Client> getByName(String name);
 
     Collection<Client> getAll();
     int count();

@@ -6,7 +6,8 @@ import java.util.List;
 
 public class Client extends EntityWithUUID {
     private String name;
-    private final Instant whenCreated;
+    private String password;
+    private Instant whenCreated;
     private final List<Account> accounts;
 
     {
@@ -14,8 +15,9 @@ public class Client extends EntityWithUUID {
         accounts = new ArrayList<>();
     }
 
-    public Client(String name) {
+    public Client(String name, String password) {
         this.name = name;
+        this.password = password;
     }
 
     public String getName() {
@@ -32,5 +34,17 @@ public class Client extends EntityWithUUID {
 
     public List<Account> getAccounts() {
         return accounts;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setWhenCreated(Instant whenCreated) {
+        this.whenCreated = whenCreated;
     }
 }

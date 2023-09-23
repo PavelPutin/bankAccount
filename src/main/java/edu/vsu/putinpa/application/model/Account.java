@@ -5,9 +5,9 @@ import java.time.Instant;
 
 public class Account extends EntityWithUUID {
     private String name;
-    private final Instant whenOpened;
+    private Instant whenOpened;
     private Instant whenClosed;
-    private final Client creator;
+    private Client creator;
     private Money balance;
 
     {
@@ -26,6 +26,14 @@ public class Account extends EntityWithUUID {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setWhenOpened(Instant whenOpened) {
+        this.whenOpened = whenOpened;
+    }
+
+    public void setCreator(Client creator) {
+        this.creator = creator;
     }
 
     public Instant getWhenOpened() {
