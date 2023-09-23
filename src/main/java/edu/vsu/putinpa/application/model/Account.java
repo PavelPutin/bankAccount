@@ -59,4 +59,14 @@ public class Account extends EntityWithUUID {
     public void setBalance(Money balance) {
         this.balance = balance;
     }
+
+    public Money add(Money money) {
+        balance = balance.add(money);
+        return balance;
+    }
+
+    public Money subtract(Money money) {
+        balance = balance.subtract(money);
+        return balance;
+    }
 }

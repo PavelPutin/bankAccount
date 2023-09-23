@@ -9,6 +9,14 @@ import java.util.stream.Collectors;
 
 public class InMemoryAccountRepository implements AccountsRepository {
     private final Map<UUID, Account> data = new HashMap<>();
+
+    public InMemoryAccountRepository() {}
+
+    public InMemoryAccountRepository(Account... accounts) {
+        for (Account account : accounts) {
+            data.put(account.getUuid(), account);
+        }
+    }
     @Override
     public Optional<Account> findByUUID(UUID uuid) {
         return Optional.ofNullable(data.get(uuid));
