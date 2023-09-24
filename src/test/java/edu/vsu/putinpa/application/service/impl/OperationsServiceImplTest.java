@@ -41,7 +41,7 @@ class OperationsServiceImplTest {
         operationsService.executeOperation(open);
 
         Account created = accountsService.getBy(creator).stream().findFirst().get();
-        JournalOperation journalOperation = operationsHistoryService.getAll().stream().findFirst().get();
+        JournalOperation journalOperation = getFirstJournalOperation();
         assertAll(
                 () -> assertNotNull(created),
                 () -> assertNotNull(journalOperation),
@@ -74,10 +74,15 @@ class OperationsServiceImplTest {
         operationsService.executeOperation(open);
 
         Account created = accountsService.getBy("created").stream().findFirst().get();
+        JournalOperation journalOperation = getFirstJournalOperation();
         assertAll(
                 () -> assertNotNull(created),
                 () -> assertEquals(new Money("ru", BigDecimal.valueOf(6)), created.getBalance()),
-                () -> assertEquals(new Money("ru", BigDecimal.valueOf(4)), sender.getBalance())
+                () -> assertEquals(new Money("ru", BigDecimal.valueOf(4)), sender.getBalance()),
+                () -> assertEquals(creator, journalOperation.getClient()),
+                () -> assertEquals(sender, journalOperation.getSender()),
+                () -> assertEquals(created, journalOperation.getRecipient()),
+                () -> assertEquals(new Money("ru", BigDecimal.valueOf(6)), journalOperation.getMoney())
         );
     }
 
@@ -96,7 +101,7 @@ class OperationsServiceImplTest {
         Operation<?> operation = new Transfer(operationsService, transferInfo);
         operationsService.executeOperation(operation);
 
-        JournalOperation journalOperation = operationsHistoryService.getAll().stream().findFirst().get();
+        JournalOperation journalOperation = getFirstJournalOperation();
         assertAll(
                 () -> assertEquals(new Money("ru", BigDecimal.valueOf(8)), sender.getBalance()),
                 () -> assertEquals(new Money("ru", BigDecimal.valueOf(3)), recipient.getBalance()),
@@ -105,5 +110,9 @@ class OperationsServiceImplTest {
                 () -> assertEquals(recipient, journalOperation.getRecipient()),
                 () -> assertEquals(new Money("ru", BigDecimal.TWO), journalOperation.getMoney())
         );
+    }
+
+    private JournalOperation getFirstJournalOperation() {
+        return operationsHistoryService.getAll().stream().findFirst().get();
     }
 }
