@@ -4,15 +4,15 @@ import edu.vsu.putinpa.application.dto.OperationInfoDto;
 import edu.vsu.putinpa.application.model.JournalOperation;
 
 abstract public class Operation <T extends OperationInfoDto> {
-    private OperationService service;
+    private OperationsService service;
     private T info;
 
-    public Operation(OperationService service, T info) {
+    public Operation(OperationsService service, T info) {
         this.service = service;
         this.info = info;
     }
 
-    public OperationService getService() {
+    public OperationsService getService() {
         return service;
     }
 

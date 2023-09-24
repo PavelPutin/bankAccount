@@ -8,12 +8,12 @@ import edu.vsu.putinpa.application.repository.OperationsRepository;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class InMemoryOperationRepository implements OperationsRepository {
+public class InMemoryOperationsRepository implements OperationsRepository {
     private final Map<UUID, JournalOperation> data = new HashMap<>();
 
-    public InMemoryOperationRepository() {}
+    public InMemoryOperationsRepository() {}
 
-    public InMemoryOperationRepository(JournalOperation... journalOperations) {
+    public InMemoryOperationsRepository(JournalOperation... journalOperations) {
         for (JournalOperation journalOperation : journalOperations) {
             data.put(journalOperation.getUuid(), journalOperation);
         }
@@ -25,35 +25,40 @@ public class InMemoryOperationRepository implements OperationsRepository {
     }
 
     @Override
-    public Optional<JournalOperation> getByUUID(UUID uuid) {
+    public Optional<JournalOperation> findByUUID(UUID uuid) {
         return Optional.ofNullable(data.get(uuid));
     }
 
     @Override
-    public Collection<JournalOperation> getByClient(Client client) {
+    public Collection<JournalOperation> findByClient(Client client) {
         return data.values().stream()
                 .filter(journalOperation -> journalOperation.getClient().equals(client))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<JournalOperation> getBySender(Account account) {
+    public Collection<JournalOperation> findBySender(Account account) {
         return data.values().stream()
                 .filter(journalOperation -> journalOperation.getSender().equals(account))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<JournalOperation> getByRecipient(Account recipient) {
+    public Collection<JournalOperation> findByRecipient(Account recipient) {
         return data.values().stream()
                 .filter(journalOperation -> journalOperation.getRecipient().equals(recipient))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<JournalOperation> getBySenderOrRecipient(Account account) {
+    public Collection<JournalOperation> findBySenderOrRecipient(Account account) {
         return data.values().stream()
                 .filter(journalOperation -> journalOperation.getRecipient().equals(account) || journalOperation.getSender().equals(account))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<JournalOperation> findAll() {
+        return data.values();
     }
 }

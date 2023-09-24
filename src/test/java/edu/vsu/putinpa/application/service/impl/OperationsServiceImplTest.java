@@ -7,11 +7,11 @@ import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.model.Money;
 import edu.vsu.putinpa.application.repository.AccountsRepository;
 import edu.vsu.putinpa.application.repository.OperationsRepository;
-import edu.vsu.putinpa.application.repository.impl.InMemoryAccountRepository;
-import edu.vsu.putinpa.application.repository.impl.InMemoryOperationRepository;
+import edu.vsu.putinpa.application.repository.impl.InMemoryAccountsRepository;
+import edu.vsu.putinpa.application.repository.impl.InMemoryOperationsRepository;
 import edu.vsu.putinpa.application.service.Operation;
-import edu.vsu.putinpa.application.service.OperationHistoryService;
-import edu.vsu.putinpa.application.service.OperationService;
+import edu.vsu.putinpa.application.service.OperationsHistoryService;
+import edu.vsu.putinpa.application.service.OperationsService;
 import edu.vsu.putinpa.application.service.operation.CloseAccount;
 import edu.vsu.putinpa.application.service.operation.OpenAccount;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,18 +21,18 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class OperationServiceImplTest {
+class OperationsServiceImplTest {
     private AccountsRepository accountsRepository;
     private OperationsRepository operationsRepository;
-    private OperationService operationService;
-    private OperationHistoryService operationHistoryService;
+    private OperationsService operationsService;
+    private OperationsHistoryService operationsHistoryService;
 
     @BeforeEach
     public void init() {
-        accountsRepository = new InMemoryAccountRepository();
-        operationsRepository = new InMemoryOperationRepository();
-        operationHistoryService = new OperationHistoryServiceImpl(operationsRepository);
-        operationService = new OperationServiceImpl(accountsRepository, operationHistoryService);
+        accountsRepository = new InMemoryAccountsRepository();
+        operationsRepository = new InMemoryOperationsRepository();
+        operationsHistoryService = new OperationsHistoryServiceImpl(operationsRepository);
+        operationsService = new OperationsServiceImpl(accountsRepository, operationsHistoryService);
     }
 
     @Test
@@ -41,8 +41,8 @@ class OperationServiceImplTest {
         OpeningAccountInfoDto info = new OpeningAccountInfoDto(
                 client, "test account", "ru", null, null
         );
-        Operation<?> operation = new OpenAccount(operationService, info);
-        operationService.executeOperation(operation);
+        Operation<?> operation = new OpenAccount(operationsService, info);
+        operationsService.executeOperation(operation);
         assertEquals(1, accountsRepository.findByName("test account").size());
     }
 
@@ -55,8 +55,8 @@ class OperationServiceImplTest {
         };
         accounts[0].setBalance(new Money("ru", BigDecimal.TEN));
 
-        AccountsRepository mock = new InMemoryAccountRepository(accounts);
-        OperationService service = new OperationServiceImpl(mock, operationHistoryService);
+        AccountsRepository mock = new InMemoryAccountsRepository(accounts);
+        OperationsService service = new OperationsServiceImpl(mock, operationsHistoryService);
         ClosingAccountInfoDto info = new ClosingAccountInfoDto(client, accounts[0], accounts[1]);
         service.executeOperation(new CloseAccount(service, info));
 

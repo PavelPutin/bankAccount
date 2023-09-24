@@ -7,12 +7,12 @@ import edu.vsu.putinpa.application.repository.AccountsRepository;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class InMemoryAccountRepository implements AccountsRepository {
+public class InMemoryAccountsRepository implements AccountsRepository {
     private final Map<UUID, Account> data = new HashMap<>();
 
-    public InMemoryAccountRepository() {}
+    public InMemoryAccountsRepository() {}
 
-    public InMemoryAccountRepository(Account... accounts) {
+    public InMemoryAccountsRepository(Account... accounts) {
         for (Account account : accounts) {
             data.put(account.getUuid(), account);
         }
