@@ -16,8 +16,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,6 +49,33 @@ class OperationsServiceImplTest {
                 () -> assertNull(journalOperation.getMoney()),
                 () -> assertEquals(created, journalOperation.getRecipient()),
                 () -> assertEquals(creator, journalOperation.getClient())
+        );
+    }
+
+    @Test
+    public void givenSender_whenOpeningAccount_thenOpenAccountAndUpdateBalanceInBothAccounts() {
+        Client creator = new Client("test", "test");
+        Account sender = new Account("sender", "ru", creator);
+        sender.replenishment(new Money("ru", BigDecimal.TEN));
+
+        accountsService = new AccountsServiceImpl(new InMemoryAccountsRepository(sender));
+        operationsService = new OperationsServiceImpl(accountsService, operationsHistoryService);
+
+        OpeningAccountInfoDto openInfo = new OpeningAccountInfoDto(
+                creator,
+                "created",
+                "ru",
+                sender,
+                new Money("ru", BigDecimal.valueOf(6))
+        );
+        Operation<?> open = new OpenAccount(operationsService, openInfo);
+        operationsService.executeOperation(open);
+
+        Account created = accountsService.getBy("created").stream().findFirst().get();
+        assertAll(
+                () -> assertNotNull(created),
+                () -> assertEquals(new Money("ru", BigDecimal.valueOf(6)), created.getBalance()),
+                () -> assertEquals(new Money("ru", BigDecimal.valueOf(4)), sender.getBalance())
         );
     }
 }

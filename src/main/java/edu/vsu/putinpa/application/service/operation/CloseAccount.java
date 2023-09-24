@@ -18,8 +18,8 @@ public class CloseAccount extends Operation<ClosingAccountInfoDto> {
     public void execute() {
         getInfo().getTarget().setWhenClosed(Instant.now());
         balance = getInfo().getTarget().getBalance();
-        getInfo().getRecipient().add(balance);
-        getInfo().getTarget().subtract(balance);
+        getInfo().getRecipient().replenishment(balance);
+        getInfo().getTarget().withdrawal(balance);
 
         getService().getAccountsService().save(getInfo().getTarget());
         getService().getAccountsService().save(getInfo().getRecipient());
