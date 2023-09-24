@@ -3,7 +3,7 @@ package edu.vsu.putinpa.infrastructure.di;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AnnotationComponentReaderTest {
     private final String CURRENT_PACKAGE = this.getClass().getPackageName();

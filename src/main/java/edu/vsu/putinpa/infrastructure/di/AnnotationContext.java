@@ -1,7 +1,5 @@
 package edu.vsu.putinpa.infrastructure.di;
 
-import java.util.HashMap;
-
 public class AnnotationContext {
     private final ConfigurableListableComponentFactory componentFactory = new ConfigurableListableComponentFactory();
 
