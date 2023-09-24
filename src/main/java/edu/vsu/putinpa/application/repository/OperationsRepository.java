@@ -2,6 +2,7 @@ package edu.vsu.putinpa.application.repository;
 
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
+import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.service.Operation;
 
 import java.util.Collection;
@@ -9,9 +10,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface OperationsRepository {
-    Optional<Operation> getByUUID(UUID uuid);
-    Collection<Operation> getByClient(Client client);
-    Collection<Operation> getBySender(Account account);
+    JournalOperation save(JournalOperation journalOperation);
+    Optional<JournalOperation> getByUUID(UUID uuid);
+    Collection<JournalOperation> getByClient(Client client);
+    Collection<JournalOperation> getBySender(Account account);
 
     /**
      * Возвращает операции, в которых указанный счёт выступает как получатель.
@@ -19,7 +21,7 @@ public interface OperationsRepository {
      * @param recipient счёт, по которому осуществляется поиск
      * @return операции, в которых указанный счёт выступает как получатель
      */
-    Collection<Operation> getByRecipient(Account recipient);
+    Collection<JournalOperation> getByRecipient(Account recipient);
 
     /**
      * Возвращает операции, в которых указанный счёт выступает либо как получатель, либо как отправитель.
@@ -27,5 +29,5 @@ public interface OperationsRepository {
      * @param account счёт, по которому осуществляется поиск
      * @return операции, в которых указанный счёт выступает либо как получатель, либо как отправитель.
      */
-    Collection<Operation> getBySenderOrRecipient(Account account);
+    Collection<JournalOperation> getBySenderOrRecipient(Account account);
 }

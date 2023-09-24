@@ -7,14 +7,17 @@ import edu.vsu.putinpa.application.service.OperationService;
 
 public class OperationServiceImpl implements OperationService {
     private AccountsRepository accountsRepository;
+    private OperationsRepository operationsRepository;
 
-    public OperationServiceImpl(AccountsRepository accountsRepository) {
+    public OperationServiceImpl(AccountsRepository accountsRepository, OperationsRepository operationsRepository) {
         this.accountsRepository = accountsRepository;
+        this.operationsRepository = operationsRepository;
     }
 
     @Override
     public void executeOperation(Operation<?> operation) {
         operation.execute();
+        operationsRepository.save(operation.log());
     }
 
     @Override

@@ -6,7 +6,9 @@ import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.model.Money;
 import edu.vsu.putinpa.application.repository.AccountsRepository;
+import edu.vsu.putinpa.application.repository.OperationsRepository;
 import edu.vsu.putinpa.application.repository.impl.InMemoryAccountRepository;
+import edu.vsu.putinpa.application.repository.impl.InMemoryOperationRepository;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationService;
 import edu.vsu.putinpa.application.service.operation.CloseAccount;
@@ -21,12 +23,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class OperationServiceImplTest {
     private AccountsRepository accountsRepository;
+    private OperationsRepository operationsRepository;
     private OperationService operationService;
 
     @BeforeEach
     public void init() {
         accountsRepository = new InMemoryAccountRepository();
-        operationService = new OperationServiceImpl(accountsRepository);
+        operationsRepository = new InMemoryOperationRepository();
+        operationService = new OperationServiceImpl(accountsRepository, operationsRepository);
     }
 
     @Test
@@ -50,7 +54,7 @@ class OperationServiceImplTest {
         accounts[0].setBalance(new Money("ru", BigDecimal.TEN));
 
         AccountsRepository mock = new InMemoryAccountRepository(accounts);
-        OperationService service = new OperationServiceImpl(mock);
+        OperationService service = new OperationServiceImpl(mock, operationsRepository);
         ClosingAccountInfoDto info = new ClosingAccountInfoDto(client, accounts[0], accounts[1]);
         service.executeOperation(new CloseAccount(service, info));
 
