@@ -1,6 +1,7 @@
 package edu.vsu.putinpa.application.service.impl;
 
 import edu.vsu.putinpa.application.dto.OpeningAccountInfoDto;
+import edu.vsu.putinpa.application.dto.TransferInfoDto;
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.model.JournalOperation;
@@ -12,6 +13,7 @@ import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsHistoryService;
 import edu.vsu.putinpa.application.service.OperationsService;
 import edu.vsu.putinpa.application.service.operation.OpenAccount;
+import edu.vsu.putinpa.application.service.operation.Transfer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,10 +47,10 @@ class OperationsServiceImplTest {
                 () -> assertNotNull(journalOperation),
                 () -> assertEquals("test account", created.getName()),
                 () -> assertEquals(new Money("ru", BigDecimal.ZERO), created.getBalance()),
+                () -> assertEquals(creator, journalOperation.getClient()),
                 () -> assertNull(journalOperation.getSender()),
-                () -> assertNull(journalOperation.getMoney()),
                 () -> assertEquals(created, journalOperation.getRecipient()),
-                () -> assertEquals(creator, journalOperation.getClient())
+                () -> assertNull(journalOperation.getMoney())
         );
     }
 
@@ -76,6 +78,32 @@ class OperationsServiceImplTest {
                 () -> assertNotNull(created),
                 () -> assertEquals(new Money("ru", BigDecimal.valueOf(6)), created.getBalance()),
                 () -> assertEquals(new Money("ru", BigDecimal.valueOf(4)), sender.getBalance())
+        );
+    }
+
+    @Test
+    public void givenSenderAndRecipient_whenTransfer_thenUpdateBalanceInBothAccounts() {
+        Client creator = new Client("test", "test");
+        Account sender = new Account("sender", "ru", creator);
+        sender.replenishment(new Money("ru", BigDecimal.TEN));
+        Account recipient = new Account("recipient", "ru", creator);
+        recipient.replenishment(new Money("ru", BigDecimal.ONE));
+
+        accountsService = new AccountsServiceImpl(new InMemoryAccountsRepository(sender, recipient));
+        operationsService = new OperationsServiceImpl(accountsService, operationsHistoryService);
+
+        TransferInfoDto transferInfo = new TransferInfoDto(creator, sender, recipient, new Money("ru", BigDecimal.TWO));
+        Operation<?> operation = new Transfer(operationsService, transferInfo);
+        operationsService.executeOperation(operation);
+
+        JournalOperation journalOperation = operationsHistoryService.getAll().stream().findFirst().get();
+        assertAll(
+                () -> assertEquals(new Money("ru", BigDecimal.valueOf(8)), sender.getBalance()),
+                () -> assertEquals(new Money("ru", BigDecimal.valueOf(3)), recipient.getBalance()),
+                () -> assertEquals(creator, journalOperation.getClient()),
+                () -> assertEquals(sender, journalOperation.getSender()),
+                () -> assertEquals(recipient, journalOperation.getRecipient()),
+                () -> assertEquals(new Money("ru", BigDecimal.TWO), journalOperation.getMoney())
         );
     }
 }
