@@ -20,6 +20,9 @@ public class CloseAccount extends Operation<ClosingAccountInfoDto> {
         balance = getInfo().getTarget().getBalance();
         getInfo().getRecipient().add(balance);
         getInfo().getTarget().subtract(balance);
+
+        getService().getAccountsService().save(getInfo().getTarget());
+        getService().getAccountsService().save(getInfo().getRecipient());
     }
 
     @Override

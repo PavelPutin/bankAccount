@@ -25,7 +25,7 @@ public class OpenAccount extends Operation<OpeningAccountInfoDto> {
             created.add(getInfo().getMoney());
             getInfo().getSender().subtract(getInfo().getMoney());
         }
-        getService().getAccountRepository().save(created);
+        getService().getAccountsService().save(created);
     }
 
     @Override

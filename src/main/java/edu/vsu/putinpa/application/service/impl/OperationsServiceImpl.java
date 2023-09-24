@@ -1,16 +1,16 @@
 package edu.vsu.putinpa.application.service.impl;
 
-import edu.vsu.putinpa.application.repository.AccountsRepository;
+import edu.vsu.putinpa.application.service.AccountsService;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsHistoryService;
 import edu.vsu.putinpa.application.service.OperationsService;
 
 public class OperationsServiceImpl implements OperationsService {
-    private AccountsRepository accountsRepository;
+    private AccountsService accountsService;
     private OperationsHistoryService operationsHistoryService;
 
-    public OperationsServiceImpl(AccountsRepository accountsRepository, OperationsHistoryService operationsHistoryService) {
-        this.accountsRepository = accountsRepository;
+    public OperationsServiceImpl(AccountsService accountsService, OperationsHistoryService operationsHistoryService) {
+        this.accountsService = accountsService;
         this.operationsHistoryService = operationsHistoryService;
     }
 
@@ -26,7 +26,7 @@ public class OperationsServiceImpl implements OperationsService {
     }
 
     @Override
-    public AccountsRepository getAccountRepository() {
-        return accountsRepository;
+    public AccountsService getAccountsService() {
+        return accountsService;
     }
 }

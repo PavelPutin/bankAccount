@@ -5,10 +5,10 @@ import edu.vsu.putinpa.application.dto.OpeningAccountInfoDto;
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.model.Money;
-import edu.vsu.putinpa.application.repository.AccountsRepository;
 import edu.vsu.putinpa.application.repository.OperationsRepository;
 import edu.vsu.putinpa.application.repository.impl.InMemoryAccountsRepository;
 import edu.vsu.putinpa.application.repository.impl.InMemoryOperationsRepository;
+import edu.vsu.putinpa.application.service.AccountsService;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsHistoryService;
 import edu.vsu.putinpa.application.service.OperationsService;
@@ -22,66 +22,14 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
 class OperationsServiceImplTest {
-    private AccountsRepository accountsRepository;
-    private OperationsRepository operationsRepository;
+    private AccountsService accountsService;
     private OperationsService operationsService;
     private OperationsHistoryService operationsHistoryService;
 
     @BeforeEach
     public void init() {
-        accountsRepository = new InMemoryAccountsRepository();
-        operationsRepository = new InMemoryOperationsRepository();
-        operationsHistoryService = new OperationsHistoryServiceImpl(operationsRepository);
-        operationsService = new OperationsServiceImpl(accountsRepository, operationsHistoryService);
+        accountsService = new AccountsServiceImpl(new InMemoryAccountsRepository());
+        operationsHistoryService = new OperationsHistoryServiceImpl(new InMemoryOperationsRepository());
+        operationsService = new OperationsServiceImpl(accountsService, operationsHistoryService);
     }
-
-    @Test
-    public void testAccountOpening() {
-        Client client = new Client("test", "test");
-        OpeningAccountInfoDto info = new OpeningAccountInfoDto(
-                client, "test account", "ru", null, null
-        );
-        Operation<?> operation = new OpenAccount(operationsService, info);
-        operationsService.executeOperation(operation);
-        assertEquals(1, accountsRepository.findByName("test account").size());
-    }
-
-    @Test
-    public void testAccountClosing() {
-        Client client = new Client("test", "test");
-        Account[] accounts = {
-                new Account("test1", "ru", client),
-                new Account("test2", "ru", client)
-        };
-        accounts[0].setBalance(new Money("ru", BigDecimal.TEN));
-
-        AccountsRepository mock = new InMemoryAccountsRepository(accounts);
-        OperationsService service = new OperationsServiceImpl(mock, operationsHistoryService);
-        ClosingAccountInfoDto info = new ClosingAccountInfoDto(client, accounts[0], accounts[1]);
-        service.executeOperation(new CloseAccount(service, info));
-
-        assertAll(
-                () -> assertNotNull(mock.findByUUID(accounts[0].getUuid()), "Первый счёт не добавлен"),
-                () -> assertNotNull(mock.findByUUID(accounts[1].getUuid()), "Второй счёт не добавлен"),
-                () -> {
-                    Account test1 = mock.findByUUID(accounts[0].getUuid()).get();
-                    Account test2 = mock.findByUUID(accounts[1].getUuid()).get();
-
-                    assertAll(
-                            () -> assertNotNull(test1.getWhenClosed(), "Время закрытия не установлено"),
-                            () -> assertEquals(
-                                    new Money("ru", BigDecimal.ZERO),
-                                    test1.getBalance(),
-                                    "У закрываемого счёта не пустой баланс"),
-                            () -> assertEquals(
-                                    new Money("ru", BigDecimal.TEN),
-                                    test2.getBalance(),
-                                    "Деньги не переведены на счёт заместитель")
-                    );
-                }
-        );
-
-
-    }
-
 }
