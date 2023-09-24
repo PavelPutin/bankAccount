@@ -5,6 +5,6 @@ import edu.vsu.putinpa.application.repository.OperationsRepository;
 
 public interface OperationService {
     void executeOperation(Operation<?> operation);
-    OperationsRepository getOperationsRepository();
+    OperationHistoryService getOperationHistoryService();
     AccountsRepository getAccountRepository();
 }

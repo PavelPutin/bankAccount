@@ -3,26 +3,27 @@ package edu.vsu.putinpa.application.service.impl;
 import edu.vsu.putinpa.application.repository.AccountsRepository;
 import edu.vsu.putinpa.application.repository.OperationsRepository;
 import edu.vsu.putinpa.application.service.Operation;
+import edu.vsu.putinpa.application.service.OperationHistoryService;
 import edu.vsu.putinpa.application.service.OperationService;
 
 public class OperationServiceImpl implements OperationService {
     private AccountsRepository accountsRepository;
-    private OperationsRepository operationsRepository;
+    private OperationHistoryService operationHistoryService;
 
-    public OperationServiceImpl(AccountsRepository accountsRepository, OperationsRepository operationsRepository) {
+    public OperationServiceImpl(AccountsRepository accountsRepository, OperationHistoryService operationHistoryService) {
         this.accountsRepository = accountsRepository;
-        this.operationsRepository = operationsRepository;
+        this.operationHistoryService = operationHistoryService;
     }
 
     @Override
     public void executeOperation(Operation<?> operation) {
         operation.execute();
-        operationsRepository.save(operation.log());
+        operationHistoryService.add(operation);
     }
 
     @Override
-    public OperationsRepository getOperationsRepository() {
-        return null;
+    public OperationHistoryService getOperationHistoryService() {
+        return operationHistoryService;
     }
 
     @Override

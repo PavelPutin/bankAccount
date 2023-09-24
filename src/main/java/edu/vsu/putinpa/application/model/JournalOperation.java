@@ -53,4 +53,15 @@ public class JournalOperation extends EntityWithUUID {
     public void setMoney(Money money) {
         this.money = money;
     }
+
+    @Override
+    public String toString() {
+        return "JournalOperation{" +
+                "whenCreated=" + whenCreated +
+                ", client=" + client +
+                ", sender=" + sender +
+                ", recipient=" + recipient +
+                ", money=" + money +
+                '}';
+    }
 }

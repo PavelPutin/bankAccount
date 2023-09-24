@@ -10,6 +10,7 @@ import edu.vsu.putinpa.application.repository.OperationsRepository;
 import edu.vsu.putinpa.application.repository.impl.InMemoryAccountRepository;
 import edu.vsu.putinpa.application.repository.impl.InMemoryOperationRepository;
 import edu.vsu.putinpa.application.service.Operation;
+import edu.vsu.putinpa.application.service.OperationHistoryService;
 import edu.vsu.putinpa.application.service.OperationService;
 import edu.vsu.putinpa.application.service.operation.CloseAccount;
 import edu.vsu.putinpa.application.service.operation.OpenAccount;
@@ -17,7 +18,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,12 +25,14 @@ class OperationServiceImplTest {
     private AccountsRepository accountsRepository;
     private OperationsRepository operationsRepository;
     private OperationService operationService;
+    private OperationHistoryService operationHistoryService;
 
     @BeforeEach
     public void init() {
         accountsRepository = new InMemoryAccountRepository();
         operationsRepository = new InMemoryOperationRepository();
-        operationService = new OperationServiceImpl(accountsRepository, operationsRepository);
+        operationHistoryService = new OperationHistoryServiceImpl(operationsRepository);
+        operationService = new OperationServiceImpl(accountsRepository, operationHistoryService);
     }
 
     @Test
@@ -54,7 +56,7 @@ class OperationServiceImplTest {
         accounts[0].setBalance(new Money("ru", BigDecimal.TEN));
 
         AccountsRepository mock = new InMemoryAccountRepository(accounts);
-        OperationService service = new OperationServiceImpl(mock, operationsRepository);
+        OperationService service = new OperationServiceImpl(mock, operationHistoryService);
         ClosingAccountInfoDto info = new ClosingAccountInfoDto(client, accounts[0], accounts[1]);
         service.executeOperation(new CloseAccount(service, info));
 
