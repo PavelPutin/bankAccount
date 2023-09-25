@@ -1,6 +1,7 @@
 package edu.vsu.putinpa.application.service.impl;
 
 import edu.vsu.putinpa.application.dto.OpeningAccountInfoDto;
+import edu.vsu.putinpa.application.dto.ReplenishmentInfoDto;
 import edu.vsu.putinpa.application.dto.TransferInfoDto;
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
@@ -13,6 +14,7 @@ import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsHistoryService;
 import edu.vsu.putinpa.application.service.OperationsService;
 import edu.vsu.putinpa.application.service.operation.OpenAccount;
+import edu.vsu.putinpa.application.service.operation.Replenishment;
 import edu.vsu.putinpa.application.service.operation.Transfer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,12 +24,14 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
 class OperationsServiceImplTest {
+    private Client creator;
     private AccountsService accountsService;
     private OperationsService operationsService;
     private OperationsHistoryService operationsHistoryService;
 
     @BeforeEach
     public void init() {
+        creator = new Client("test", "test");
         accountsService = new AccountsServiceImpl(new InMemoryAccountsRepository());
         operationsHistoryService = new OperationsHistoryServiceImpl(new InMemoryOperationsRepository());
         operationsService = new OperationsServiceImpl(accountsService, operationsHistoryService);
@@ -35,7 +39,6 @@ class OperationsServiceImplTest {
 
     @Test
     public void notGivenSender_whenOpeningAccount_thenOpenAccountWithZeroBalance() {
-        Client creator = new Client("test", "test");
         OpeningAccountInfoDto openInfo = new OpeningAccountInfoDto(creator, "test account", "ru", null, null);
         Operation<?> open = new OpenAccount(operationsService, openInfo);
         operationsService.executeOperation(open);
@@ -56,7 +59,6 @@ class OperationsServiceImplTest {
 
     @Test
     public void givenSender_whenOpeningAccount_thenOpenAccountAndUpdateBalanceInBothAccounts() {
-        Client creator = new Client("test", "test");
         Account sender = new Account("sender", "ru", creator);
         sender.replenishment(new Money("ru", BigDecimal.TEN));
 
@@ -88,7 +90,6 @@ class OperationsServiceImplTest {
 
     @Test
     public void givenSenderAndRecipient_whenTransfer_thenUpdateBalanceInBothAccounts() {
-        Client creator = new Client("test", "test");
         Account sender = new Account("sender", "ru", creator);
         sender.replenishment(new Money("ru", BigDecimal.TEN));
         Account recipient = new Account("recipient", "ru", creator);
@@ -108,6 +109,28 @@ class OperationsServiceImplTest {
                 () -> assertEquals(creator, journalOperation.getClient()),
                 () -> assertEquals(sender, journalOperation.getSender()),
                 () -> assertEquals(recipient, journalOperation.getRecipient()),
+                () -> assertEquals(new Money("ru", BigDecimal.TWO), journalOperation.getMoney())
+        );
+    }
+
+    @Test
+    public void givenMoney_whenReplenishment_thenAddMoneyToBalance() {
+        Account target = new Account("target", "ru", creator);
+        target.replenishment(new Money("ru", BigDecimal.TEN));
+
+        accountsService = new AccountsServiceImpl(new InMemoryAccountsRepository(target));
+        operationsService = new OperationsServiceImpl(accountsService, operationsHistoryService);
+
+        ReplenishmentInfoDto info = new ReplenishmentInfoDto(creator, target, new Money("ru", BigDecimal.TWO));
+        Operation<?> operation = new Replenishment(operationsService, info);
+        operationsService.executeOperation(operation);
+
+        JournalOperation journalOperation = getFirstJournalOperation();
+        assertAll(
+                () -> assertEquals(new Money("ru", BigDecimal.valueOf(12)), target.getBalance()),
+                () -> assertEquals(creator, journalOperation.getClient()),
+                () -> assertEquals(target, journalOperation.getRecipient()),
+                () -> assertNull(journalOperation.getSender()),
                 () -> assertEquals(new Money("ru", BigDecimal.TWO), journalOperation.getMoney())
         );
     }
