@@ -3,6 +3,7 @@ package edu.vsu.putinpa.application.service.impl;
 import edu.vsu.putinpa.application.dto.OpeningAccountInfoDto;
 import edu.vsu.putinpa.application.dto.ReplenishmentInfoDto;
 import edu.vsu.putinpa.application.dto.TransferInfoDto;
+import edu.vsu.putinpa.application.dto.WithdrawalInfoDto;
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.model.JournalOperation;
@@ -16,6 +17,7 @@ import edu.vsu.putinpa.application.service.OperationsService;
 import edu.vsu.putinpa.application.service.operation.OpenAccount;
 import edu.vsu.putinpa.application.service.operation.Replenishment;
 import edu.vsu.putinpa.application.service.operation.Transfer;
+import edu.vsu.putinpa.application.service.operation.Withdraw;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -131,6 +133,28 @@ class OperationsServiceImplTest {
                 () -> assertEquals(creator, journalOperation.getClient()),
                 () -> assertEquals(target, journalOperation.getRecipient()),
                 () -> assertNull(journalOperation.getSender()),
+                () -> assertEquals(new Money("ru", BigDecimal.TWO), journalOperation.getMoney())
+        );
+    }
+
+    @Test
+    public void givenMoney_whenWithdraw_thenSubtractMoneyFromBalance() {
+        Account target = new Account("target", "ru", creator);
+        target.replenishment(new Money("ru", BigDecimal.TEN));
+
+        accountsService = new AccountsServiceImpl(new InMemoryAccountsRepository(target));
+        operationsService = new OperationsServiceImpl(accountsService, operationsHistoryService);
+
+        WithdrawalInfoDto info = new WithdrawalInfoDto(creator, target, new Money("ru", BigDecimal.TWO));
+        Operation<?> operation = new Withdraw(operationsService, info);
+        operationsService.executeOperation(operation);
+
+        JournalOperation journalOperation = getFirstJournalOperation();
+        assertAll(
+                () -> assertEquals(new Money("ru", BigDecimal.valueOf(8)), target.getBalance()),
+                () -> assertEquals(creator, journalOperation.getClient()),
+                () -> assertEquals(target, journalOperation.getSender()),
+                () -> assertNull(journalOperation.getRecipient()),
                 () -> assertEquals(new Money("ru", BigDecimal.TWO), journalOperation.getMoney())
         );
     }
