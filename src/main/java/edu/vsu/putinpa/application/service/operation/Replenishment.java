@@ -16,6 +16,7 @@ public class Replenishment extends Operation<ReplenishmentInfoDto> {
     @Override
     public void execute() {
         getInfo().getTarget().replenishment(getInfo().getMoney());
+        getService().getAccountsService().save(getInfo().getTarget());
     }
 
     @Override

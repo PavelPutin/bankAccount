@@ -15,6 +15,7 @@ public class Withdraw extends Operation<WithdrawalInfoDto> {
     @Override
     public void execute() {
         getInfo().getTarget().withdrawal(getInfo().getMoney());
+        getService().getAccountsService().save(getInfo().getTarget());
     }
 
     @Override
