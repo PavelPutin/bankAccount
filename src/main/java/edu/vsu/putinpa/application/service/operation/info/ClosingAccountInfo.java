@@ -1,12 +1,12 @@
-package edu.vsu.putinpa.application.dto;
+package edu.vsu.putinpa.application.service.operation.info;
 
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 
-public class ClosingAccountInfoDto extends OperationInfoDto {
+public class ClosingAccountInfo extends OperationInfo {
     private Account target;
     private Account recipient;
-    public ClosingAccountInfoDto(Client invoker, Account target, Account recipient) {
+    public ClosingAccountInfo(Client invoker, Account target, Account recipient) {
         super(invoker);
         this.target = target;
         this.recipient = recipient;

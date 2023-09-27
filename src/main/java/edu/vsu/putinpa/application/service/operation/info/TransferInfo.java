@@ -1,15 +1,15 @@
-package edu.vsu.putinpa.application.dto;
+package edu.vsu.putinpa.application.service.operation.info;
 
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.model.Money;
 
-public class TransferInfoDto extends OperationInfoDto {
+public class TransferInfo extends OperationInfo {
     private Account sender;
     private Account recipient;
     private Money money;
 
-    public TransferInfoDto(Client invoker, Account sender, Account recipient, Money money) {
+    public TransferInfo(Client invoker, Account sender, Account recipient, Money money) {
         super(invoker);
         this.sender = sender;
         this.recipient = recipient;

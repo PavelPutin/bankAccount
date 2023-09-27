@@ -1,9 +1,9 @@
 package edu.vsu.putinpa.application.service.impl;
 
-import edu.vsu.putinpa.application.dto.OpeningAccountInfoDto;
-import edu.vsu.putinpa.application.dto.ReplenishmentInfoDto;
-import edu.vsu.putinpa.application.dto.TransferInfoDto;
-import edu.vsu.putinpa.application.dto.WithdrawalInfoDto;
+import edu.vsu.putinpa.application.service.operation.info.OpeningAccountInfo;
+import edu.vsu.putinpa.application.service.operation.info.ReplenishmentInfo;
+import edu.vsu.putinpa.application.service.operation.info.TransferInfo;
+import edu.vsu.putinpa.application.service.operation.info.WithdrawalInfo;
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.model.JournalOperation;
@@ -14,10 +14,10 @@ import edu.vsu.putinpa.application.service.AccountsService;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsHistoryService;
 import edu.vsu.putinpa.application.service.OperationsService;
-import edu.vsu.putinpa.application.service.operation.OpenAccount;
-import edu.vsu.putinpa.application.service.operation.Replenishment;
-import edu.vsu.putinpa.application.service.operation.Transfer;
-import edu.vsu.putinpa.application.service.operation.Withdraw;
+import edu.vsu.putinpa.application.service.operation.impl.OpenAccount;
+import edu.vsu.putinpa.application.service.operation.impl.Replenishment;
+import edu.vsu.putinpa.application.service.operation.impl.Transfer;
+import edu.vsu.putinpa.application.service.operation.impl.Withdraw;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,7 +41,7 @@ class OperationsServiceImplTest {
 
     @Test
     public void notGivenSender_whenOpeningAccount_thenOpenAccountWithZeroBalance() {
-        OpeningAccountInfoDto openInfo = new OpeningAccountInfoDto(creator, "test account", "ru", null, null);
+        OpeningAccountInfo openInfo = new OpeningAccountInfo(creator, "test account", "ru", null, null);
         Operation<?> open = new OpenAccount(operationsService, openInfo);
         operationsService.executeOperation(open);
 
@@ -67,7 +67,7 @@ class OperationsServiceImplTest {
         accountsService = new AccountsServiceImpl(new InMemoryAccountsRepository(sender));
         operationsService = new OperationsServiceImpl(accountsService, operationsHistoryService);
 
-        OpeningAccountInfoDto openInfo = new OpeningAccountInfoDto(
+        OpeningAccountInfo openInfo = new OpeningAccountInfo(
                 creator,
                 "created",
                 "ru",
@@ -100,7 +100,7 @@ class OperationsServiceImplTest {
         accountsService = new AccountsServiceImpl(new InMemoryAccountsRepository(sender, recipient));
         operationsService = new OperationsServiceImpl(accountsService, operationsHistoryService);
 
-        TransferInfoDto transferInfo = new TransferInfoDto(creator, sender, recipient, new Money("ru", BigDecimal.TWO));
+        TransferInfo transferInfo = new TransferInfo(creator, sender, recipient, new Money("ru", BigDecimal.TWO));
         Operation<?> operation = new Transfer(operationsService, transferInfo);
         operationsService.executeOperation(operation);
 
@@ -123,7 +123,7 @@ class OperationsServiceImplTest {
         accountsService = new AccountsServiceImpl(new InMemoryAccountsRepository(target));
         operationsService = new OperationsServiceImpl(accountsService, operationsHistoryService);
 
-        ReplenishmentInfoDto info = new ReplenishmentInfoDto(creator, target, new Money("ru", BigDecimal.TWO));
+        ReplenishmentInfo info = new ReplenishmentInfo(creator, target, new Money("ru", BigDecimal.TWO));
         Operation<?> operation = new Replenishment(operationsService, info);
         operationsService.executeOperation(operation);
 
@@ -145,7 +145,7 @@ class OperationsServiceImplTest {
         accountsService = new AccountsServiceImpl(new InMemoryAccountsRepository(target));
         operationsService = new OperationsServiceImpl(accountsService, operationsHistoryService);
 
-        WithdrawalInfoDto info = new WithdrawalInfoDto(creator, target, new Money("ru", BigDecimal.TWO));
+        WithdrawalInfo info = new WithdrawalInfo(creator, target, new Money("ru", BigDecimal.TWO));
         Operation<?> operation = new Withdraw(operationsService, info);
         operationsService.executeOperation(operation);
 

@@ -1,14 +1,14 @@
-package edu.vsu.putinpa.application.service.operation;
+package edu.vsu.putinpa.application.service.operation.impl;
 
-import edu.vsu.putinpa.application.dto.WithdrawalInfoDto;
+import edu.vsu.putinpa.application.service.operation.info.WithdrawalInfo;
 import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsService;
 
 import java.time.Instant;
 
-public class Withdraw extends Operation<WithdrawalInfoDto> {
-    public Withdraw(OperationsService service, WithdrawalInfoDto info) {
+public class Withdraw extends Operation<WithdrawalInfo> {
+    public Withdraw(OperationsService service, WithdrawalInfo info) {
         super(service, info);
     }
 

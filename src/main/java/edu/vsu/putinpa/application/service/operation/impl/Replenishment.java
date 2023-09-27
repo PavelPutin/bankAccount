@@ -1,15 +1,14 @@
-package edu.vsu.putinpa.application.service.operation;
+package edu.vsu.putinpa.application.service.operation.impl;
 
-import edu.vsu.putinpa.application.dto.OperationInfoDto;
-import edu.vsu.putinpa.application.dto.ReplenishmentInfoDto;
+import edu.vsu.putinpa.application.service.operation.info.ReplenishmentInfo;
 import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsService;
 
 import java.time.Instant;
 
-public class Replenishment extends Operation<ReplenishmentInfoDto> {
-    public Replenishment(OperationsService service, ReplenishmentInfoDto info) {
+public class Replenishment extends Operation<ReplenishmentInfo> {
+    public Replenishment(OperationsService service, ReplenishmentInfo info) {
         super(service, info);
     }
 

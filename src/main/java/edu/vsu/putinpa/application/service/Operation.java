@@ -1,9 +1,9 @@
 package edu.vsu.putinpa.application.service;
 
-import edu.vsu.putinpa.application.dto.OperationInfoDto;
+import edu.vsu.putinpa.application.service.operation.info.OperationInfo;
 import edu.vsu.putinpa.application.model.JournalOperation;
 
-abstract public class Operation <T extends OperationInfoDto> {
+abstract public class Operation <T extends OperationInfo> {
     private OperationsService service;
     private T info;
 

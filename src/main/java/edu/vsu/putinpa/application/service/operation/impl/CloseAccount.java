@@ -1,6 +1,6 @@
-package edu.vsu.putinpa.application.service.operation;
+package edu.vsu.putinpa.application.service.operation.impl;
 
-import edu.vsu.putinpa.application.dto.ClosingAccountInfoDto;
+import edu.vsu.putinpa.application.service.operation.info.ClosingAccountInfo;
 import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.model.Money;
 import edu.vsu.putinpa.application.service.Operation;
@@ -8,9 +8,9 @@ import edu.vsu.putinpa.application.service.OperationsService;
 
 import java.time.Instant;
 
-public class CloseAccount extends Operation<ClosingAccountInfoDto> {
+public class CloseAccount extends Operation<ClosingAccountInfo> {
     private Money balance;
-    public CloseAccount(OperationsService service, ClosingAccountInfoDto info) {
+    public CloseAccount(OperationsService service, ClosingAccountInfo info) {
         super(service, info);
     }
 

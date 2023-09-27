@@ -1,11 +1,11 @@
-package edu.vsu.putinpa.application.dto;
+package edu.vsu.putinpa.application.service.operation.info;
 
 import edu.vsu.putinpa.application.model.Client;
 
-abstract public class OperationInfoDto {
+abstract public class OperationInfo {
     private Client invoker;
 
-    public OperationInfoDto(Client invoker) {
+    public OperationInfo(Client invoker) {
         this.invoker = invoker;
     }
 

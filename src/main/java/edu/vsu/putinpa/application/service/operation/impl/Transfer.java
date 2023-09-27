@@ -1,6 +1,6 @@
-package edu.vsu.putinpa.application.service.operation;
+package edu.vsu.putinpa.application.service.operation.impl;
 
-import edu.vsu.putinpa.application.dto.TransferInfoDto;
+import edu.vsu.putinpa.application.service.operation.info.TransferInfo;
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.service.Operation;
@@ -9,8 +9,8 @@ import edu.vsu.putinpa.application.service.OperationsService;
 import java.time.Instant;
 import java.util.List;
 
-public class Transfer extends Operation<TransferInfoDto> {
-    public Transfer(OperationsService service, TransferInfoDto info) {
+public class Transfer extends Operation<TransferInfo> {
+    public Transfer(OperationsService service, TransferInfo info) {
         super(service, info);
     }
 

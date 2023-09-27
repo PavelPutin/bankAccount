@@ -1,6 +1,6 @@
-package edu.vsu.putinpa.application.service.operation;
+package edu.vsu.putinpa.application.service.operation.impl;
 
-import edu.vsu.putinpa.application.dto.OpeningAccountInfoDto;
+import edu.vsu.putinpa.application.service.operation.info.OpeningAccountInfo;
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.service.Operation;
@@ -8,9 +8,9 @@ import edu.vsu.putinpa.application.service.OperationsService;
 
 import java.time.Instant;
 
-public class OpenAccount extends Operation<OpeningAccountInfoDto> {
+public class OpenAccount extends Operation<OpeningAccountInfo> {
     private Account created;
-    public OpenAccount(OperationsService service, OpeningAccountInfoDto info) {
+    public OpenAccount(OperationsService service, OpeningAccountInfo info) {
         super(service, info);
     }
 
