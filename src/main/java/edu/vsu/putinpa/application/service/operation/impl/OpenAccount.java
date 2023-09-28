@@ -1,14 +1,16 @@
 package edu.vsu.putinpa.application.service.operation.impl;
 
-import edu.vsu.putinpa.application.service.operation.info.OpeningAccountInfo;
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsService;
+import edu.vsu.putinpa.application.service.operation.info.OpeningAccountInfo;
+import edu.vsu.putinpa.application.service.operation.mapping.annotation.RecipientInfo;
 
 import java.time.Instant;
 
 public class OpenAccount extends Operation<OpeningAccountInfo> {
+    @RecipientInfo
     private Account created;
     public OpenAccount(OperationsService service, OpeningAccountInfo info) {
         super(service, info);
@@ -35,5 +37,9 @@ public class OpenAccount extends Operation<OpeningAccountInfo> {
         log.setRecipient(created);
         log.setMoney(getInfo().getMoney());
         return log;
+    }
+
+    public Account getCreated() {
+        return created;
     }
 }

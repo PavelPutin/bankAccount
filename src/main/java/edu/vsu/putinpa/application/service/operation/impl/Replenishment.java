@@ -1,9 +1,9 @@
 package edu.vsu.putinpa.application.service.operation.impl;
 
-import edu.vsu.putinpa.application.service.operation.info.ReplenishmentInfo;
 import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsService;
+import edu.vsu.putinpa.application.service.operation.info.ReplenishmentInfo;
 
 import java.time.Instant;
 

@@ -24,7 +24,7 @@ import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SenderInfoOperationMappingAnnotationProcessorTest {
+class RecipientOperationMappingAnnotationProcessorTest {
     private Client creator;
     private AccountsService accountsService;
     private OperationsService operationsService;
@@ -53,12 +53,14 @@ class SenderInfoOperationMappingAnnotationProcessorTest {
                 new Money("ru", BigDecimal.valueOf(6))
         );
         Operation<?> open = new OpenAccount(operationsService, openInfo);
+        operationsService.executeOperation(open);
 
+        Account created = accountsService.getBy("created").stream().findFirst().get();
         JournalOperation journalOperation = new JournalOperation(Instant.now(), creator);
 
-        OperationMappingAnnotationProcessor processor = new SenderOperationMappingAnnotationProcessor();
+        OperationMappingAnnotationProcessor processor = new RecipientOperationMappingAnnotationProcessor();
         processor.insertValueIntoJournalOperation(open, journalOperation);
 
-        assertEquals(sender, journalOperation.getSender());
+        assertEquals(created, journalOperation.getRecipient());
     }
 }

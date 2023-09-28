@@ -1,7 +1,7 @@
 package edu.vsu.putinpa.application.service;
 
-import edu.vsu.putinpa.application.service.operation.info.OperationInfo;
 import edu.vsu.putinpa.application.model.JournalOperation;
+import edu.vsu.putinpa.application.service.operation.info.OperationInfo;
 
 abstract public class Operation <T extends OperationInfo> {
     private OperationsService service;
