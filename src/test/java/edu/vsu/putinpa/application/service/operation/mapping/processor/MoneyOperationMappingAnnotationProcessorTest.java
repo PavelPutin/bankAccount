@@ -15,6 +15,7 @@ import edu.vsu.putinpa.application.service.impl.OperationsHistoryServiceImpl;
 import edu.vsu.putinpa.application.service.impl.OperationsServiceImpl;
 import edu.vsu.putinpa.application.service.operation.impl.OpenAccount;
 import edu.vsu.putinpa.application.service.operation.info.OpeningAccountInfo;
+import edu.vsu.putinpa.application.service.operation.mapping.OperationMappingAnnotationProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +24,7 @@ import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SenderOperationMappingAnnotationProcessorTest {
+class MoneyOperationMappingAnnotationProcessorTest {
     private Client creator;
     private AccountsService accountsService;
     private OperationsService operationsService;
@@ -55,9 +56,9 @@ class SenderOperationMappingAnnotationProcessorTest {
 
         JournalOperation journalOperation = new JournalOperation(Instant.now(), creator);
 
-        SenderOperationMappingAnnotationProcessor processor = new SenderOperationMappingAnnotationProcessor();
+        OperationMappingAnnotationProcessor processor = new MoneyOperationMappingAnnotationProcessor();
         processor.insertValueIntoJournalOperation(open, journalOperation);
 
-        assertEquals(sender, journalOperation.getSender());
+        assertEquals(new Money("ru", BigDecimal.valueOf(6)), journalOperation.getMoney());
     }
 }
