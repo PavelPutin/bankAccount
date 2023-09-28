@@ -3,10 +3,12 @@ package edu.vsu.putinpa.application.service.operation.info;
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.model.Money;
+import edu.vsu.putinpa.application.service.operation.mapping.annotation.Sender;
 
 public class OpeningAccountInfo extends OperationInfo {
     private String name;
     private String currency;
+    @Sender
     private Account sender;
     private Money money;
 
@@ -25,7 +27,6 @@ public class OpeningAccountInfo extends OperationInfo {
     public String getCurrency() {
         return currency;
     }
-
     public Account getSender() {
         return sender;
     }
