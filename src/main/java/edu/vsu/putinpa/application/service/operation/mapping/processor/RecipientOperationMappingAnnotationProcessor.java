@@ -13,9 +13,6 @@ public class RecipientOperationMappingAnnotationProcessor implements OperationMa
     @Override
     public void insertValueIntoJournalOperation(Operation<?> operation, JournalOperation journalOperation) {
         Account recipient = (Account) traverseFields(operation.getInfo(), RecipientInfo.class);
-        if (recipient == null) {
-            recipient = (Account) traverseFields(operation, RecipientInfo.class);
-        }
         journalOperation.setRecipient(recipient);
     }
 }

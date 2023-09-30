@@ -17,12 +17,4 @@ public class Withdraw extends Operation<WithdrawalInfo> {
         getInfo().getSender().withdrawal(getInfo().getMoney());
         getService().getAccountsService().save(getInfo().getSender());
     }
-
-    @Override
-    public JournalOperation log() {
-        JournalOperation log = new JournalOperation(Instant.now(), getInfo().getInvoker());
-        log.setSender(getInfo().getSender());
-        log.setMoney(getInfo().getMoney());
-        return log;
-    }
 }

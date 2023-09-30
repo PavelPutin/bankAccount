@@ -17,12 +17,4 @@ public class Replenishment extends Operation<ReplenishmentInfo> {
         getInfo().getRecipient().replenishment(getInfo().getMoney());
         getService().getAccountsService().save(getInfo().getRecipient());
     }
-
-    @Override
-    public JournalOperation log() {
-        JournalOperation log = new JournalOperation(Instant.now(), getInfo().getInvoker());
-        log.setRecipient(getInfo().getRecipient());
-        log.setMoney(getInfo().getMoney());
-        return log;
-    }
 }

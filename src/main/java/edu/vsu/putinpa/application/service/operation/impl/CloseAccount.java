@@ -10,8 +10,6 @@ import edu.vsu.putinpa.application.service.operation.mapping.annotation.MoneyInf
 import java.time.Instant;
 
 public class CloseAccount extends Operation<ClosingAccountInfo> {
-    @MoneyInfo
-    private Money balance;
     public CloseAccount(OperationsService service, ClosingAccountInfo info) {
         super(service, info);
     }
@@ -19,20 +17,13 @@ public class CloseAccount extends Operation<ClosingAccountInfo> {
     @Override
     public void execute() {
         getInfo().getTarget().setWhenClosed(Instant.now());
-        balance = getInfo().getTarget().getBalance();
+        Money balance = getInfo().getTarget().getBalance();
         getInfo().getRecipient().replenishment(balance);
         getInfo().getTarget().withdrawal(balance);
 
+        getInfo().setMoney(balance);
+
         getService().getAccountsService().save(getInfo().getTarget());
         getService().getAccountsService().save(getInfo().getRecipient());
-    }
-
-    @Override
-    public JournalOperation log() {
-        JournalOperation log = new JournalOperation(Instant.now(), getInfo().getInvoker());
-        log.setSender(getInfo().getTarget());
-        log.setRecipient(getInfo().getRecipient());
-        log.setMoney(balance);
-        return log;
     }
 }

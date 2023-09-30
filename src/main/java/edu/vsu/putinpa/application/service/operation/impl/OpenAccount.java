@@ -10,15 +10,13 @@ import edu.vsu.putinpa.application.service.operation.mapping.annotation.Recipien
 import java.time.Instant;
 
 public class OpenAccount extends Operation<OpeningAccountInfo> {
-    @RecipientInfo
-    private Account created;
     public OpenAccount(OperationsService service, OpeningAccountInfo info) {
         super(service, info);
     }
 
     @Override
     public void execute() {
-        created = new Account(
+        Account created = new Account(
                 getInfo().getName(),
                 getInfo().getCurrency(),
                 getInfo().getInvoker()
@@ -27,19 +25,9 @@ public class OpenAccount extends Operation<OpeningAccountInfo> {
             created.replenishment(getInfo().getMoney());
             getInfo().getSender().withdrawal(getInfo().getMoney());
         }
+
+        getInfo().setCreated(created);
+
         getService().getAccountsService().save(created);
-    }
-
-    @Override
-    public JournalOperation log() {
-        JournalOperation log = new JournalOperation(Instant.now(), getInfo().getInvoker());
-        log.setSender(getInfo().getSender());
-        log.setRecipient(created);
-        log.setMoney(getInfo().getMoney());
-        return log;
-    }
-
-    public Account getCreated() {
-        return created;
     }
 }

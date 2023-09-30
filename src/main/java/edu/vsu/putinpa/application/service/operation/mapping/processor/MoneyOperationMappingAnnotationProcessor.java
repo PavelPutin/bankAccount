@@ -13,9 +13,6 @@ public class MoneyOperationMappingAnnotationProcessor implements OperationMappin
     @Override
     public void insertValueIntoJournalOperation(Operation<?> operation, JournalOperation journalOperation) {
         Money money = (Money) traverseFields(operation.getInfo(), MoneyInfo.class);
-        if (money == null) {
-            money = (Money) traverseFields(operation, MoneyInfo.class);
-        }
         journalOperation.setMoney(money);
     }
 }

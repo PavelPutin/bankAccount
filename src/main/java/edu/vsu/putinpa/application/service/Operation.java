@@ -21,5 +21,4 @@ abstract public class Operation <T extends OperationInfo> {
     }
 
     abstract public void execute();
-    abstract public JournalOperation log();
 }

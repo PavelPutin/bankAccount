@@ -22,13 +22,4 @@ public class Transfer extends Operation<TransferInfo> {
         for (Account a : List.of(getInfo().getSender(), getInfo().getRecipient()))
             getService().getAccountsService().save(a);
     }
-
-    @Override
-    public JournalOperation log() {
-        JournalOperation log = new JournalOperation(Instant.now(), getInfo().getInvoker());
-        log.setSender(getInfo().getSender());
-        log.setRecipient(getInfo().getRecipient());
-        log.setMoney(getInfo().getMoney());
-        return log;
-    }
 }
