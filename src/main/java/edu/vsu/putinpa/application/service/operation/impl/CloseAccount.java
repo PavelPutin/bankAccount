@@ -5,10 +5,12 @@ import edu.vsu.putinpa.application.model.Money;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsService;
 import edu.vsu.putinpa.application.service.operation.info.ClosingAccountInfo;
+import edu.vsu.putinpa.application.service.operation.mapping.annotation.MoneyInfo;
 
 import java.time.Instant;
 
 public class CloseAccount extends Operation<ClosingAccountInfo> {
+    @MoneyInfo
     private Money balance;
     public CloseAccount(OperationsService service, ClosingAccountInfo info) {
         super(service, info);

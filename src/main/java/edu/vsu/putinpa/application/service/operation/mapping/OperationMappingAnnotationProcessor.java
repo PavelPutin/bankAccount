@@ -7,6 +7,7 @@ import edu.vsu.putinpa.application.service.operation.mapping.processor.Duplicate
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
+import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.getAllDeclaredFieldsFromClassHierarchy;
 import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.getValueWithGetter;
 
 public interface OperationMappingAnnotationProcessor {
@@ -20,7 +21,7 @@ public interface OperationMappingAnnotationProcessor {
         Object result = null;
         int found = 0;
         String previousFoundName = "";
-        for (Field f : infoClass.getDeclaredFields()) {
+        for (Field f : getAllDeclaredFieldsFromClassHierarchy(infoClass)) {
             f.setAccessible(true);
             if (f.isAnnotationPresent(annotationClass)) {
                 if (++found > 1) {

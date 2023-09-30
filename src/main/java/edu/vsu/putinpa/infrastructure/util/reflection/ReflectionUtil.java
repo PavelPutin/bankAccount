@@ -3,6 +3,10 @@ package edu.vsu.putinpa.infrastructure.util.reflection;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class ReflectionUtil {
     public static Object getValueWithGetter(Field field, Object obj) {
@@ -17,5 +21,16 @@ public class ReflectionUtil {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static List<Field> getAllDeclaredFieldsFromClassHierarchy(Class<?> clazz) {
+        if (clazz == null) {
+            return Collections.emptyList();
+        }
+
+        List<Field> result = new ArrayList<>(getAllDeclaredFieldsFromClassHierarchy(clazz.getSuperclass()));
+        Field[] fields = clazz.getDeclaredFields();
+        result.addAll(Arrays.asList(fields));
+        return result;
     }
 }

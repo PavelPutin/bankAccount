@@ -2,9 +2,14 @@ package edu.vsu.putinpa.application.service.operation.info;
 
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
+import edu.vsu.putinpa.application.service.operation.mapping.annotation.MoneyInfo;
+import edu.vsu.putinpa.application.service.operation.mapping.annotation.RecipientInfo;
+import edu.vsu.putinpa.application.service.operation.mapping.annotation.SenderInfo;
 
 public class ClosingAccountInfo extends OperationInfo {
+    @SenderInfo
     private Account target;
+    @RecipientInfo
     private Account recipient;
     public ClosingAccountInfo(Client invoker, Account target, Account recipient) {
         super(invoker);

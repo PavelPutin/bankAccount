@@ -11,7 +11,7 @@ import static edu.vsu.putinpa.application.service.operation.mapping.OperationMap
 public class SenderOperationMappingAnnotationProcessor implements OperationMappingAnnotationProcessor {
     @Override
     public void insertValueIntoJournalOperation(Operation<?> operation, JournalOperation journalOperation) {
-        Account sender = (Account) traverseFields(operation, SenderInfo.class);
+        Account sender = (Account) traverseFields(operation.getInfo(), SenderInfo.class);
         journalOperation.setSender(sender);
     }
 }

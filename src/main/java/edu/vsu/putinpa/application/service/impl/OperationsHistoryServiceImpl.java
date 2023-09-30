@@ -5,19 +5,36 @@ import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.repository.OperationsRepository;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsHistoryService;
+import edu.vsu.putinpa.application.service.operation.mapping.OperationMappingAnnotationProcessor;
+import edu.vsu.putinpa.application.service.operation.mapping.processor.MoneyOperationMappingAnnotationProcessor;
+import edu.vsu.putinpa.application.service.operation.mapping.processor.RecipientOperationMappingAnnotationProcessor;
+import edu.vsu.putinpa.application.service.operation.mapping.processor.SenderOperationMappingAnnotationProcessor;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class OperationsHistoryServiceImpl implements OperationsHistoryService {
     private OperationsRepository operationsRepository;
+    private List<OperationMappingAnnotationProcessor> mappingAnnotationProcessorList = new ArrayList<>();
 
     public OperationsHistoryServiceImpl(OperationsRepository operationsRepository) {
         this.operationsRepository = operationsRepository;
+        mappingAnnotationProcessorList.addAll(List.of(
+                new RecipientOperationMappingAnnotationProcessor(),
+                new SenderOperationMappingAnnotationProcessor(),
+                new MoneyOperationMappingAnnotationProcessor()
+        ));
     }
 
     @Override
     public void add(Operation<?> operation) {
-        operationsRepository.save(operation.log());
+        JournalOperation journalOperation = new JournalOperation(Instant.now(), operation.getInfo().getInvoker());
+        for (var processor : mappingAnnotationProcessorList) {
+            processor.insertValueIntoJournalOperation(operation, journalOperation);
+        }
+        operationsRepository.save(journalOperation);
     }
 
     @Override

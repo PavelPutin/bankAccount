@@ -14,14 +14,14 @@ public class Withdraw extends Operation<WithdrawalInfo> {
 
     @Override
     public void execute() {
-        getInfo().getTarget().withdrawal(getInfo().getMoney());
-        getService().getAccountsService().save(getInfo().getTarget());
+        getInfo().getSender().withdrawal(getInfo().getMoney());
+        getService().getAccountsService().save(getInfo().getSender());
     }
 
     @Override
     public JournalOperation log() {
         JournalOperation log = new JournalOperation(Instant.now(), getInfo().getInvoker());
-        log.setSender(getInfo().getTarget());
+        log.setSender(getInfo().getSender());
         log.setMoney(getInfo().getMoney());
         return log;
     }

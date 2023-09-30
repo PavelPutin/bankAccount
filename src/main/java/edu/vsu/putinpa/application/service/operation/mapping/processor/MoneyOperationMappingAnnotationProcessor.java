@@ -12,7 +12,10 @@ import static edu.vsu.putinpa.application.service.operation.mapping.OperationMap
 public class MoneyOperationMappingAnnotationProcessor implements OperationMappingAnnotationProcessor {
     @Override
     public void insertValueIntoJournalOperation(Operation<?> operation, JournalOperation journalOperation) {
-        Money money = (Money) traverseFields(operation, MoneyInfo.class);
+        Money money = (Money) traverseFields(operation.getInfo(), MoneyInfo.class);
+        if (money == null) {
+            money = (Money) traverseFields(operation, MoneyInfo.class);
+        }
         journalOperation.setMoney(money);
     }
 }

@@ -14,14 +14,14 @@ public class Replenishment extends Operation<ReplenishmentInfo> {
 
     @Override
     public void execute() {
-        getInfo().getTarget().replenishment(getInfo().getMoney());
-        getService().getAccountsService().save(getInfo().getTarget());
+        getInfo().getRecipient().replenishment(getInfo().getMoney());
+        getService().getAccountsService().save(getInfo().getRecipient());
     }
 
     @Override
     public JournalOperation log() {
         JournalOperation log = new JournalOperation(Instant.now(), getInfo().getInvoker());
-        log.setRecipient(getInfo().getTarget());
+        log.setRecipient(getInfo().getRecipient());
         log.setMoney(getInfo().getMoney());
         return log;
     }
