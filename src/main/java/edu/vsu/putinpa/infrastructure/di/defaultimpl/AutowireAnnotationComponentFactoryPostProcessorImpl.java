@@ -2,7 +2,7 @@ package edu.vsu.putinpa.infrastructure.di.defaultimpl;
 
 import edu.vsu.putinpa.infrastructure.di.ComponentDefinition;
 import edu.vsu.putinpa.infrastructure.di.ConfigurableListableComponentFactory;
-import edu.vsu.putinpa.infrastructure.di.api.Autowire;
+import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 import edu.vsu.putinpa.infrastructure.di.api.ComponentFactoryPostProcessor;
 
@@ -21,7 +21,7 @@ public class AutowireAnnotationComponentFactoryPostProcessorImpl implements Comp
                 Class<?> clazz = Class.forName(definition.getComponentClassName());
                 for (Field field : clazz.getDeclaredFields()) {
                     field.setAccessible(true);
-                    if (field.isAnnotationPresent(Autowire.class)) {
+                    if (field.isAnnotationPresent(AutoInjected.class)) {
                         Class<?> fieldType = field.getType();
                         Set<String> candidates = getAllDefinitionNamesByClass(componentFactory, fieldType);
                         if (candidates.size() > 1) {

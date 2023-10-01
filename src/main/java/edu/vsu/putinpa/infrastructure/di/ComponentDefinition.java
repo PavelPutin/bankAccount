@@ -47,8 +47,10 @@ public class ComponentDefinition {
         Class<?> componentClass = Class.forName(componentClassName);
         Object instance = componentClass.getConstructor().newInstance();
         for (Map.Entry<String, String> dependency : dependsOnAndFieldName.entrySet()) {
-            ComponentDefinition dependencyDefinition = componentFactory.getComponentDefinition(dependency.getKey());
-            dependencyDefinition.createComponent(componentFactory);
+            if (componentFactory.getComponent(dependency.getKey()) == null) {
+                ComponentDefinition dependencyDefinition = componentFactory.getComponentDefinition(dependency.getKey());
+                dependencyDefinition.createComponent(componentFactory);
+            }
 
             Object instanceDependency = componentFactory.getComponent(dependency.getKey());
             Field injectTarget = componentClass.getDeclaredField(dependency.getValue());

@@ -18,6 +18,6 @@ class AnnotationComponentReaderTest {
     @Test
     public void readerTest() {
         int foundComponents = reader.loadComponentDefinitions(CURRENT_PACKAGE);
-        assertEquals(2, foundComponents);
+        assertEquals(3, foundComponents);
     }
 }

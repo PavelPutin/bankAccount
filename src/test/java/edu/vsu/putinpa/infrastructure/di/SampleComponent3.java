@@ -1,13 +1,13 @@
 package edu.vsu.putinpa.infrastructure.di;
 
-import edu.vsu.putinpa.infrastructure.di.api.Autowire;
+import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 
 @Component(name="comp3")
 public class SampleComponent3 {
-    @Autowire
+    @AutoInjected
     private SampleComponent1 comp1;
-    @Autowire
+    @AutoInjected
     private SampleComponent2 comp2;
 
     public SampleComponent1 getComp1() {
