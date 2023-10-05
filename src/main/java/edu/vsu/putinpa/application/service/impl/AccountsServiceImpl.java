@@ -4,14 +4,18 @@ import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.repository.AccountsRepository;
 import edu.vsu.putinpa.application.service.AccountsService;
+import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
+import edu.vsu.putinpa.infrastructure.di.api.Component;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
+@Component
 public class AccountsServiceImpl implements AccountsService {
     private AccountsRepository accountsRepository;
 
+    @AutoInjected
     public AccountsServiceImpl(AccountsRepository accountsRepository) {
         this.accountsRepository = accountsRepository;
     }

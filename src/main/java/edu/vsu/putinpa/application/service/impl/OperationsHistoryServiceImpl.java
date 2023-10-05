@@ -9,16 +9,20 @@ import edu.vsu.putinpa.application.service.operation.mapping.OperationMappingAnn
 import edu.vsu.putinpa.application.service.operation.mapping.processor.MoneyOperationMappingAnnotationProcessor;
 import edu.vsu.putinpa.application.service.operation.mapping.processor.RecipientOperationMappingAnnotationProcessor;
 import edu.vsu.putinpa.application.service.operation.mapping.processor.SenderOperationMappingAnnotationProcessor;
+import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
+import edu.vsu.putinpa.infrastructure.di.api.Component;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Component
 public class OperationsHistoryServiceImpl implements OperationsHistoryService {
     private OperationsRepository operationsRepository;
     private List<OperationMappingAnnotationProcessor> mappingAnnotationProcessorList = new ArrayList<>();
 
+    @AutoInjected
     public OperationsHistoryServiceImpl(OperationsRepository operationsRepository) {
         this.operationsRepository = operationsRepository;
         mappingAnnotationProcessorList.addAll(List.of(

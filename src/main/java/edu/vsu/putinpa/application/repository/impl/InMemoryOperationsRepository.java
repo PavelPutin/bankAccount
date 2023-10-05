@@ -4,10 +4,12 @@ import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.repository.OperationsRepository;
+import edu.vsu.putinpa.infrastructure.di.api.Component;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Component
 public class InMemoryOperationsRepository implements OperationsRepository {
     private final Map<UUID, JournalOperation> data = new HashMap<>();
 
