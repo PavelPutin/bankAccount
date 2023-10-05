@@ -33,4 +33,12 @@ public class ReflectionUtil {
         result.addAll(Arrays.asList(fields));
         return result;
     }
+
+    public static Class<?> forNameWithoutThrown(String className) {
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

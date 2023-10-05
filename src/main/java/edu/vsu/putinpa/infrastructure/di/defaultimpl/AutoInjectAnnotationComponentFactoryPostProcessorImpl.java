@@ -1,0 +1,84 @@
+package edu.vsu.putinpa.infrastructure.di.defaultimpl;
+
+import edu.vsu.putinpa.infrastructure.di.ComponentDefinition;
+import edu.vsu.putinpa.infrastructure.di.ConfigurableListableComponentFactory;
+import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
+import edu.vsu.putinpa.infrastructure.di.api.Component;
+import edu.vsu.putinpa.infrastructure.di.api.ComponentFactoryPostProcessor;
+import edu.vsu.putinpa.infrastructure.di.api.Qualify;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.*;
+
+@Component
+public class AutoInjectAnnotationComponentFactoryPostProcessorImpl implements ComponentFactoryPostProcessor {
+    @Override
+    public void postProcessComponentFactory(ConfigurableListableComponentFactory componentFactory) {
+        for (ComponentDefinition definition : componentFactory.getComponentDefinitions()) {
+            Class<?> clazz = forNameWithoutThrown(definition.getComponentClassName());
+            for (Field field : clazz.getDeclaredFields()) {
+                field.setAccessible(true);
+                if (!field.isAnnotationPresent(AutoInjected.class))
+                    continue;
+
+                Class<?> fieldType = field.getType();
+                Set<String> candidates = componentFactory.getAllDefinitionNamesByClass(fieldType);
+                if (candidates.size() > 1)
+                    throw new RuntimeException("Too many autowire candidates TODO: make normal message");
+
+                if (candidates.isEmpty())
+                    throw new RuntimeException("No autowire candidates were found TODO: make normal message");
+
+                List<String> candidate = new ArrayList<>(candidates);
+                definition.addDependencyComponentName(candidate.get(0), field.getName());
+            }
+
+            List<String> componentNames = new ArrayList<>();
+            int autoInjectFoundConstructors = 0;
+            for (Constructor<?> constructor : clazz.getConstructors()) {
+                if (!constructor.isAnnotationPresent(AutoInjected.class))
+                    continue;
+
+                if (++autoInjectFoundConstructors > 1)
+                    throw new RuntimeException("Too many auto inject constructors");
+
+                Class<?>[] paramTypes = constructor.getParameterTypes();
+                definition.setConstructorArgumentTypes(paramTypes);
+                Annotation[][] paramsAnnotations = constructor.getParameterAnnotations();
+
+                for (int i = 0; i < constructor.getParameterCount(); i++) {
+                    Class<?> paramClass = paramTypes[i];
+                    Annotation[] paramAnnotation = paramsAnnotations[i];
+
+                    String componentName = null;
+                    for (Annotation a : paramAnnotation) {
+                        if (a instanceof Qualify qualify) {
+                            componentName = qualify.value();
+                        }
+                    }
+
+                    if (componentName == null) {
+                        for (ComponentDefinition componentDefinition : componentFactory.getComponentDefinitions()) {
+                            Class<?> componentClass = forNameWithoutThrown(componentDefinition.getComponentClassName());
+                            if (paramClass.isAssignableFrom(componentClass)) {
+                                componentName = componentDefinition.getComponentName();
+                            }
+                        }
+                    }
+
+                    // Если имя не найдено в objects - ошибка
+                    componentNames.add(componentName);
+                }
+            }
+            definition.setConstructorArgumentComponentNames(componentNames.toArray(new String[0]));
+        }
+    }
+}

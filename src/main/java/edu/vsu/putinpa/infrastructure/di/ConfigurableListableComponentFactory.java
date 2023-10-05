@@ -3,6 +3,7 @@ package edu.vsu.putinpa.infrastructure.di;
 import edu.vsu.putinpa.infrastructure.di.api.ComponentFactoryPostProcessor;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ConfigurableListableComponentFactory {
     private final Map<String, ComponentDefinition> componentDefinitions = new HashMap<>();
@@ -59,5 +60,12 @@ public class ConfigurableListableComponentFactory {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    public Set<String> getAllDefinitionNamesByClass(Class<?> clazz) {
+        return this.getComponentDefinitions().stream()
+                .filter(definition -> definition.getComponentClassName().equals(clazz.getName()))
+                .map(ComponentDefinition::getComponentName)
+                .collect(Collectors.toSet());
     }
 }

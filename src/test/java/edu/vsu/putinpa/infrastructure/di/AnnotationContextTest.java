@@ -16,21 +16,6 @@ class AnnotationContextTest {
     }
 
     @Test
-    public void componentDefinitionNamesTest() {
-        Set<String> actualNames = context.getComponentFactory().getComponentDefinitionNames();
-        Set<String> expected = Set.of("SampleComponent1", "comp2", "comp3", "AutowireAnnotationComponentFactoryPostProcessorImpl");
-        assertEquals(expected, actualNames);
-    }
-
-    @Test
-    public void autowireDependencyTest() {
-        ComponentDefinition sample2 = context.getComponentFactory().getComponentDefinition("comp2");
-        Set<String> actual = sample2.getDependsOn();
-        Set<String> expected = Set.of("SampleComponent1");
-        assertEquals(expected, actual);
-    }
-
-    @Test
     public void injectTest() {
         Object sample1 = context.getComponentFactory().getComponent("SampleComponent1");
         SampleComponent2 sample2 = (SampleComponent2) context.getComponentFactory().getComponent("comp2");

@@ -1,6 +1,7 @@
 package edu.vsu.putinpa.infrastructure.di;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -8,7 +9,8 @@ import java.util.Set;
 public class ComponentDefinition {
     private String componentName;
     private String componentClassName;
-    private Object constructorArgumentValues;
+    private Class<?>[] constructorArgumentTypes;
+    private String[] constructorArgumentComponentNames;
     private final Map<String, String> dependsOnAndFieldName = new HashMap<>();
 
     public String getComponentName() {
@@ -27,12 +29,16 @@ public class ComponentDefinition {
         this.componentClassName = componentClassName;
     }
 
-    public Object getConstructorArgumentValues() {
-        return constructorArgumentValues;
+    public Object getConstructorArgumentTypes() {
+        return constructorArgumentTypes;
     }
 
-    public void setConstructorArgumentValues(Object constructorArgumentValues) {
-        this.constructorArgumentValues = constructorArgumentValues;
+    public void setConstructorArgumentTypes(Class<?>[] constructorArgumentTypes) {
+        this.constructorArgumentTypes = constructorArgumentTypes;
+    }
+
+    public void setConstructorArgumentComponentNames(String[] constructorArgumentComponentNames) {
+        this.constructorArgumentComponentNames = constructorArgumentComponentNames;
     }
 
     public Set<String> getDependsOn() {
@@ -45,7 +51,17 @@ public class ComponentDefinition {
 
     public void createComponent(ConfigurableListableComponentFactory componentFactory) throws Exception {
         Class<?> componentClass = Class.forName(componentClassName);
-        Object instance = componentClass.getConstructor().newInstance();
+
+        Object[] initialArguments = new Object[constructorArgumentComponentNames.length];
+        for (int i = 0; i < constructorArgumentComponentNames.length; i++) {
+            String name = constructorArgumentComponentNames[i];
+            if (componentFactory.getComponent(name) == null) {
+                componentFactory.getComponentDefinition(name).createComponent(componentFactory);
+            }
+            initialArguments[i] = componentFactory.getComponent(name);
+        }
+
+        Object instance = componentClass.getConstructor(constructorArgumentTypes).newInstance(initialArguments);
         for (Map.Entry<String, String> dependency : dependsOnAndFieldName.entrySet()) {
             if (componentFactory.getComponent(dependency.getKey()) == null) {
                 ComponentDefinition dependencyDefinition = componentFactory.getComponentDefinition(dependency.getKey());
