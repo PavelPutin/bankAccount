@@ -25,13 +25,13 @@ public class InMemoryAccountsRepository implements AccountsRepository {
     }
 
     @Override
-    public Collection<Account> findByName(String name) {
-        return data.values().stream().filter(account -> account.getName().equals(name)).collect(Collectors.toSet());
+    public List<Account> findByName(String name) {
+        return data.values().stream().filter(account -> account.getName().equals(name)).toList();
     }
 
     @Override
-    public Collection<Account> findByCreator(Client creator) {
-        return data.values().stream().filter(account -> account.getCreator().equals(creator)).collect(Collectors.toSet());
+    public List<Account> findByCreator(Client creator) {
+        return data.values().stream().filter(account -> account.getCreator().equals(creator)).toList();
     }
 
     @Override
@@ -40,7 +40,7 @@ public class InMemoryAccountsRepository implements AccountsRepository {
     }
 
     @Override
-    public Collection<Account> findAll() {
-        return data.values();
+    public List<Account> findAll() {
+        return List.copyOf(data.values());
     }
 }
