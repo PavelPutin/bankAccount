@@ -2,6 +2,7 @@ package edu.vsu.putinpa.application.service;
 
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
+import edu.vsu.putinpa.application.model.Money;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -13,4 +14,5 @@ public interface AccountsService {
     Collection<Account> getBy(Client creator);
     Collection<Account> getAll();
     Account save(Account account);
+    Money getBalance(UUID uuid);
 }

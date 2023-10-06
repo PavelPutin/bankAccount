@@ -2,6 +2,7 @@ package edu.vsu.putinpa.application.service.impl;
 
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
+import edu.vsu.putinpa.application.model.Money;
 import edu.vsu.putinpa.application.repository.AccountsRepository;
 import edu.vsu.putinpa.application.service.AccountsService;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
@@ -43,5 +44,11 @@ public class AccountsServiceImpl implements AccountsService {
     @Override
     public Account save(Account account) {
         return accountsRepository.save(account);
+    }
+
+    @Override
+    public Money getBalance(UUID uuid) {
+        Account account = getBy(uuid).orElseThrow(() -> new IllegalArgumentException("Account doesn't exist."));
+        return account.getBalance();
     }
 }
