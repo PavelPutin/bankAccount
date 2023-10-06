@@ -6,7 +6,7 @@ import edu.vsu.putinpa.infrastructure.di.AnnotationContext;
 public class BankAccountApplication {
     public static void main(String[] args) throws Exception {
         AnnotationContext context = new AnnotationContext("edu.vsu.putinpa");
-        AccountsService service = (AccountsService) context.getComponentFactory().getComponent("AccountsServiceImpl");
+        AccountsService service = context.getComponent("AccountsServiceImpl", AccountsService.class);
         System.out.println(service);
     }
 }

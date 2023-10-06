@@ -17,16 +17,16 @@ class AnnotationContextTest {
 
     @Test
     public void injectTest() {
-        Object sample1 = context.getComponentFactory().getComponent("SampleComponent1");
-        SampleComponent2 sample2 = (SampleComponent2) context.getComponentFactory().getComponent("comp2");
+        Sample1 sample1 = context.getComponent("SampleComponent1", Sample1.class);
+        Sample2 sample2 = context.getComponent("comp2", Sample2.class);
         assertEquals(sample1, sample2.getSampleComponent1());
     }
 
     @Test
     public void multipleInjectTest() {
-        Object sample1 = context.getComponentFactory().getComponent("SampleComponent1");
-        SampleComponent2 sample2 = (SampleComponent2) context.getComponentFactory().getComponent("comp2");
-        SampleComponent3 sample3 = (SampleComponent3) context.getComponentFactory().getComponent("comp3");
+        Sample1 sample1 = context.getComponent("SampleComponent1", Sample1.class);
+        Sample2 sample2 = context.getComponent("comp2", Sample2.class);
+        SampleComponent3 sample3 = context.getComponent("comp3", SampleComponent3.class);
         assertAll(
                 () -> assertEquals(sample1, sample3.getComp1()),
                 () -> assertEquals(sample2, sample3.getComp2())

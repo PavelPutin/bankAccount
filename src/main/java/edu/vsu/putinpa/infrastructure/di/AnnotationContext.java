@@ -14,7 +14,7 @@ public class AnnotationContext {
         componentFactory.registryComponentDefinition(definition);
     }
 
-    public ConfigurableListableComponentFactory getComponentFactory() {
-        return componentFactory;
+    public <T> T getComponent(String name, Class<T> type) {
+        return type.cast(componentFactory.getComponent(name));
     }
 }
