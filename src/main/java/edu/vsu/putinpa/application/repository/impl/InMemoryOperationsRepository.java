@@ -13,8 +13,6 @@ import java.util.stream.Collectors;
 public class InMemoryOperationsRepository implements OperationsRepository {
     private final Map<UUID, JournalOperation> data = new HashMap<>();
 
-    public InMemoryOperationsRepository() {}
-
     public InMemoryOperationsRepository(JournalOperation... journalOperations) {
         for (JournalOperation journalOperation : journalOperations) {
             data.put(journalOperation.getUuid(), journalOperation);
@@ -32,23 +30,23 @@ public class InMemoryOperationsRepository implements OperationsRepository {
     }
 
     @Override
-    public Collection<JournalOperation> findByClient(Client client) {
+    public List<JournalOperation> findByClient(Client client) {
         return data.values().stream()
                 .filter(journalOperation -> journalOperation.getClient().equals(client))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<JournalOperation> findByClientAndAccount(Client client, Account account) {
+    public List<JournalOperation> findByClientAndAccount(Client client, Account account) {
         return data.values().stream()
                 .filter(journalOperation ->
                         journalOperation.getClient().equals(client) &&
                                 (journalOperation.getSender().equals(account) || journalOperation.getRecipient().equals(account)))
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     @Override
-    public Collection<JournalOperation> findAll() {
-        return data.values();
+    public List<JournalOperation> findAll() {
+        return List.copyOf(data.values());
     }
 }
