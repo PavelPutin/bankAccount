@@ -43,17 +43,17 @@ public class OperationsHistoryServiceImpl implements OperationsHistoryService {
     }
 
     @Override
-    public Collection<JournalOperation> getAll() {
+    public List<JournalOperation> getAll() {
         return operationsRepository.findAll();
     }
 
     @Override
-    public Collection<JournalOperation> getAllByClient(Client client) {
-        return null;
+    public List<JournalOperation> getAllByClient(Client client) {
+        return operationsRepository.findByClient(client);
     }
 
     @Override
-    public Collection<JournalOperation> getAllByClientAndAccount(Client client, Account account) {
-        return null;
+    public List<JournalOperation> getAllByClientAndAccount(Client client, Account account) {
+        return operationsRepository.findByClientAndAccount(client, account);
     }
 }
