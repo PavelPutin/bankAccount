@@ -15,7 +15,6 @@ import edu.vsu.putinpa.infrastructure.di.api.Component;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Component

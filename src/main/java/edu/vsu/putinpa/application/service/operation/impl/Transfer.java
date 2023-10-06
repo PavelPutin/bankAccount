@@ -1,12 +1,10 @@
 package edu.vsu.putinpa.application.service.operation.impl;
 
 import edu.vsu.putinpa.application.model.Account;
-import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsService;
 import edu.vsu.putinpa.application.service.operation.info.TransferInfo;
 
-import java.time.Instant;
 import java.util.List;
 
 public class Transfer extends Operation<TransferInfo> {

@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 public interface ClientsService {
-    Client register(String name);
+    Client register(String name, String password);
     Collection<Client> getAll();
     List<Account> getAccounts(Client client);
 }

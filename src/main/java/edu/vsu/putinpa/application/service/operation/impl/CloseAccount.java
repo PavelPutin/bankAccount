@@ -1,11 +1,9 @@
 package edu.vsu.putinpa.application.service.operation.impl;
 
-import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.model.Money;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsService;
 import edu.vsu.putinpa.application.service.operation.info.ClosingAccountInfo;
-import edu.vsu.putinpa.application.service.operation.mapping.annotation.MoneyInfo;
 
 import java.time.Instant;
 
