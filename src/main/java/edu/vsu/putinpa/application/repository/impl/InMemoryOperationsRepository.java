@@ -39,24 +39,12 @@ public class InMemoryOperationsRepository implements OperationsRepository {
     }
 
     @Override
-    public Collection<JournalOperation> findBySender(Account account) {
+    public Collection<JournalOperation> findByClientAndAccount(Client client, Account account) {
         return data.values().stream()
-                .filter(journalOperation -> journalOperation.getSender().equals(account))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Collection<JournalOperation> findByRecipient(Account recipient) {
-        return data.values().stream()
-                .filter(journalOperation -> journalOperation.getRecipient().equals(recipient))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Collection<JournalOperation> findBySenderOrRecipient(Account account) {
-        return data.values().stream()
-                .filter(journalOperation -> journalOperation.getRecipient().equals(account) || journalOperation.getSender().equals(account))
-                .collect(Collectors.toList());
+                .filter(journalOperation ->
+                        journalOperation.getClient().equals(client) &&
+                                (journalOperation.getSender().equals(account) || journalOperation.getRecipient().equals(account)))
+                .collect(Collectors.toSet());
     }
 
     @Override

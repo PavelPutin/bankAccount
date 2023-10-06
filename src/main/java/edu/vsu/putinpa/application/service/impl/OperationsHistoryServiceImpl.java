@@ -1,6 +1,7 @@
 package edu.vsu.putinpa.application.service.impl;
 
 import edu.vsu.putinpa.application.model.Account;
+import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.repository.OperationsRepository;
 import edu.vsu.putinpa.application.service.Operation;
@@ -47,32 +48,12 @@ public class OperationsHistoryServiceImpl implements OperationsHistoryService {
     }
 
     @Override
-    public Collection<JournalOperation> getTransfers() {
+    public Collection<JournalOperation> getAllByClient(Client client) {
         return null;
     }
 
     @Override
-    public Collection<JournalOperation> getTransfers(Account account) {
-        return null;
-    }
-
-    @Override
-    public Collection<JournalOperation> getIncomingTransfers() {
-        return null;
-    }
-
-    @Override
-    public Collection<JournalOperation> getIncomingTransfers(Account account) {
-        return null;
-    }
-
-    @Override
-    public Collection<JournalOperation> getOutgoingTransfers() {
-        return null;
-    }
-
-    @Override
-    public Collection<JournalOperation> getOutgoingTransfers(Account account) {
+    public Collection<JournalOperation> getAllByClientAndAccount(Client client, Account account) {
         return null;
     }
 }
