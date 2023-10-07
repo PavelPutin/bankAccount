@@ -8,6 +8,8 @@ import edu.vsu.putinpa.application.service.OperationsService;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 
+import java.util.Scanner;
+
 @Component
 public class MvpDemoController {
     private Client loggedInClient = null;
@@ -28,8 +30,16 @@ public class MvpDemoController {
      * запуск контроллера
      */
     public void start() {
+        Scanner input = new Scanner(System.in);
         while (true) {
-
+            String[] tokens = input.nextLine().split(" ");
+            switch (tokens[0]) {
+                case "registration" -> System.out.println("registration");
+                case "stop" -> {
+                    System.out.println("stop");
+                    return;
+                }
+            }
         }
     }
 

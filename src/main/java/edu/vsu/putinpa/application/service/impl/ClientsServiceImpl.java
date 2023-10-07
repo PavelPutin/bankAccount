@@ -6,10 +6,12 @@ import edu.vsu.putinpa.application.repository.AccountsRepository;
 import edu.vsu.putinpa.application.repository.ClientsRepository;
 import edu.vsu.putinpa.application.service.ClientsService;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
+import edu.vsu.putinpa.infrastructure.di.api.Component;
 
 import java.util.Collection;
 import java.util.List;
 
+@Component
 public class ClientsServiceImpl implements ClientsService {
     private final AccountsRepository accountsRepository;
     private final ClientsRepository clientsRepository;

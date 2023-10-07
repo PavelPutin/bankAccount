@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 public class InMemoryOperationsRepository implements OperationsRepository {
     private final Map<UUID, JournalOperation> data = new HashMap<>();
 
+    public InMemoryOperationsRepository() {}
+
     public InMemoryOperationsRepository(JournalOperation... journalOperations) {
         for (JournalOperation journalOperation : journalOperations) {
             data.put(journalOperation.getUuid(), journalOperation);
