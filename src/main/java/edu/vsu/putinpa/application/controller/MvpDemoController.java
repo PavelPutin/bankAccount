@@ -32,13 +32,18 @@ public class MvpDemoController {
     public void start() {
         Scanner input = new Scanner(System.in);
         while (true) {
+            System.out.printf("%s>> ", loggedInClient == null ? "!Unauth!" : loggedInClient.getName());
             String[] tokens = input.nextLine().split(" ");
-            switch (tokens[0]) {
-                case "registration" -> System.out.println("registration");
-                case "stop" -> {
-                    System.out.println("stop");
-                    return;
+            try {
+                switch (tokens[0]) {
+                    case "registration" -> registerClient(tokens);
+                    case "stop" -> {
+                        System.out.println("stop");
+                        return;
+                    }
                 }
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -46,45 +51,54 @@ public class MvpDemoController {
     /**
      * добавление некоторой суммы на счет
      */
-    public void replenish() {}
+    public void replenish(String... tokens) {}
 
     /**
      * снятие некоторой суммы со счета
      */
-    public void withdraw() {}
+    public void withdraw(String... tokens) {}
 
     /**
      * передача суммы с одного счета на другой
      */
-    public void transfer() {}
+    public void transfer(String... tokens) {}
 
     /**
      * открытие счета
      */
-    public void openAccount() {}
+    public void openAccount(String... tokens) {}
 
     /**
      * закрытие счета
      */
-    public void closeAccount() {}
+    public void closeAccount(String... tokens) {}
 
     /**
      * получение истории операций
      */
-    public void getOperationsHistory() {}
+    public void getOperationsHistory(String... tokens) {}
 
     /**
      * регистрация клиента
      */
-    public void registrationClient() {}
+    public void registerClient(String... tokens) {
+        if (tokens.length != 3)
+            throw new IllegalArgumentException("usage: registration <name> <password>");
+
+        String name = tokens[1];
+        String password = tokens[2];
+
+        Client newClient = clientsService.register(name, password);
+        System.out.println("Register new client.");
+    }
 
     /**
      * получение баланса по счету
      */
-    public void getBalanceByAccount() {}
+    public void getBalanceByAccount(String... tokens) {}
 
     /**
      * формирование сводной информации по всем счетам
      */
-    public void getAggregatedInfoAboutAccounts() {}
+    public void getAggregatedInfoAboutAccounts(String... tokens) {}
 }
