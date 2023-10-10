@@ -4,8 +4,10 @@ import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.model.Money;
 import edu.vsu.putinpa.application.service.*;
+import edu.vsu.putinpa.application.service.operation.impl.CloseAccount;
 import edu.vsu.putinpa.application.service.operation.impl.OpenAccount;
 import edu.vsu.putinpa.application.service.operation.impl.Replenishment;
+import edu.vsu.putinpa.application.service.operation.info.ClosingAccountInfo;
 import edu.vsu.putinpa.application.service.operation.info.OpeningAccountInfo;
 import edu.vsu.putinpa.application.service.operation.info.ReplenishmentInfo;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
@@ -69,6 +71,7 @@ public class MvpDemoController {
                     case "login" -> login(tokens);
                     case "logout" -> logout();
                     case "open" -> openAccount(tokens);
+                    case "close" -> closeAccount(tokens);
                     case "replenish" -> replenish(tokens);
                     case "infoAllAcc" -> getAggregatedInfoAboutAccounts();
                     case "stop" -> {
@@ -209,7 +212,26 @@ public class MvpDemoController {
     /**
      * закрытие счета
      */
-    public void closeAccount(String... tokens) {}
+    public void closeAccount(String... tokens) {
+        if (loggedInClient == null)
+            throw new IllegalStateException("NEED AUTHORIZATION");
+
+        if (tokens.length != 3)
+            throw new IllegalArgumentException("usage: close <closing acc UUID> <recipient UUID>");
+
+        UUID targetUUID = UUID.fromString(tokens[1]);
+        Account target = accountsService.getBy(targetUUID).orElseThrow();
+
+        UUID recipientUUID = UUID.fromString(tokens[2]);
+        Account recipient = accountsService.getBy(recipientUUID).orElseThrow();
+
+        ClosingAccountInfo info = new ClosingAccountInfo(
+                loggedInClient,
+                target,
+                recipient
+        );
+        operationsService.executeOperation(new CloseAccount(operationsService, info));
+    }
 
     /**
      * получение истории операций

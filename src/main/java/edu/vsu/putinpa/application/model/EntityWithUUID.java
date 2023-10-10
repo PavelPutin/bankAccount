@@ -5,10 +5,11 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 abstract public class EntityWithUUID {
+    private static Supplier<UUID> defaultSupplier = UUID::randomUUID;
     private final UUID uuid;
 
     public EntityWithUUID() {
-        uuid = UUID.randomUUID();
+        uuid = defaultSupplier.get();
     }
 
     public EntityWithUUID(Supplier<UUID> uuidSupplier) {
@@ -30,5 +31,9 @@ abstract public class EntityWithUUID {
     @Override
     public int hashCode() {
         return Objects.hash(getUuid());
+    }
+
+    public static void setDefaultUUIDSupplier(Supplier<UUID> uuidSupplier) {
+        defaultSupplier = uuidSupplier;
     }
 }
