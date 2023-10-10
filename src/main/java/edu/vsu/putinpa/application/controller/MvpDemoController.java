@@ -59,6 +59,7 @@ public class MvpDemoController {
                     case "registration" -> registerClient(tokens);
                     case "allclients" -> showAllClients();
                     case "login" -> login(tokens);
+                    case "logout" -> logout();
                     case "stop" -> {
                         out.println("stop");
                         return;
@@ -118,6 +119,10 @@ public class MvpDemoController {
         } catch (ClientNotFoundException e) {
             out.println("Can't login: invalid name or password");
         }
+    }
+
+    public void logout() {
+        loggedInClient = null;
     }
 
     /**

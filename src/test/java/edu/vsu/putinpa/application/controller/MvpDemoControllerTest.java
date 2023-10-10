@@ -42,6 +42,8 @@ class MvpDemoControllerTest {
                 login pavel 12345
                 login pavel qwerty
                 login hello ab
+                login test test
+                logout
                 stop
                 """;
         InputStream sourceStream = new ByteArrayInputStream(source.getBytes());
