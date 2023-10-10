@@ -35,9 +35,9 @@ class MvpDemoControllerTest {
     public void demoControllerTest() {
         String source = """
                 allclients
-                registration pavel qwerty
-                registration pavel qwerty
-                registration test test
+                register pavel qwerty
+                register pavel qwerty
+                register test test
                 allclients
                 login pavel 12345
                 login pavel qwerty

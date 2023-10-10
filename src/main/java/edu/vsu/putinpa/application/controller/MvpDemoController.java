@@ -64,18 +64,19 @@ public class MvpDemoController {
             String[] tokens = inputLine.split(" ");
             try {
                 switch (tokens[0]) {
-                    case "registration" -> registerClient(tokens);
+                    case "register" -> registerClient(tokens);
                     case "allclients" -> showAllClients();
                     case "login" -> login(tokens);
                     case "logout" -> logout();
                     case "open" -> openAccount(tokens);
                     case "replenish" -> replenish(tokens);
+                    case "infoAllAcc" -> getAggregatedInfoAboutAccounts();
                     case "stop" -> {
                         out.println("stop");
                         return;
                     }
                 }
-            } catch (IllegalArgumentException e) {
+            } catch (Exception e) {
                 out.println(e.getMessage());
             }
         }
@@ -223,5 +224,21 @@ public class MvpDemoController {
     /**
      * формирование сводной информации по всем счетам
      */
-    public void getAggregatedInfoAboutAccounts(String... tokens) {}
+    public void getAggregatedInfoAboutAccounts() {
+        if (loggedInClient == null)
+            throw new IllegalStateException("NEED AUTHORIZATION");
+
+        List<Account> accounts = accountsService.getBy(loggedInClient);
+        if (accounts.isEmpty()) {
+            out.println("No accounts");
+        } else {
+            out.printf("%36s\t%20s\t%20s\t%20s\t%15s%n", "uuid", "name", "created", "closed", "balance");
+            accounts.forEach(account -> out.printf("%36s\t%20s\t%20s\t%20s\t%15s%n",
+                    account.getUuid(),
+                    account.getName(),
+                    account.getWhenOpened(),
+                    account.getWhenClosed(),
+                    account.getBalance()));
+        }
+    }
 }

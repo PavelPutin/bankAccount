@@ -8,7 +8,7 @@ import edu.vsu.putinpa.application.service.AccountsService;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,17 +27,17 @@ public class AccountsServiceImpl implements AccountsService {
     }
 
     @Override
-    public Collection<Account> getBy(String name) {
+    public List<Account> getBy(String name) {
         return accountsRepository.findByName(name);
     }
 
     @Override
-    public Collection<Account> getBy(Client creator) {
+    public List<Account> getBy(Client creator) {
         return accountsRepository.findByCreator(creator);
     }
 
     @Override
-    public Collection<Account> getAll() {
+    public List<Account> getAll() {
         return accountsRepository.findAll();
     }
 
