@@ -41,6 +41,8 @@ class MvpDemoControllerTest {
                 allclients
                 login pavel 12345
                 login pavel qwerty
+                open acc1 ru
+                replenish acc1 
                 login hello ab
                 login test test
                 logout

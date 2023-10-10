@@ -1,14 +1,22 @@
 package edu.vsu.putinpa.application.controller;
 
+import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
+import edu.vsu.putinpa.application.model.Money;
 import edu.vsu.putinpa.application.service.*;
+import edu.vsu.putinpa.application.service.operation.impl.OpenAccount;
+import edu.vsu.putinpa.application.service.operation.impl.Replenishment;
+import edu.vsu.putinpa.application.service.operation.info.OpeningAccountInfo;
+import edu.vsu.putinpa.application.service.operation.info.ReplenishmentInfo;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 @Component
 public class MvpDemoController {
@@ -60,6 +68,8 @@ public class MvpDemoController {
                     case "allclients" -> showAllClients();
                     case "login" -> login(tokens);
                     case "logout" -> logout();
+                    case "open" -> openAccount(tokens);
+                    case "replenish" -> replenish(tokens);
                     case "stop" -> {
                         out.println("stop");
                         return;
@@ -128,7 +138,27 @@ public class MvpDemoController {
     /**
      * добавление некоторой суммы на счет
      */
-    public void replenish(String... tokens) {}
+    public void replenish(String... tokens) {
+        if (loggedInClient == null)
+            throw new IllegalStateException("NEED AUTHORIZATION");
+
+        if (tokens.length != 4)
+            throw new IllegalArgumentException("usage: replenish <recipient name> <money value> <currency>");
+
+        UUID recipientUUID = UUID.fromString(tokens[1]);
+        Account recipient = accountsService.getBy(recipientUUID).orElseThrow();
+        double value = Double.parseDouble(tokens[2]);
+        String currency = tokens[3];
+        Money money = new Money(currency, BigDecimal.valueOf(value));
+
+        ReplenishmentInfo info = new ReplenishmentInfo(
+                loggedInClient,
+                recipient,
+                money
+        );
+
+        operationsService.executeOperation(new Replenishment(operationsService, info));
+    }
 
     /**
      * снятие некоторой суммы со счета
@@ -143,7 +173,37 @@ public class MvpDemoController {
     /**
      * открытие счета
      */
-    public void openAccount(String... tokens) {}
+    public void openAccount(String... tokens) {
+        if (loggedInClient == null)
+            throw new IllegalStateException("NEED AUTHORIZATION");
+
+        if (tokens.length != 3 && tokens.length != 5)
+            throw new IllegalArgumentException("usage: open <name> <currency> [<sender> <money value>]");
+
+
+        String name = tokens[1];
+        String currency = tokens[2];
+
+        Account sender = null;
+        Money money = null;
+        if (tokens.length >= 4) {
+            UUID senderUUID = UUID.fromString(tokens[3]);
+            sender = accountsService.getBy(senderUUID).orElseThrow();
+
+            double value = Double.parseDouble(tokens[4]);
+            money = new Money(currency, BigDecimal.valueOf(value));
+        }
+
+        OpeningAccountInfo openingAccountInfo = new OpeningAccountInfo(
+                loggedInClient,
+                name,
+                currency,
+                sender,
+                money
+        );
+
+        operationsService.executeOperation(new OpenAccount(operationsService, openingAccountInfo));
+    }
 
     /**
      * закрытие счета
