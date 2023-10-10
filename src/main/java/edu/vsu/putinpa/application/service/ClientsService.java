@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ClientsService {
     Client register(String name, String password);
-    Collection<Client> getAll();
+    List<Client> getAll();
     List<Account> getAccounts(Client client);
 }

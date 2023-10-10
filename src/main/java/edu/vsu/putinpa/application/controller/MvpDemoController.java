@@ -8,6 +8,9 @@ import edu.vsu.putinpa.application.service.OperationsService;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.List;
 import java.util.Scanner;
 
 @Component
@@ -18,6 +21,10 @@ public class MvpDemoController {
     private final OperationsHistoryService operationsHistoryService;
     private final OperationsService operationsService;
 
+    private InputStream source = System.in;
+    private PrintStream out = System.out;
+    private boolean debug = false;
+
     @AutoInjected
     public MvpDemoController(AccountsService accountsService, ClientsService clientsService, OperationsHistoryService operationsHistoryService, OperationsService operationsService) {
         this.accountsService = accountsService;
@@ -26,25 +33,69 @@ public class MvpDemoController {
         this.operationsService = operationsService;
     }
 
+    public void setSource(InputStream source) {
+        this.source = source;
+    }
+
+    public void setOut(PrintStream out) {
+        this.out = out;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
     /**
      * запуск контроллера
      */
     public void start() {
-        Scanner input = new Scanner(System.in);
+        Scanner input = new Scanner(source);
         while (true) {
-            System.out.printf("%s>> ", loggedInClient == null ? "!Unauth!" : loggedInClient.getName());
-            String[] tokens = input.nextLine().split(" ");
+            out.printf("%s>> ", loggedInClient == null ? "!Unauth!" : loggedInClient.getName());
+            String inputLine = input.nextLine();
+            if (debug) {
+                out.println(inputLine);
+            }
+            String[] tokens = inputLine.split(" ");
             try {
                 switch (tokens[0]) {
                     case "registration" -> registerClient(tokens);
+                    case "allclients" -> showAllClients();
                     case "stop" -> {
-                        System.out.println("stop");
+                        out.println("stop");
                         return;
                     }
                 }
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                out.println(e.getMessage());
             }
+        }
+    }
+
+    /**
+     * регистрация клиента
+     */
+    public void registerClient(String... tokens) {
+        if (tokens.length != 3)
+            throw new IllegalArgumentException("usage: registration <name> <password>");
+
+        String name = tokens[1];
+        String password = tokens[2];
+
+        clientsService.register(name, password);
+        out.println("Register new client.");
+    }
+
+    /**
+     * Показать всех зарегистрированных пользователей
+     */
+    public void showAllClients() {
+        List<Client> clients = clientsService.getAll();
+        if (clients.isEmpty()) {
+            out.println("No clients");
+        } else {
+            out.printf("%36s\t%20s\t%20s\t%s%n", "uuid", "name", "password", "created");
+            clients.forEach(c -> out.printf("%36s\t%20s\t%20s\t%s%n", c.getUuid(), c.getName(), c.getPassword(), c.getWhenCreated()));
         }
     }
 
@@ -77,20 +128,6 @@ public class MvpDemoController {
      * получение истории операций
      */
     public void getOperationsHistory(String... tokens) {}
-
-    /**
-     * регистрация клиента
-     */
-    public void registerClient(String... tokens) {
-        if (tokens.length != 3)
-            throw new IllegalArgumentException("usage: registration <name> <password>");
-
-        String name = tokens[1];
-        String password = tokens[2];
-
-        Client newClient = clientsService.register(name, password);
-        System.out.println("Register new client.");
-    }
 
     /**
      * получение баланса по счету

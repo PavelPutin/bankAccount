@@ -29,8 +29,8 @@ public class ClientsServiceImpl implements ClientsService {
     }
 
     @Override
-    public Collection<Client> getAll() {
-        return null;
+    public List<Client> getAll() {
+        return clientsRepository.findAll();
     }
 
     @Override
