@@ -17,8 +17,8 @@ public class InMemoryClientsRepository implements ClientsRepository {
     }
 
     @Override
-    public List<Client> findByName(String name) {
-        return data.values().stream().filter(client -> client.getName().equals(name)).toList();
+    public Optional<Client> findByName(String name) {
+        return data.values().stream().filter(client -> client.getName().equals(name)).findAny();
     }
 
     @Override

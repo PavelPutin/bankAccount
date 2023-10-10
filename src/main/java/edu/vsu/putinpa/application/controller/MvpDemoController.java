@@ -82,8 +82,12 @@ public class MvpDemoController {
         String name = tokens[1];
         String password = tokens[2];
 
-        clientsService.register(name, password);
-        out.println("Register new client.");
+        try {
+            clientsService.register(name, password);
+            out.println("Register new client.");
+        } catch (IllegalArgumentException e) {
+            out.println(e.getMessage());
+        }
     }
 
     /**

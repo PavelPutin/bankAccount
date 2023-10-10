@@ -8,8 +8,8 @@ import edu.vsu.putinpa.application.service.ClientsService;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ClientsServiceImpl implements ClientsService {
@@ -24,6 +24,9 @@ public class ClientsServiceImpl implements ClientsService {
 
     @Override
     public Client register(String name, String password) {
+        if (clientsRepository.findByName(name).isPresent()) {
+            throw new IllegalArgumentException("Client with name \"%s\" is already exist.".formatted(name));
+        }
         Client newClient = new Client(name, password);
         return clientsRepository.save(newClient);
     }

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface ClientsRepository {
     Optional<Client> findByUUID(UUID uuid);
-    List<Client> findByName(String name);
+    Optional<Client> findByName(String name);
     List<Client> findAll();
     Client save(Client client);
 }

@@ -36,6 +36,7 @@ class MvpDemoControllerTest {
         String source = """
                 allclients
                 registration pavel qwerty
+                registration pavel qwerty
                 registration test test
                 allclients
                 stop
