@@ -39,6 +39,9 @@ class MvpDemoControllerTest {
                 registration pavel qwerty
                 registration test test
                 allclients
+                login pavel 12345
+                login pavel qwerty
+                login hello ab
                 stop
                 """;
         InputStream sourceStream = new ByteArrayInputStream(source.getBytes());

@@ -4,6 +4,7 @@ import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.repository.AccountsRepository;
 import edu.vsu.putinpa.application.repository.ClientsRepository;
+import edu.vsu.putinpa.application.service.ClientNotFoundException;
 import edu.vsu.putinpa.application.service.ClientsService;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
@@ -34,6 +35,12 @@ public class ClientsServiceImpl implements ClientsService {
     @Override
     public List<Client> getAll() {
         return clientsRepository.findAll();
+    }
+
+    @Override
+    public Client getByName(String name) throws ClientNotFoundException {
+        return clientsRepository.findByName(name)
+                .orElseThrow(ClientNotFoundException::new);
     }
 
     @Override

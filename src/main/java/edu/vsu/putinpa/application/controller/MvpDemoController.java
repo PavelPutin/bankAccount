@@ -1,10 +1,7 @@
 package edu.vsu.putinpa.application.controller;
 
 import edu.vsu.putinpa.application.model.Client;
-import edu.vsu.putinpa.application.service.AccountsService;
-import edu.vsu.putinpa.application.service.ClientsService;
-import edu.vsu.putinpa.application.service.OperationsHistoryService;
-import edu.vsu.putinpa.application.service.OperationsService;
+import edu.vsu.putinpa.application.service.*;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 
@@ -61,6 +58,7 @@ public class MvpDemoController {
                 switch (tokens[0]) {
                     case "registration" -> registerClient(tokens);
                     case "allclients" -> showAllClients();
+                    case "login" -> login(tokens);
                     case "stop" -> {
                         out.println("stop");
                         return;
@@ -100,6 +98,25 @@ public class MvpDemoController {
         } else {
             out.printf("%36s\t%20s\t%20s\t%s%n", "uuid", "name", "password", "created");
             clients.forEach(c -> out.printf("%36s\t%20s\t%20s\t%s%n", c.getUuid(), c.getName(), c.getPassword(), c.getWhenCreated()));
+        }
+    }
+
+    public void login(String... tokens) {
+        if (tokens.length != 3)
+            throw new IllegalArgumentException("usage: login <name> <password>");
+
+        String name = tokens[1];
+        String password = tokens[2];
+
+        try {
+            Client client = clientsService.getByName(name);
+            if (client.getPassword().equals(password)) {
+                loggedInClient = client;
+            } else {
+                out.println("Can't login: invalid name or password");
+            }
+        } catch (ClientNotFoundException e) {
+            out.println("Can't login: invalid name or password");
         }
     }
 
