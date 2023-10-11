@@ -7,9 +7,11 @@ import edu.vsu.putinpa.application.service.*;
 import edu.vsu.putinpa.application.service.operation.impl.CloseAccount;
 import edu.vsu.putinpa.application.service.operation.impl.OpenAccount;
 import edu.vsu.putinpa.application.service.operation.impl.Replenishment;
+import edu.vsu.putinpa.application.service.operation.impl.Withdraw;
 import edu.vsu.putinpa.application.service.operation.info.ClosingAccountInfo;
 import edu.vsu.putinpa.application.service.operation.info.OpeningAccountInfo;
 import edu.vsu.putinpa.application.service.operation.info.ReplenishmentInfo;
+import edu.vsu.putinpa.application.service.operation.info.WithdrawalInfo;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 
@@ -73,6 +75,7 @@ public class MvpDemoController {
                     case "open" -> openAccount(tokens);
                     case "close" -> closeAccount(tokens);
                     case "replenish" -> replenish(tokens);
+                    case "withdraw" -> withdraw(tokens);
                     case "infoAllAcc" -> getAggregatedInfoAboutAccounts();
                     case "stop" -> {
                         out.println("stop");
@@ -167,7 +170,27 @@ public class MvpDemoController {
     /**
      * снятие некоторой суммы со счета
      */
-    public void withdraw(String... tokens) {}
+    public void withdraw(String... tokens) {
+        if (loggedInClient == null)
+            throw new IllegalStateException("NEED AUTHORIZATION");
+
+        if (tokens.length != 4)
+            throw new IllegalArgumentException("usage: withdraw <sender name> <money value> <currency>");
+
+        UUID senderUUID = UUID.fromString(tokens[1]);
+        Account sender = accountsService.getBy(senderUUID).orElseThrow();
+        double value = Double.parseDouble(tokens[2]);
+        String currency = tokens[3];
+        Money money = new Money(currency, BigDecimal.valueOf(value));
+
+        WithdrawalInfo info = new WithdrawalInfo(
+                loggedInClient,
+                sender,
+                money
+        );
+
+        operationsService.executeOperation(new Withdraw(operationsService, info));
+    }
 
     /**
      * передача суммы с одного счета на другой
@@ -255,7 +278,7 @@ public class MvpDemoController {
             out.println("No accounts");
         } else {
             out.printf("%36s\t%20s\t%20s\t%20s\t%15s%n", "uuid", "name", "created", "closed", "balance");
-            accounts.forEach(account -> out.printf("%36s\t%20s\t%20s\t%20s\t%15s%n",
+            accounts.forEach(account -> out.printf("%36s\t%20s\t%30s\t%30s\t%15s%n",
                     account.getUuid(),
                     account.getName(),
                     account.getWhenOpened(),
