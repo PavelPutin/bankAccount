@@ -4,14 +4,8 @@ import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.model.Money;
 import edu.vsu.putinpa.application.service.*;
-import edu.vsu.putinpa.application.service.operation.impl.CloseAccount;
-import edu.vsu.putinpa.application.service.operation.impl.OpenAccount;
-import edu.vsu.putinpa.application.service.operation.impl.Replenishment;
-import edu.vsu.putinpa.application.service.operation.impl.Withdraw;
-import edu.vsu.putinpa.application.service.operation.info.ClosingAccountInfo;
-import edu.vsu.putinpa.application.service.operation.info.OpeningAccountInfo;
-import edu.vsu.putinpa.application.service.operation.info.ReplenishmentInfo;
-import edu.vsu.putinpa.application.service.operation.info.WithdrawalInfo;
+import edu.vsu.putinpa.application.service.operation.impl.*;
+import edu.vsu.putinpa.application.service.operation.info.*;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 
@@ -76,6 +70,7 @@ public class MvpDemoController {
                     case "close" -> closeAccount(tokens);
                     case "replenish" -> replenish(tokens);
                     case "withdraw" -> withdraw(tokens);
+                    case "transfer" -> transfer(tokens);
                     case "infoAllAcc" -> getAggregatedInfoAboutAccounts();
                     case "stop" -> {
                         out.println("stop");
@@ -175,7 +170,7 @@ public class MvpDemoController {
             throw new IllegalStateException("NEED AUTHORIZATION");
 
         if (tokens.length != 4)
-            throw new IllegalArgumentException("usage: withdraw <sender name> <money value> <currency>");
+            throw new IllegalArgumentException("usage: withdraw <sender uuid> <money value> <currency>");
 
         UUID senderUUID = UUID.fromString(tokens[1]);
         Account sender = accountsService.getBy(senderUUID).orElseThrow();
@@ -195,7 +190,28 @@ public class MvpDemoController {
     /**
      * передача суммы с одного счета на другой
      */
-    public void transfer(String... tokens) {}
+    public void transfer(String... tokens) {
+        if (loggedInClient == null)
+            throw new IllegalStateException("NEED AUTHORIZATION");
+
+        if (tokens.length != 4)
+            throw new IllegalArgumentException("usage: transfer <sender uuid> <recipient uuid> <money value>");
+
+
+        UUID senderUUID = UUID.fromString(tokens[1]);
+        Account sender = accountsService.getBy(senderUUID).orElseThrow();
+
+        UUID recipientUUID = UUID.fromString(tokens[2]);
+        Account recipient = accountsService.getBy(recipientUUID).orElseThrow();
+
+        double value = Double.parseDouble(tokens[3]);
+        Money money = new Money(sender.getBalance().currency(), BigDecimal.valueOf(value));
+
+        TransferInfo info = new TransferInfo(
+                loggedInClient, sender, recipient, money
+        );
+        operationsService.executeOperation(new Transfer(operationsService, info));
+    }
 
     /**
      * открытие счета
