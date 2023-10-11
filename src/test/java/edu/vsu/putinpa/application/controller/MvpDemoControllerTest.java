@@ -56,13 +56,15 @@ class MvpDemoControllerTest {
         String source = """
                 allclients
                 register pavel qwerty
-                register pavel qwerty
                 register test test
                 allclients
                 login pavel 12345
                 login pavel qwerty
                 open acc1 ru
+                replenish""" + " 20000000-0000-0000-0000-000000000000 " + """
+                15 ru
                 infoAllAcc
+                history
                 login hello ab
                 login test test
                 logout

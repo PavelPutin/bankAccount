@@ -2,6 +2,7 @@ package edu.vsu.putinpa.application.controller;
 
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
+import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.model.Money;
 import edu.vsu.putinpa.application.service.*;
 import edu.vsu.putinpa.application.service.operation.impl.*;
@@ -71,6 +72,7 @@ public class MvpDemoController {
                     case "replenish" -> replenish(tokens);
                     case "withdraw" -> withdraw(tokens);
                     case "transfer" -> transfer(tokens);
+                    case "history" -> getOperationsHistory();
                     case "infoAllAcc" -> getAggregatedInfoAboutAccounts();
                     case "stop" -> {
                         out.println("stop");
@@ -275,7 +277,30 @@ public class MvpDemoController {
     /**
      * получение истории операций
      */
-    public void getOperationsHistory(String... tokens) {}
+    public void getOperationsHistory() {
+        if (loggedInClient == null)
+            throw new IllegalStateException("NEED AUTHORIZATION");
+
+        List<JournalOperation> journalOperations = operationsHistoryService.getAllByClient(loggedInClient);
+        if (journalOperations.isEmpty()) {
+            out.println("Operations history is empty");
+        } else {
+            out.printf("%40s\t%40s\t%40s\t%40s\t%40s\t%s%n",
+                    "uuid",
+                    "when created",
+                    "client uuid",
+                    "sender",
+                    "recipient",
+                    "money");
+            journalOperations.forEach(jojo -> out.printf("%40s\t%40s\t%40s\t%40s\t%40s\t%s%n",
+                    jojo.getUuid(),
+                    jojo.getWhenCreated(),
+                    jojo.getClient().getUuid(),
+                    jojo.getRecipient() == null ? "null" : jojo.getRecipient().getUuid(),
+                    jojo.getSender() == null ? "null" : jojo.getSender().getUuid(),
+                    jojo.getMoney()));
+        }
+    }
 
     /**
      * получение баланса по счету
