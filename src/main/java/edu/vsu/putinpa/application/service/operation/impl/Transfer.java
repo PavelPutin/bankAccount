@@ -14,6 +14,11 @@ public class Transfer extends Operation<TransferInfo> {
 
     @Override
     public void execute() {
+        if (!getInfo().getSender().getCreator().equals(getInfo().getInvoker())) {
+            throw new IllegalStateException("%s tried to transfer from account %s he didn't create."
+                    .formatted(getInfo().getInvoker().getUuid(), getInfo().getSender().getUuid()));
+        }
+
         getInfo().getSender().withdrawal(getInfo().getMoney());
         getInfo().getRecipient().replenishment(getInfo().getMoney());
 
