@@ -11,6 +11,11 @@ public class Withdraw extends Operation<WithdrawalInfo> {
 
     @Override
     public void execute() {
+        if (!getInfo().getSender().getCreator().equals(getInfo().getInvoker())) {
+            throw new IllegalStateException("%s tried to withdraw from account %s he didn't create."
+                    .formatted(getInfo().getInvoker().getUuid(), getInfo().getSender().getUuid()));
+        }
+
         getInfo().getSender().withdrawal(getInfo().getMoney());
         getService().getAccountsService().save(getInfo().getSender());
     }
