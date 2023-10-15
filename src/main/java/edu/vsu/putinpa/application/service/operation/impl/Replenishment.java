@@ -11,6 +11,11 @@ public class Replenishment extends Operation<ReplenishmentInfo> {
 
     @Override
     public void execute() {
+        if (!getInfo().getRecipient().getCreator().equals(getInfo().getInvoker())) {
+            throw new IllegalStateException("%s tried to replenish account %s he didn't create."
+                    .formatted(getInfo().getInvoker().getUuid(), getInfo().getRecipient().getUuid()));
+        }
+
         getInfo().getRecipient().replenishment(getInfo().getMoney());
         getService().getAccountsService().save(getInfo().getRecipient());
     }
