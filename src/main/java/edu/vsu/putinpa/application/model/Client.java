@@ -8,11 +8,9 @@ public class Client extends EntityWithUUID {
     private String name;
     private String password;
     private Instant whenCreated;
-    private final List<Account> accounts;
 
     {
         whenCreated = Instant.now();
-        accounts = new ArrayList<>();
     }
 
     public Client(String name, String password) {
@@ -30,10 +28,6 @@ public class Client extends EntityWithUUID {
 
     public Instant getWhenCreated() {
         return whenCreated;
-    }
-
-    public List<Account> getAccounts() {
-        return accounts;
     }
 
     public void setPassword(String password) {
