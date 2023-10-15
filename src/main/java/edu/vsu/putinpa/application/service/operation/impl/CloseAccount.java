@@ -14,6 +14,16 @@ public class CloseAccount extends Operation<ClosingAccountInfo> {
 
     @Override
     public void execute() {
+        if (!getInfo().getTarget().getCreator().equals(getInfo().getInvoker())) {
+            throw new IllegalStateException("%s tried to close account %s he didn't create."
+                    .formatted(getInfo().getInvoker().getUuid(), getInfo().getTarget().getUuid()));
+        }
+
+        if (!getInfo().getRecipient().getCreator().equals(getInfo().getInvoker())) {
+            throw new IllegalStateException("%s tried to transfer money after closing to account %s he didn't create."
+                    .formatted(getInfo().getInvoker().getUuid(), getInfo().getRecipient().getUuid()));
+        }
+
         getInfo().getTarget().setWhenClosed(Instant.now());
         Money balance = getInfo().getTarget().getBalance();
         getInfo().getRecipient().replenishment(balance);
