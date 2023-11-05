@@ -1,5 +1,6 @@
 package edu.vsu.putinpa.application.service;
 
+import edu.vsu.putinpa.application.model.OperationType;
 import edu.vsu.putinpa.application.service.operation.info.OperationInfo;
 
 abstract public class Operation <T extends OperationInfo> {
@@ -18,6 +19,8 @@ abstract public class Operation <T extends OperationInfo> {
     public T getInfo() {
         return info;
     }
+
+    public abstract OperationType getType();
 
     abstract public void execute();
 }

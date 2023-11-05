@@ -8,10 +8,12 @@ public class JournalOperation extends EntityWithUUID {
     private Account sender;
     private Account recipient;
     private Money money;
+    private OperationType type;
 
-    public JournalOperation(Instant whenCreated, Client client) {
+    public JournalOperation(Instant whenCreated, Client client, OperationType type) {
         this.whenCreated = whenCreated;
         this.client = client;
+        this.type = type;
     }
 
     public Instant getWhenCreated() {

@@ -54,7 +54,7 @@ class MoneyOperationMappingAnnotationProcessorTest {
         );
         Operation<?> open = new OpenAccount(operationsService, openInfo);
 
-        JournalOperation journalOperation = new JournalOperation(Instant.now(), creator);
+        JournalOperation journalOperation = new JournalOperation(Instant.now(), creator, open.getType());
 
         OperationMappingAnnotationProcessor processor = new MoneyOperationMappingAnnotationProcessor();
         processor.insertValueIntoJournalOperation(open, journalOperation);

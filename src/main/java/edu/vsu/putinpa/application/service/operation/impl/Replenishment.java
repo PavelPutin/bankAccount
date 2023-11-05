@@ -1,5 +1,6 @@
 package edu.vsu.putinpa.application.service.operation.impl;
 
+import edu.vsu.putinpa.application.model.OperationType;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsService;
 import edu.vsu.putinpa.application.service.operation.info.ReplenishmentInfo;
@@ -18,5 +19,10 @@ public class Replenishment extends Operation<ReplenishmentInfo> {
 
         getInfo().getRecipient().replenishment(getInfo().getMoney());
         getService().getAccountsService().save(getInfo().getRecipient());
+    }
+
+    @Override
+    public OperationType getType() {
+        return OperationType.REPLENISHMENT;
     }
 }

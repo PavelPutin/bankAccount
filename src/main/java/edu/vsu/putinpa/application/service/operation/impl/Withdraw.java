@@ -1,5 +1,6 @@
 package edu.vsu.putinpa.application.service.operation.impl;
 
+import edu.vsu.putinpa.application.model.OperationType;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsService;
 import edu.vsu.putinpa.application.service.operation.info.WithdrawalInfo;
@@ -18,5 +19,10 @@ public class Withdraw extends Operation<WithdrawalInfo> {
 
         getInfo().getSender().withdrawal(getInfo().getMoney());
         getService().getAccountsService().save(getInfo().getSender());
+    }
+
+    @Override
+    public OperationType getType() {
+        return OperationType.WITHDRAW;
     }
 }

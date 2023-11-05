@@ -34,7 +34,7 @@ public class OperationsHistoryServiceImpl implements OperationsHistoryService {
 
     @Override
     public void add(Operation<?> operation) {
-        JournalOperation journalOperation = new JournalOperation(Instant.now(), operation.getInfo().getInvoker());
+        JournalOperation journalOperation = new JournalOperation(Instant.now(), operation.getInfo().getInvoker(), operation.getType());
         for (var processor : mappingAnnotationProcessorList) {
             processor.insertValueIntoJournalOperation(operation, journalOperation);
         }

@@ -1,6 +1,7 @@
 package edu.vsu.putinpa.application.service.operation.impl;
 
 import edu.vsu.putinpa.application.model.Money;
+import edu.vsu.putinpa.application.model.OperationType;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsService;
 import edu.vsu.putinpa.application.service.operation.info.ClosingAccountInfo;
@@ -33,5 +34,10 @@ public class CloseAccount extends Operation<ClosingAccountInfo> {
 
         getService().getAccountsService().save(getInfo().getTarget());
         getService().getAccountsService().save(getInfo().getRecipient());
+    }
+
+    @Override
+    public OperationType getType() {
+        return OperationType.CLOSE;
     }
 }

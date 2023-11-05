@@ -1,6 +1,7 @@
 package edu.vsu.putinpa.application.service.operation.impl;
 
 import edu.vsu.putinpa.application.model.Account;
+import edu.vsu.putinpa.application.model.OperationType;
 import edu.vsu.putinpa.application.service.Operation;
 import edu.vsu.putinpa.application.service.OperationsService;
 import edu.vsu.putinpa.application.service.operation.info.OpeningAccountInfo;
@@ -25,5 +26,10 @@ public class OpenAccount extends Operation<OpeningAccountInfo> {
         getInfo().setCreated(created);
 
         getService().getAccountsService().save(created);
+    }
+
+    @Override
+    public OperationType getType() {
+        return OperationType.OPEN;
     }
 }
