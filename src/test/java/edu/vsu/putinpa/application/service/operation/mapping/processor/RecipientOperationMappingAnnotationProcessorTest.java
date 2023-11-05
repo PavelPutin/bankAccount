@@ -56,7 +56,7 @@ class RecipientOperationMappingAnnotationProcessorTest {
         operationsService.executeOperation(open);
 
         Account created = accountsService.getBy("created").stream().findFirst().get();
-        JournalOperation journalOperation = new JournalOperation(Instant.now(), creator);
+        JournalOperation journalOperation = new JournalOperation(Instant.now(), creator, open.getType());
 
         OperationMappingAnnotationProcessor processor = new RecipientOperationMappingAnnotationProcessor();
         processor.insertValueIntoJournalOperation(open, journalOperation);
