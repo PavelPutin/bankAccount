@@ -111,8 +111,8 @@ public class MvpDemoController {
         if (clients.isEmpty()) {
             out.println("No clients");
         } else {
-            out.printf("%36s\t%20s\t%20s\t%s%n", "uuid", "name", "password", "created");
-            clients.forEach(c -> out.printf("%36s\t%20s\t%20s\t%s%n", c.getUuid(), c.getName(), c.getPassword(), c.getWhenCreated()));
+            out.printf("%36s\t%20s\t%30s\t%s%n", "uuid", "name", "password", "created");
+            clients.forEach(c -> out.printf("%36s\t%20s\t%30s\t%s%n", c.getUuid(), c.getName(), c.getPassword(), c.getWhenCreated()));
         }
     }
 
@@ -318,7 +318,7 @@ public class MvpDemoController {
         if (accounts.isEmpty()) {
             out.println("No accounts");
         } else {
-            out.printf("%36s\t%20s\t%20s\t%20s\t%15s%n", "uuid", "name", "created", "closed", "balance");
+            out.printf("%36s\t%20s\t%30s\t%30s\t%15s%n", "uuid", "name", "created", "closed", "balance");
             accounts.forEach(account -> out.printf("%36s\t%20s\t%30s\t%30s\t%15s%n",
                     account.getUuid(),
                     account.getName(),
