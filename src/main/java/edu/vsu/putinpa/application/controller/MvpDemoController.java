@@ -285,27 +285,24 @@ public class MvpDemoController {
         if (journalOperations.isEmpty()) {
             out.println("Operations history is empty");
         } else {
-            out.printf("%40s\t%40s\t%40s\t%40s\t%40s\t%s%n",
+            out.printf("%40s\t%40s\t%40s\t%40s\t%40s\t%15s\t%s%n",
                     "uuid",
                     "when created",
                     "client uuid",
                     "sender",
                     "recipient",
-                    "money");
-            journalOperations.forEach(jojo -> out.printf("%40s\t%40s\t%40s\t%40s\t%40s\t%s%n",
+                    "money",
+                    "type");
+            journalOperations.forEach(jojo -> out.printf("%40s\t%40s\t%40s\t%40s\t%40s\t%15s\t%s%n",
                     jojo.getUuid(),
                     jojo.getWhenCreated(),
                     jojo.getClient().getUuid(),
                     jojo.getRecipient() == null ? "null" : jojo.getRecipient().getUuid(),
                     jojo.getSender() == null ? "null" : jojo.getSender().getUuid(),
-                    jojo.getMoney()));
+                    jojo.getMoney(),
+                    jojo.getType()));
         }
     }
-
-    /**
-     * получение баланса по счету
-     */
-    public void getBalanceByAccount(String... tokens) {}
 
     /**
      * формирование сводной информации по всем счетам

@@ -56,6 +56,14 @@ public class JournalOperation extends EntityWithUUID {
         this.money = money;
     }
 
+    public OperationType getType() {
+        return type;
+    }
+
+    public void setType(OperationType type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "JournalOperation{" +
