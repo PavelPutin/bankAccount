@@ -2,6 +2,7 @@ package edu.vsu.putinpa.infrastructure.di;
 
 import edu.vsu.putinpa.infrastructure.di.api.ComponentFactoryPostProcessor;
 import edu.vsu.putinpa.infrastructure.di.api.ComponentPostProcessor;
+import edu.vsu.putinpa.infrastructure.di.defaultimpl.AutoInjectAnnotationComponentFactoryPostProcessorImpl;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,6 +34,12 @@ public class ConfigurableListableComponentFactory {
         for (ComponentFactoryPostProcessor postProcessor : componentFactoryPostProcessors) {
             postProcessor.postProcessComponentFactory(this);
         }
+
+        /*
+        TODO
+        Я застрял на внедрении проксей
+        Мне нужно создавать их дефинишены.
+         */
 
         for (ComponentDefinition definition : componentDefinitions.values()) {
             if (!components.containsKey(definition.getComponentName())) {
@@ -69,7 +76,11 @@ public class ConfigurableListableComponentFactory {
                 Class<?> clazz = Class.forName(definition.getComponentClassName());
                 if (Arrays.asList(clazz.getInterfaces()).contains(ComponentFactoryPostProcessor.class)) {
                     ComponentFactoryPostProcessor component = (ComponentFactoryPostProcessor) clazz.getConstructor().newInstance();
-                    componentFactoryPostProcessors.add(component);
+                    if (definition.getComponentClassName().equals(AutoInjectAnnotationComponentFactoryPostProcessorImpl.class.getName())) {
+                        componentFactoryPostProcessors.add(0, component);
+                    } else {
+                        componentFactoryPostProcessors.add(component);
+                    }
                 }
             } catch (Exception e) {
                 // TODO: обработать остальные exception (XD как будто это кто-то будет делать)

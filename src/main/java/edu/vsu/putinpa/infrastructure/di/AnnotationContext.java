@@ -1,6 +1,7 @@
 package edu.vsu.putinpa.infrastructure.di;
 
 import edu.vsu.putinpa.infrastructure.di.api.Component;
+import edu.vsu.putinpa.infrastructure.orm.RepositoriesCreator;
 
 @Component
 public class AnnotationContext {

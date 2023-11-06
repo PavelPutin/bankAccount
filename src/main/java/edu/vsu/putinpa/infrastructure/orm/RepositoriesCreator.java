@@ -1,6 +1,7 @@
 package edu.vsu.putinpa.infrastructure.orm;
 
 import edu.vsu.putinpa.infrastructure.di.AnnotationContext;
+import edu.vsu.putinpa.infrastructure.di.ComponentDefinition;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 import edu.vsu.putinpa.infrastructure.di.api.InitMethod;
@@ -29,8 +30,8 @@ public class RepositoriesCreator {
         Set<Class<?>> classes = findAllClassesUsingClassLoader(context.getSourcePackageName());
         for (Class<?> clazz : classes) {
             if (OrmRepository.class.isAssignableFrom(clazz) && clazz.isInterface() && !clazz.equals(OrmRepository.class)) {
-                OrmRepository<?, ?> repository = (OrmRepository<?, ?>) Proxy.newProxyInstance(OrmRepository.class.getClassLoader(),
-                        new Class[] {OrmRepository.class},
+                OrmRepository<?, ?> repository = (OrmRepository<?, ?>) Proxy.newProxyInstance(clazz.getClassLoader(),
+                        new Class[] {clazz},
                         new GetHandler());
                 context.getComponentFactory().registryComponent(repository.getClass().getName(), repository);
             }
