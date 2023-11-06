@@ -1,6 +1,7 @@
 package edu.vsu.putinpa.infrastructure.orm;
 
 import edu.vsu.putinpa.infrastructure.di.api.Component;
+import edu.vsu.putinpa.infrastructure.di.api.InitMethod;
 import edu.vsu.putinpa.infrastructure.di.api.Property;
 
 import java.sql.Connection;
@@ -21,6 +22,7 @@ public class OrmConnection {
     private String driverClassName;
     private Connection connection;
 
+    @InitMethod
     public void init() {
         try {
             Class.forName(driverClassName);

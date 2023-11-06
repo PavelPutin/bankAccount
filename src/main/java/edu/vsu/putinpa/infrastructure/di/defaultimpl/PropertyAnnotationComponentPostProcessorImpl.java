@@ -27,7 +27,8 @@ public class PropertyAnnotationComponentPostProcessorImpl implements ComponentPo
             if (property != null) {
                 String value = property.value();
                 if (value.startsWith("{") && value.endsWith("}")) {
-                    value = environment.getProperty(value.substring(0, value.length() - 1));
+                    String propertyName = value.substring(1, value.length() - 1);
+                    value = environment.getProperty(propertyName);
                 }
                 field.setAccessible(true);
                 try {
