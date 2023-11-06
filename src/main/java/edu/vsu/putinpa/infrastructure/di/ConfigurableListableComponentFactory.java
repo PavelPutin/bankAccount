@@ -1,6 +1,7 @@
 package edu.vsu.putinpa.infrastructure.di;
 
 import edu.vsu.putinpa.infrastructure.di.api.ComponentFactoryPostProcessor;
+import edu.vsu.putinpa.infrastructure.di.api.ComponentPostProcessor;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import java.util.stream.Collectors;
 public class ConfigurableListableComponentFactory {
     private final Map<String, ComponentDefinition> componentDefinitions = new HashMap<>();
     private final List<ComponentFactoryPostProcessor> componentFactoryPostProcessors = new ArrayList<>();
+    private final List<ComponentPostProcessor> componentPostProcessors = new ArrayList<>();
     private final Map<String, Object> components = new HashMap<>();
 
     public void registryComponentDefinition(ComponentDefinition definition) {
@@ -35,6 +37,17 @@ public class ConfigurableListableComponentFactory {
         for (ComponentDefinition definition : componentDefinitions.values()) {
             if (!components.containsKey(definition.getComponentName())) {
                 definition.createComponent(this);
+            }
+            Object component = components.get(definition.getComponentName());
+            if (Arrays.asList(component.getClass().getInterfaces()).contains(ComponentPostProcessor.class)) {
+                componentPostProcessors.add((ComponentPostProcessor) component);
+            }
+        }
+
+        for (ComponentDefinition definition : componentDefinitions.values()) {
+            Object component = components.get(definition.getComponentName());
+            for (ComponentPostProcessor postProcessor : componentPostProcessors) {
+                postProcessor.postProcessBeforeInitialization(component, definition.getComponentName());
             }
         }
     }

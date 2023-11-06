@@ -1,6 +1,7 @@
 package edu.vsu.putinpa.infrastructure.orm;
 
 import edu.vsu.putinpa.infrastructure.di.api.Component;
+import edu.vsu.putinpa.infrastructure.di.api.Property;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
