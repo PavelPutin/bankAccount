@@ -3,6 +3,8 @@ package edu.vsu.putinpa.infrastructure.orm;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 @Component
 public class OrmConnection {
@@ -17,6 +19,20 @@ public class OrmConnection {
     @Property("{orm.datasource.driver}")
     private String driverClassName;
     private Connection connection;
+
+    public OrmConnection() {
+        try {
+            Class.forName(driverClassName);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Can't find driver class %s.".formatted(driverClassName), e);
+        }
+
+        try {
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't create connection to database.", e);
+        }
+    }
 
     public String getUrl() {
         return url;
