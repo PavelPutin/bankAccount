@@ -21,7 +21,7 @@ public class OrmConnection {
     private String driverClassName;
     private Connection connection;
 
-    public OrmConnection() {
+    public void init() {
         try {
             Class.forName(driverClassName);
         } catch (ClassNotFoundException e) {

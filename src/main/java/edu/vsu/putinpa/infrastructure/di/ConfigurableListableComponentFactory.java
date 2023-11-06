@@ -49,6 +49,9 @@ public class ConfigurableListableComponentFactory {
             for (ComponentPostProcessor postProcessor : componentPostProcessors) {
                 postProcessor.postProcessBeforeInitialization(component, definition.getComponentName());
             }
+            if (definition.getInitMethodName() != null) {
+                component.getClass().getMethod(definition.getInitMethodName()).invoke(component);
+            }
         }
     }
 

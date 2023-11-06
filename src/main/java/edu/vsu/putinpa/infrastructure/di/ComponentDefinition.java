@@ -11,6 +11,7 @@ public class ComponentDefinition {
     private Class<?>[] constructorArgumentTypes;
     private String[] constructorArgumentComponentNames;
     private final Map<String, String> dependsOnAndFieldName = new HashMap<>();
+    private String initMethodName;
 
     public String getComponentName() {
         return componentName;
@@ -46,6 +47,14 @@ public class ComponentDefinition {
 
     public void addDependencyComponentName(String dependencyComponentName, String fieldName) {
         this.dependsOnAndFieldName.put(dependencyComponentName, fieldName);
+    }
+
+    public String getInitMethodName() {
+        return initMethodName;
+    }
+
+    public void setInitMethodName(String initMethodName) {
+        this.initMethodName = initMethodName;
     }
 
     public void createComponent(ConfigurableListableComponentFactory componentFactory) throws Exception {

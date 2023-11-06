@@ -1,11 +1,13 @@
 package edu.vsu.putinpa.infrastructure.di;
 
 import edu.vsu.putinpa.infrastructure.di.api.Component;
+import edu.vsu.putinpa.infrastructure.di.api.InitMethod;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,6 +31,17 @@ public class AnnotationComponentReader {
                     definition.setComponentName(clazz.getSimpleName());
                 } else {
                     definition.setComponentName(annotation.name());
+                }
+
+                String initMethodName = null;
+                for (Method m : clazz.getMethods()) {
+                    if (m.isAnnotationPresent(InitMethod.class)) {
+                        if (initMethodName != null) {
+                            throw new RuntimeException("Only one init method can exists. Error in component %s".formatted(definition.getComponentName()));
+                        }
+                        definition.setInitMethodName(m.getName());
+                        initMethodName = m.getName();
+                    }
                 }
 
                 componentDefinitionRegistry.registryComponentDefinition(definition);
