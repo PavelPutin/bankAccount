@@ -1,12 +1,13 @@
 package edu.vsu.putinpa.infrastructure.util.reflection;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class ReflectionUtil {
     public static Object getValueWithGetter(Field field, Object obj) {
@@ -37,6 +38,35 @@ public class ReflectionUtil {
     public static Class<?> forNameWithoutThrown(String className) {
         try {
             return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Set<Class<?>> findAllClassesUsingClassLoader(String packageName) {
+        InputStream stream = ClassLoader.getSystemClassLoader()
+                .getResourceAsStream(packageName.replaceAll("[.]", "/"));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+
+        Set<Class<?>> result = new HashSet<>();
+        try {
+            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
+                if (line.endsWith(".class")) {
+                    result.add(getClass(line, packageName));
+                } else {
+                    result.addAll(findAllClassesUsingClassLoader(packageName + "." + line));
+                }
+            }
+        } catch (IOException e) {
+            throw  new RuntimeException(e);
+        }
+        return result;
+    }
+
+    public static Class<?> getClass(String className, String packageName) {
+        try {
+            return Class.forName(packageName + "."
+                    + className.substring(0, className.lastIndexOf('.')));
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }

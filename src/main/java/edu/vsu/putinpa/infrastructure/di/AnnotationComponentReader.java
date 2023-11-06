@@ -11,6 +11,8 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
+import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.findAllClassesUsingClassLoader;
+
 public class AnnotationComponentReader {
     private AnnotationContext componentDefinitionRegistry;
 
@@ -49,34 +51,5 @@ public class AnnotationComponentReader {
             }
         }
         return found;
-    }
-
-    private Set<Class<?>> findAllClassesUsingClassLoader(String packageName) {
-        InputStream stream = ClassLoader.getSystemClassLoader()
-                .getResourceAsStream(packageName.replaceAll("[.]", "/"));
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-
-        Set<Class<?>> result = new HashSet<>();
-        try {
-            for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-                if (line.endsWith(".class")) {
-                    result.add(getClass(line, packageName));
-                } else {
-                    result.addAll(findAllClassesUsingClassLoader(packageName + "." + line));
-                }
-            }
-        } catch (IOException e) {
-            throw  new RuntimeException(e);
-        }
-        return result;
-    }
-
-    private Class<?> getClass(String className, String packageName) {
-        try {
-            return Class.forName(packageName + "."
-                    + className.substring(0, className.lastIndexOf('.')));
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
