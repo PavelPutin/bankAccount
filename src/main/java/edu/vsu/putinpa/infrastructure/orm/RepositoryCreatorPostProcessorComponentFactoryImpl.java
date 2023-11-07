@@ -13,6 +13,8 @@ public class RepositoryCreatorPostProcessorComponentFactoryImpl implements Compo
             if (definition.getComponentClassName().equals(RepositoriesCreator.class.getName())) {
                 try {
                     definition.createComponent(componentFactory);
+                    RepositoriesCreator creator = (RepositoriesCreator) componentFactory.getComponent(definition.getComponentName());
+                    creator.init();
                 } catch (Exception e) {
                     throw new RuntimeException("Can't create RepositoryCreator", e);
                 }

@@ -34,6 +34,12 @@ public class RepositoriesCreator {
                         new Class[] {clazz},
                         new GetHandler());
                 context.getComponentFactory().registryComponent(repository.getClass().getName(), repository);
+
+                ComponentDefinition componentDefinition = new ComponentDefinition();
+                componentDefinition.setComponentName(repository.getClass().getName());
+                componentDefinition.setComponentClassName(repository.getClass().getName());
+                componentDefinition.setConstructorArgumentComponentNames(new String[0]);
+                context.getComponentFactory().registryComponentDefinition(componentDefinition);
             }
         }
     }
