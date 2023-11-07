@@ -4,6 +4,7 @@ import edu.vsu.putinpa.infrastructure.di.AnnotationContext;
 import edu.vsu.putinpa.infrastructure.di.ComponentDefinition;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
+import edu.vsu.putinpa.infrastructure.di.api.IComponentDefinition;
 import edu.vsu.putinpa.infrastructure.di.api.InitMethod;
 
 import java.lang.reflect.InvocationHandler;
@@ -35,7 +36,7 @@ public class RepositoriesCreator {
                         new GetHandler());
                 context.getComponentFactory().registryComponent(repository.getClass().getName(), repository);
 
-                ComponentDefinition componentDefinition = new ComponentDefinition();
+                IComponentDefinition componentDefinition = new ComponentDefinition();
                 componentDefinition.setComponentName(repository.getClass().getName());
                 componentDefinition.setComponentClassName(repository.getClass().getName());
                 componentDefinition.setConstructorArgumentComponentNames(new String[0]);

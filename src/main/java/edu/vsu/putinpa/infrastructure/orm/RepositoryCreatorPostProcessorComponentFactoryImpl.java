@@ -4,12 +4,13 @@ import edu.vsu.putinpa.infrastructure.di.ComponentDefinition;
 import edu.vsu.putinpa.infrastructure.di.ConfigurableListableComponentFactory;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 import edu.vsu.putinpa.infrastructure.di.api.ComponentFactoryPostProcessor;
+import edu.vsu.putinpa.infrastructure.di.api.IComponentDefinition;
 
 @Component
 public class RepositoryCreatorPostProcessorComponentFactoryImpl implements ComponentFactoryPostProcessor {
     @Override
     public void postProcessComponentFactory(ConfigurableListableComponentFactory componentFactory) {
-        for (ComponentDefinition definition : componentFactory.getComponentDefinitions()) {
+        for (IComponentDefinition definition : componentFactory.getComponentDefinitions()) {
             if (definition.getComponentClassName().equals(RepositoriesCreator.class.getName())) {
                 try {
                     definition.createComponent(componentFactory);

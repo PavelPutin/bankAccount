@@ -1,6 +1,7 @@
 package edu.vsu.putinpa.infrastructure.di;
 
 import edu.vsu.putinpa.infrastructure.di.api.Component;
+import edu.vsu.putinpa.infrastructure.di.api.IComponentDefinition;
 import edu.vsu.putinpa.infrastructure.orm.RepositoriesCreator;
 
 @Component
@@ -17,7 +18,7 @@ public class AnnotationContext {
         componentFactory.refreshComponents();
     }
 
-    public void registryComponentDefinition(ComponentDefinition definition) {
+    public void registryComponentDefinition(IComponentDefinition definition) {
         componentFactory.registryComponentDefinition(definition);
     }
 
