@@ -47,8 +47,10 @@ public class OrmRepositoryComponentFactoryPostProcessorImpl implements Component
                 ClassLoader loader = componentClass.getClassLoader();
                 Class<?>[] repositoryInterface = {componentClass};
 
-                IComponentDefinition connectionDefinition = factory.getComponentDefinition("orm$OrmConnectionWrapper");
-                connectionDefinition.createComponent(factory);
+                if (factory.getComponent("orm$OrmConnectionWrapper") == null) {
+                    IComponentDefinition connectionDefinition = factory.getComponentDefinition("orm$OrmConnectionWrapper");
+                    connectionDefinition.createComponent(factory);
+                }
                 OrmConnectionWrapper connectionWrapper = factory.getComponent("orm$OrmConnectionWrapper", OrmConnectionWrapper.class);
 
                 InvocationHandler handler = new OrmRepositoryHandler(connectionWrapper);
