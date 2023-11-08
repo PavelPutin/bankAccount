@@ -8,8 +8,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@Component
-public class OrmConnection {
+@Component(name = "orm$OrmConnectionWrapper")
+public class OrmConnectionWrapper {
     @Property("{orm.datasource.url}")
     private String url;
 

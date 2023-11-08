@@ -41,14 +41,19 @@ public class OrmRepositoryComponentFactoryPostProcessorImpl implements Component
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if (method.getName().equals("createComponent")) {
+                ConfigurableListableComponentFactory factory = (ConfigurableListableComponentFactory) args[0];
+
                 Class<?> componentClass = forNameWithoutThrown(originComponentDefinition.getComponentClassName());
                 ClassLoader loader = componentClass.getClassLoader();
                 Class<?>[] repositoryInterface = {componentClass};
-                InvocationHandler handler = new OrmRepositoryHandler();
+
+                IComponentDefinition connectionDefinition = factory.getComponentDefinition("orm$OrmConnectionWrapper");
+                connectionDefinition.createComponent(factory);
+                OrmConnectionWrapper connectionWrapper = factory.getComponent("orm$OrmConnectionWrapper", OrmConnectionWrapper.class);
+
+                InvocationHandler handler = new OrmRepositoryHandler(connectionWrapper);
 
                 Object repository = Proxy.newProxyInstance(loader, repositoryInterface, handler);
-
-                ConfigurableListableComponentFactory factory = (ConfigurableListableComponentFactory) args[0];
 
                 String name = originComponentDefinition.getComponentName();
                 factory.registryComponent(name, repository);

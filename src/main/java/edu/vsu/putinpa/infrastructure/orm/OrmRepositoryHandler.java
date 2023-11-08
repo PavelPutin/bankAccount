@@ -4,8 +4,15 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 public class OrmRepositoryHandler implements InvocationHandler {
+    private OrmConnectionWrapper ormConnectionWrapper;
+
+    public OrmRepositoryHandler(OrmConnectionWrapper ormConnectionWrapper) {
+        this.ormConnectionWrapper = ormConnectionWrapper;
+    }
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        System.out.println("work with " + ormConnectionWrapper.getUrl());
         if (method.getName().startsWith("find")) {
             System.out.println("find method");
         } else if (method.getName().startsWith("save")) {

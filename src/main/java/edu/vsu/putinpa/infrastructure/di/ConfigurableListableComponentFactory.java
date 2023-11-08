@@ -63,6 +63,10 @@ public class ConfigurableListableComponentFactory {
         return components.get(name);
     }
 
+    public <T> T getComponent(String name, Class<T> type) {
+        return type.cast(this.getComponent(name));
+    }
+
     public void registryComponent(String name, Object component) {
         components.put(name, component);
     }
