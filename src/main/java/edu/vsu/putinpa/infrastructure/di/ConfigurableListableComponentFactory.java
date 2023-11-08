@@ -8,6 +8,8 @@ import edu.vsu.putinpa.infrastructure.di.defaultimpl.AutoInjectAnnotationCompone
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.forNameWithoutThrown;
+
 public class ConfigurableListableComponentFactory {
     private final Map<String, IComponentDefinition> componentDefinitions = new HashMap<>();
     private final List<ComponentFactoryPostProcessor> componentFactoryPostProcessors = new ArrayList<>();
@@ -35,12 +37,6 @@ public class ConfigurableListableComponentFactory {
         for (ComponentFactoryPostProcessor postProcessor : componentFactoryPostProcessors) {
             postProcessor.postProcessComponentFactory(this);
         }
-
-        /*
-        TODO
-        Я застрял на внедрении проксей
-        Мне нужно создавать их дефинишены.
-         */
 
         for (IComponentDefinition definition : componentDefinitions.values()) {
             if (!components.containsKey(definition.getComponentName())) {
@@ -93,6 +89,7 @@ public class ConfigurableListableComponentFactory {
     public Set<String> getAllDefinitionNamesByClass(Class<?> clazz) {
         return this.getComponentDefinitions().stream()
                 .filter(definition -> definition.getComponentClassName().equals(clazz.getName()))
+                .filter(definition -> forNameWithoutThrown(definition.getComponentClassName()).isAssignableFrom(clazz))
                 .map(IComponentDefinition::getComponentName)
                 .collect(Collectors.toSet());
     }

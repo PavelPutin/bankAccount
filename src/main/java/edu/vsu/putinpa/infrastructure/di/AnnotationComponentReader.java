@@ -4,12 +4,7 @@ import edu.vsu.putinpa.infrastructure.di.api.Component;
 import edu.vsu.putinpa.infrastructure.di.api.IComponentDefinition;
 import edu.vsu.putinpa.infrastructure.di.api.InitMethod;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.util.HashSet;
 import java.util.Set;
 
 import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.findAllClassesUsingClassLoader;
