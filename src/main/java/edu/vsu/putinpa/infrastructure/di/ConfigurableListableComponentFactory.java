@@ -73,11 +73,7 @@ public class ConfigurableListableComponentFactory {
                 Class<?> clazz = Class.forName(definition.getComponentClassName());
                 if (Arrays.asList(clazz.getInterfaces()).contains(ComponentFactoryPostProcessor.class)) {
                     ComponentFactoryPostProcessor component = (ComponentFactoryPostProcessor) clazz.getConstructor().newInstance();
-                    if (definition.getComponentClassName().equals(AutoInjectAnnotationComponentFactoryPostProcessorImpl.class.getName())) {
-                        componentFactoryPostProcessors.add(0, component);
-                    } else {
-                        componentFactoryPostProcessors.add(component);
-                    }
+                    componentFactoryPostProcessors.add(component);
                 }
             } catch (Exception e) {
                 // TODO: обработать остальные exception (XD как будто это кто-то будет делать)
