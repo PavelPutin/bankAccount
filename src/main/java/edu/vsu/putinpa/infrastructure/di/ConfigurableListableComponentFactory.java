@@ -6,6 +6,8 @@ import edu.vsu.putinpa.infrastructure.di.api.IComponentDefinition;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.forNameWithoutThrown;
+
 public class ConfigurableListableComponentFactory {
     private final Map<String, IComponentDefinition> componentDefinitions = new HashMap<>();
     private final List<ComponentFactoryPostProcessor> componentFactoryPostProcessors = new ArrayList<>();
@@ -65,7 +67,7 @@ public class ConfigurableListableComponentFactory {
 
     public Set<String> getAllDefinitionNamesByClass(Class<?> clazz) {
         return this.getComponentDefinitions().stream()
-                .filter(definition -> definition.getComponentClassName().equals(clazz.getName()))
+                .filter(definition -> forNameWithoutThrown(definition.getComponentClassName()).isAssignableFrom(clazz))
                 .map(IComponentDefinition::getComponentName)
                 .collect(Collectors.toSet());
     }

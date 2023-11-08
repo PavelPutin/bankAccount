@@ -64,10 +64,16 @@ public class AutoInjectAnnotationComponentFactoryPostProcessorImpl implements Co
                         for (IComponentDefinition componentDefinition : componentFactory.getComponentDefinitions()) {
                             Class<?> componentClass = forNameWithoutThrown(componentDefinition.getComponentClassName());
                             if (paramClass.isAssignableFrom(componentClass)) {
+                                if (componentName != null)
+                                    throw new RuntimeException("Too many autowire candidates TODO: make normal message");
+
                                 componentName = componentDefinition.getComponentName();
                             }
                         }
                     }
+
+                    if (componentName == null)
+                        throw new RuntimeException("No autowire candidates were found TODO: make normal message");
 
                     // Если имя не найдено в objects - ошибка
                     componentNames.add(componentName);
