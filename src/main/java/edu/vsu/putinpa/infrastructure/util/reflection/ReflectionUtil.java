@@ -1,5 +1,6 @@
 package edu.vsu.putinpa.infrastructure.util.reflection;
 
+import javax.lang.model.util.Types;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,6 +8,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class ReflectionUtil {
@@ -70,5 +72,16 @@ public class ReflectionUtil {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static Class<?>[] getGenericTypesFromOneImplementedInterface(Class<?> target) {
+        Type type = target.getGenericInterfaces()[0];
+        String interfaceName = type.getTypeName();
+        String[] splited = interfaceName.substring(interfaceName.indexOf('<') + 1, interfaceName.indexOf('>')).split(", ");
+        Class<?>[] result = new Class[splited.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = forNameWithoutThrown(splited[i]);
+        }
+        return result;
     }
 }

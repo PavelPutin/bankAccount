@@ -5,9 +5,13 @@ import java.lang.reflect.Method;
 
 public class OrmRepositoryHandler implements InvocationHandler {
     private OrmConnectionWrapper ormConnectionWrapper;
+    private Class<?> entityClass;
+    private Class<?> entityIdClass;
 
-    public OrmRepositoryHandler(OrmConnectionWrapper ormConnectionWrapper) {
+    public OrmRepositoryHandler(OrmConnectionWrapper ormConnectionWrapper, Class<?> entityClass, Class<?> entityIdClass) {
         this.ormConnectionWrapper = ormConnectionWrapper;
+        this.entityClass = entityClass;
+        this.entityIdClass = entityIdClass;
     }
 
     @Override

@@ -4,12 +4,14 @@ import edu.vsu.putinpa.infrastructure.di.ConfigurableListableComponentFactory;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 import edu.vsu.putinpa.infrastructure.di.api.ComponentFactoryPostProcessor;
 import edu.vsu.putinpa.infrastructure.di.api.IComponentDefinition;
+import edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+import java.lang.reflect.*;
+import java.util.Arrays;
+import java.util.List;
 
 import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.forNameWithoutThrown;
+import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.getGenericTypesFromOneImplementedInterface;
 
 @Component
 public class OrmRepositoryComponentFactoryPostProcessorImpl implements ComponentFactoryPostProcessor {
@@ -53,7 +55,8 @@ public class OrmRepositoryComponentFactoryPostProcessorImpl implements Component
                 }
                 OrmConnectionWrapper connectionWrapper = factory.getComponent("orm$OrmConnectionWrapper", OrmConnectionWrapper.class);
 
-                InvocationHandler handler = new OrmRepositoryHandler(connectionWrapper);
+                Class<?>[] genericTypes = getGenericTypesFromOneImplementedInterface(componentClass);
+                InvocationHandler handler = new OrmRepositoryHandler(connectionWrapper, genericTypes[0], genericTypes[1]);
 
                 Object repository = Proxy.newProxyInstance(loader, repositoryInterface, handler);
 
