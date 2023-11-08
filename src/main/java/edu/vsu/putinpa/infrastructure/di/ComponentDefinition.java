@@ -1,11 +1,13 @@
 package edu.vsu.putinpa.infrastructure.di;
 
+import edu.vsu.putinpa.infrastructure.di.api.IComponentDefinition;
+
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class ComponentDefinition {
+public class ComponentDefinition implements IComponentDefinition {
     private String componentName;
     private String componentClassName;
     private Class<?>[] constructorArgumentTypes;
@@ -63,7 +65,7 @@ public class ComponentDefinition {
         Object instance = componentClass.getConstructor(constructorArgumentTypes).newInstance(initialArguments);
         for (Map.Entry<String, String> dependency : dependsOnAndFieldName.entrySet()) {
             if (componentFactory.getComponent(dependency.getKey()) == null) {
-                ComponentDefinition dependencyDefinition = componentFactory.getComponentDefinition(dependency.getKey());
+                IComponentDefinition dependencyDefinition = componentFactory.getComponentDefinition(dependency.getKey());
                 dependencyDefinition.createComponent(componentFactory);
             }
 

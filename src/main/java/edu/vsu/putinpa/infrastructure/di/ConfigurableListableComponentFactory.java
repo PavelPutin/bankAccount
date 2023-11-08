@@ -1,16 +1,17 @@
 package edu.vsu.putinpa.infrastructure.di;
 
 import edu.vsu.putinpa.infrastructure.di.api.ComponentFactoryPostProcessor;
+import edu.vsu.putinpa.infrastructure.di.api.IComponentDefinition;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConfigurableListableComponentFactory {
-    private final Map<String, ComponentDefinition> componentDefinitions = new HashMap<>();
+    private final Map<String, IComponentDefinition> componentDefinitions = new HashMap<>();
     private final List<ComponentFactoryPostProcessor> componentFactoryPostProcessors = new ArrayList<>();
     private final Map<String, Object> components = new HashMap<>();
 
-    public void registryComponentDefinition(ComponentDefinition definition) {
+    public void registryComponentDefinition(IComponentDefinition definition) {
         componentDefinitions.put(definition.getComponentName(), definition);
     }
 
@@ -18,11 +19,11 @@ public class ConfigurableListableComponentFactory {
         return componentDefinitions.keySet();
     }
 
-    public Set<ComponentDefinition> getComponentDefinitions() {
+    public Set<IComponentDefinition> getComponentDefinitions() {
         return new HashSet<>(componentDefinitions.values());
     }
 
-    public ComponentDefinition getComponentDefinition(String name) {
+    public IComponentDefinition getComponentDefinition(String name) {
         return componentDefinitions.get(name);
     }
 
@@ -32,7 +33,7 @@ public class ConfigurableListableComponentFactory {
             postProcessor.postProcessComponentFactory(this);
         }
 
-        for (ComponentDefinition definition : componentDefinitions.values()) {
+        for (IComponentDefinition definition : componentDefinitions.values()) {
             if (!components.containsKey(definition.getComponentName())) {
                 definition.createComponent(this);
             }
@@ -48,7 +49,7 @@ public class ConfigurableListableComponentFactory {
     }
 
     private void registryComponentFactoryPostProcessors() {
-        for (ComponentDefinition definition : getComponentDefinitions()) {
+        for (IComponentDefinition definition : getComponentDefinitions()) {
             try {
                 Class<?> clazz = Class.forName(definition.getComponentClassName());
                 if (Arrays.asList(clazz.getInterfaces()).contains(ComponentFactoryPostProcessor.class)) {
@@ -65,7 +66,7 @@ public class ConfigurableListableComponentFactory {
     public Set<String> getAllDefinitionNamesByClass(Class<?> clazz) {
         return this.getComponentDefinitions().stream()
                 .filter(definition -> definition.getComponentClassName().equals(clazz.getName()))
-                .map(ComponentDefinition::getComponentName)
+                .map(IComponentDefinition::getComponentName)
                 .collect(Collectors.toSet());
     }
 }

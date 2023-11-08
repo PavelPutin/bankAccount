@@ -1,6 +1,7 @@
 package edu.vsu.putinpa.infrastructure.di;
 
 import edu.vsu.putinpa.infrastructure.di.api.Component;
+import edu.vsu.putinpa.infrastructure.di.api.IComponentDefinition;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class AnnotationComponentReader {
         for (Class<?> clazz : classes) {
             Component annotation = clazz.getAnnotation(Component.class);
             if (annotation != null) {
-                ComponentDefinition definition = new ComponentDefinition();
+                IComponentDefinition definition = new ComponentDefinition();
                 definition.setComponentClassName(clazz.getName());
 
                 if (annotation.name().equals("")) {

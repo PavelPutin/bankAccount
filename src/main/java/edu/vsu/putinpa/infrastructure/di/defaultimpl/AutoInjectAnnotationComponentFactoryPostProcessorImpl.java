@@ -2,10 +2,7 @@ package edu.vsu.putinpa.infrastructure.di.defaultimpl;
 
 import edu.vsu.putinpa.infrastructure.di.ComponentDefinition;
 import edu.vsu.putinpa.infrastructure.di.ConfigurableListableComponentFactory;
-import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
-import edu.vsu.putinpa.infrastructure.di.api.Component;
-import edu.vsu.putinpa.infrastructure.di.api.ComponentFactoryPostProcessor;
-import edu.vsu.putinpa.infrastructure.di.api.Qualify;
+import edu.vsu.putinpa.infrastructure.di.api.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -20,7 +17,7 @@ import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.forN
 public class AutoInjectAnnotationComponentFactoryPostProcessorImpl implements ComponentFactoryPostProcessor {
     @Override
     public void postProcessComponentFactory(ConfigurableListableComponentFactory componentFactory) {
-        for (ComponentDefinition definition : componentFactory.getComponentDefinitions()) {
+        for (IComponentDefinition definition : componentFactory.getComponentDefinitions()) {
             Class<?> clazz = forNameWithoutThrown(definition.getComponentClassName());
             for (Field field : clazz.getDeclaredFields()) {
                 field.setAccessible(true);
@@ -64,7 +61,7 @@ public class AutoInjectAnnotationComponentFactoryPostProcessorImpl implements Co
                     }
 
                     if (componentName == null) {
-                        for (ComponentDefinition componentDefinition : componentFactory.getComponentDefinitions()) {
+                        for (IComponentDefinition componentDefinition : componentFactory.getComponentDefinitions()) {
                             Class<?> componentClass = forNameWithoutThrown(componentDefinition.getComponentClassName());
                             if (paramClass.isAssignableFrom(componentClass)) {
                                 componentName = componentDefinition.getComponentName();
