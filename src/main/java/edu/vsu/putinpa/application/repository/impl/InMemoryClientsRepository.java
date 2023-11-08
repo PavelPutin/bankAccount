@@ -6,7 +6,7 @@ import edu.vsu.putinpa.infrastructure.di.api.Component;
 
 import java.util.*;
 
-@Component
+//@Component
 public class InMemoryClientsRepository implements ClientsRepository {
 
     private final Map<UUID, Client> data = new HashMap<>();

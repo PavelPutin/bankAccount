@@ -9,7 +9,7 @@ import edu.vsu.putinpa.infrastructure.di.api.Component;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
 public class InMemoryOperationsRepository implements OperationsRepository {
     private final Map<UUID, JournalOperation> data = new HashMap<>();
 
