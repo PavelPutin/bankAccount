@@ -19,4 +19,8 @@ public class AnnotationContext {
     public <T> T getComponent(String name, Class<T> type) {
         return type.cast(componentFactory.getComponent(name));
     }
+
+    public Object getComponent(String name) {
+        return componentFactory.getComponent(name);
+    }
 }
