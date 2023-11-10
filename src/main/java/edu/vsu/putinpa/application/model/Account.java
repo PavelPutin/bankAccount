@@ -1,6 +1,8 @@
 package edu.vsu.putinpa.application.model;
 
 import edu.vsu.putinpa.infrastructure.orm.api.Column;
+import edu.vsu.putinpa.infrastructure.orm.api.JoinColumn;
+import edu.vsu.putinpa.infrastructure.orm.api.ManyToOne;
 import edu.vsu.putinpa.infrastructure.orm.api.Table;
 
 import java.math.BigDecimal;
@@ -14,6 +16,8 @@ public class Account extends EntityWithUUID {
     private Instant whenOpened;
     @Column("whenclosed")
     private Instant whenClosed;
+    @ManyToOne
+    @JoinColumn(name = "creator_id", referencedColumnName = "id")
     private Client creator;
     private Money balance;
 

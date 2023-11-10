@@ -1,11 +1,14 @@
 package edu.vsu.putinpa.application.model;
 
 import edu.vsu.putinpa.infrastructure.orm.api.Column;
+import edu.vsu.putinpa.infrastructure.orm.api.JoinColumn;
+import edu.vsu.putinpa.infrastructure.orm.api.ManyToOne;
 
 import java.math.BigDecimal;
 
 public record Money(
-        @Column("currency")
+        @ManyToOne(tableName = "currency")
+        @JoinColumn(name = "currency_id", referencedColumnName = "id")
         String currency,
         @Column("balance")
         BigDecimal value) {
