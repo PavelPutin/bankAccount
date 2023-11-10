@@ -1,11 +1,18 @@
 package edu.vsu.putinpa.application.model;
 
+import edu.vsu.putinpa.infrastructure.orm.api.Column;
+import edu.vsu.putinpa.infrastructure.orm.api.Table;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 
+@Table("account")
 public class Account extends EntityWithUUID {
+    @Column("name")
     private String name;
+    @Column("whenopened")
     private Instant whenOpened;
+    @Column("whenclosed")
     private Instant whenClosed;
     private Client creator;
     private Money balance;

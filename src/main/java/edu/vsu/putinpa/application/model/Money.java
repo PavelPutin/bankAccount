@@ -1,8 +1,14 @@
 package edu.vsu.putinpa.application.model;
 
+import edu.vsu.putinpa.infrastructure.orm.api.Column;
+
 import java.math.BigDecimal;
 
-public record Money(String currency, BigDecimal value) {
+public record Money(
+        @Column("currency")
+        String currency,
+        @Column("balance")
+        BigDecimal value) {
     public Money {
         if (value.doubleValue() < 0) {
             throw new IllegalArgumentException("Money value should be non-negative");

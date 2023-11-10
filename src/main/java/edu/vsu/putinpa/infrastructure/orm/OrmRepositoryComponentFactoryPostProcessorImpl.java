@@ -4,11 +4,9 @@ import edu.vsu.putinpa.infrastructure.di.ConfigurableListableComponentFactory;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 import edu.vsu.putinpa.infrastructure.di.api.ComponentFactoryPostProcessor;
 import edu.vsu.putinpa.infrastructure.di.api.IComponentDefinition;
-import edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil;
+import edu.vsu.putinpa.infrastructure.orm.api.OrmRepository;
 
 import java.lang.reflect.*;
-import java.util.Arrays;
-import java.util.List;
 
 import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.forNameWithoutThrown;
 import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.getGenericTypesFromOneImplementedInterface;

@@ -1,13 +1,19 @@
 package edu.vsu.putinpa.application.model;
 
+import edu.vsu.putinpa.infrastructure.orm.api.Column;
+import edu.vsu.putinpa.infrastructure.orm.api.Table;
+
 import java.time.Instant;
 
+@Table("journal_operation")
 public class JournalOperation extends EntityWithUUID {
+    @Column("whencreated")
     private Instant whenCreated;
     private Client client;
     private Account sender;
     private Account recipient;
     private Money money;
+    @Column("type")
     private OperationType type;
 
     public JournalOperation(Instant whenCreated, Client client, OperationType type) {

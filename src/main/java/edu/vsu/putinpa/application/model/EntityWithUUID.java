@@ -1,11 +1,14 @@
 package edu.vsu.putinpa.application.model;
 
+import edu.vsu.putinpa.infrastructure.orm.api.Column;
+
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
 
 abstract public class EntityWithUUID {
     private static Supplier<UUID> defaultSupplier = UUID::randomUUID;
+    @Column("id")
     private final UUID uuid;
 
     public EntityWithUUID() {

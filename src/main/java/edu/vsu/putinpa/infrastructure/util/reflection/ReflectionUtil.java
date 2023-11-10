@@ -5,10 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.*;
 
 public class ReflectionUtil {
@@ -35,6 +32,12 @@ public class ReflectionUtil {
         Field[] fields = clazz.getDeclaredFields();
         result.addAll(Arrays.asList(fields));
         return result;
+    }
+
+    public static List<Field> getAllDeclaredNonStaticFieldsFromClassHierarchy(Class<?> clazz) {
+        return getAllDeclaredFieldsFromClassHierarchy(clazz).stream()
+                .filter(f -> !Modifier.isStatic(f.getModifiers()))
+                .toList();
     }
 
     public static Class<?> forNameWithoutThrown(String className) {

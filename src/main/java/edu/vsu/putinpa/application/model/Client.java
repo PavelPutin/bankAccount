@@ -1,12 +1,19 @@
 package edu.vsu.putinpa.application.model;
 
+import edu.vsu.putinpa.infrastructure.orm.api.Column;
+import edu.vsu.putinpa.infrastructure.orm.api.Table;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+@Table("client")
 public class Client extends EntityWithUUID {
+    @Column("name")
     private String name;
+    @Column("password")
     private String password;
+    @Column("whencreated")
     private Instant whenCreated;
 
     {
