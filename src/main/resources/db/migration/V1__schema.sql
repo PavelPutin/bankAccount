@@ -14,7 +14,7 @@ create table account (
     name varchar(256) not null,
     whenOpened timestamp not null,
     whenClosed timestamp,
-    balance float not null check (balance > 0),
+    balance float not null check (balance >= 0),
     currency_id varchar(2) not null references currency (id),
     creator_id uuid not null references client (id)
 );

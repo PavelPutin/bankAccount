@@ -25,6 +25,8 @@ public class Account extends EntityWithUUID {
         whenOpened = Instant.now();
     }
 
+    public Account() {}
+
     public Account(String name, String currency, Client creator) {
         this.name = name;
         this.creator = creator;

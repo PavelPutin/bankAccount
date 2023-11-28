@@ -1,9 +1,13 @@
 package edu.vsu.putinpa.polygon;
 
+import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
+import edu.vsu.putinpa.application.model.Money;
 import edu.vsu.putinpa.infrastructure.orm.api.Column;
 
+import javax.xml.transform.Result;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -26,49 +30,99 @@ public class Main {
                 "postgres");
         connection.setAutoCommit(false);
 
-//        Statement statement = connection.createStatement();
-//        statement.execute("delete from client;");
-//        connection.commit();
+        Client creator = new Client();
+        creator.setUUID(UUID.fromString("604fcde4-437a-4f9e-b3ad-f55d63decf78"));
+        creator.setName("test");
+        creator.setPassword("qwerty");
+        creator.setWhenCreated(Timestamp.valueOf("2023-11-28 16:00:00.715301").toInstant());
 
-        Client client = new Client("test5", "qwerty");
+        Account account = new Account("account1", "ru", creator);
 
-        PreparedStatement preparedStatement = connection.prepareStatement(
-                "insert into client(id, name, password, whencreated) values(?, ?, ?, ?);"
+        PreparedStatement insert = connection.prepareStatement(
+                "insert into account(id, name, whenopened, whenclosed, balance, currency_id, creator_id)" +
+                        "values(?, ?, ?, ?, ?, ?, ?)"
         );
-        preparedStatement.setObject(1, client.getUuid());
-        preparedStatement.setString(2, client.getName());
-        preparedStatement.setString(3, client.getPassword());
-        preparedStatement.setTimestamp(4, Timestamp.from(client.getWhenCreated()));
+        insert.setObject(1, account.getUuid());
+        insert.setString(2, account.getName());
+        insert.setTimestamp(3, Timestamp.from(account.getWhenOpened()));
+        Timestamp whenClosedOpt = account.getWhenClosed() == null ? null : Timestamp.from(account.getWhenClosed());
+        insert.setTimestamp(4, whenClosedOpt);
+        insert.setBigDecimal(5, account.getBalance().value());
+        insert.setString(6, account.getBalance().currency());
+        insert.setObject(7, account.getCreator().getUuid());
 
-        preparedStatement.execute();
+        insert.execute();
         connection.commit();
 
-        PreparedStatement select = connection.prepareStatement("select * from client;");
-        select.execute();
-        ResultSet result = select.getResultSet();
-        connection.commit();
+        Statement statement = connection.createStatement();
+        statement.execute("select * from account account1 left join client client1 on account1.creator_id=client1.id;");
+        ResultSet result = statement.getResultSet();
 
-        List<Client> clientList = new ArrayList<>();
+        List<Account> accountList = new ArrayList<>();
         while (result.next()) {
-            Client client1 = new Client();
-            for (Field field : getAllDeclaredNonStaticFieldsFromClassHierarchy(Client.class)) {
-                Class<?> type = field.getType();
-                String column = field.getAnnotation(Column.class).value();
-                Object value;
-                if (type.equals(String.class)) {
-                    value = result.getString(column);
-                } else if (type.equals(Instant.class)) {
-                    value = result.getTimestamp(column).toInstant();
-                } else {
-                    value = result.getObject(column);
-                }
-
-                field.setAccessible(true);
-                field.set(client1, value);
+            Account account1 = new Account();
+            for (int i = 1; i <= 11; i++) {
+                String columnName = result.getMetaData().getColumnName(i);
+                System.out.println(columnName);
             }
-            clientList.add(client1);
+
+            UUID id = result.getObject("account1.id", UUID.class);
+            String name = result.getString("account1.name");
+            Instant whenOpened = result.getTimestamp("account1.whenopened").toInstant();
+            Instant whenClosed = result.getTimestamp("account1.whenclosed").toInstant();
+
+            BigDecimal value = result.getBigDecimal("account1.balance");
+            String currency = result.getString("account1.currency_id");
+            Money balance = new Money(currency, value);
+
+            UUID creatorId = result.getObject("client1.id", UUID.class);
+            String creatorName = result.getString("client1.name");
+            String creatorPassword = result.getString("client1.password");
+            Instant creatorWhenCreated = result.getTimestamp("client1.whencreated").toInstant();
+
+            Client client = new Client();
+            client.setUUID(creatorId);
+            client.setName(creatorName);
+            client.setPassword(creatorPassword);
+            client.setWhenCreated(creatorWhenCreated);
+
+            account1.setUUID(id);
+            account1.setName(name);
+            account1.setWhenOpened(whenOpened);
+            account1.setWhenClosed(whenClosed);
+            account1.setBalance(balance);
+            account1.setCreator(client);
+
+            accountList.add(account1);
         }
 
-        clientList.forEach(c -> System.out.printf("id: %s; name: %s; password: %s; whenCreated %s%n", c.getUuid(), c.getName(), c.getPassword(), c.getWhenCreated()));
+        accountList.forEach(Main::printAccount);
+    }
+
+    private static void printAccount(Account account) {
+        String value = """
+                id: %s;
+                name: %s;
+                whenOpened: %s;
+                whenClosed: %s;
+                balance:
+                    value: %s;
+                    currency: %s
+                creator:
+                    id: %s;
+                    name: %s;
+                    password: %s;
+                    whenCreated: %s""".formatted(
+                account.getUuid().toString(),
+                account.getName(),
+                account.getWhenOpened(),
+                account.getWhenClosed(),
+                account.getBalance().value(),
+                account.getBalance().currency(),
+                account.getCreator().getUuid().toString(),
+                account.getCreator().getName(),
+                account.getCreator().getPassword(),
+                account.getCreator().getWhenCreated()
+        );
     }
 }
