@@ -20,6 +20,8 @@ public class Client extends EntityWithUUID {
         whenCreated = Instant.now();
     }
 
+    public Client() {}
+
     public Client(String name, String password) {
         this.name = name;
         this.password = password;

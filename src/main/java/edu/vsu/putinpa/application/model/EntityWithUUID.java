@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 abstract public class EntityWithUUID {
     private static Supplier<UUID> defaultSupplier = UUID::randomUUID;
     @Column("id")
-    private final UUID uuid;
+    private UUID uuid;
 
     public EntityWithUUID() {
         uuid = defaultSupplier.get();
@@ -19,6 +19,9 @@ abstract public class EntityWithUUID {
         uuid = uuidSupplier.get();
     }
 
+    public void setUUID(UUID uuid) {
+        this.uuid = uuid;
+    }
     public UUID getUuid() {
         return uuid;
     }
