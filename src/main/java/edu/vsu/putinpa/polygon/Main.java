@@ -3,9 +3,10 @@ package edu.vsu.putinpa.polygon;
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.model.Money;
-import edu.vsu.putinpa.infrastructure.orm.api.Column;
+import edu.vsu.putinpa.infrastructure.orm.api.*;
 
 import javax.xml.transform.Result;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -62,7 +63,50 @@ public class Main {
         while (result.next()) {
             Account account1 = new Account();
 
-            UUID id = result.getObject("id", UUID.class);
+            for (Field field : getAllDeclaredNonStaticFieldsFromClassHierarchy(Account.class)) {
+                field.setAccessible(true);
+                Class<?> type = field.getType();
+                Column column = field.getAnnotation(Column.class);
+                if (column != null) {
+                    String columnName = column.value();
+                    Object value;
+                    if (type.equals(Instant.class)) {
+                        Timestamp time = result.getTimestamp(columnName);
+                        value = time == null ? null : time.toInstant();
+                    } else {
+                        value = result.getObject(columnName, type);
+                    }
+                    field.set(account1, value);
+                } else {
+                    ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
+                    JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
+                    if (manyToOne != null && joinColumn != null) {
+                        String columnName = joinColumn.name();
+                        Object foreignKey = result.getObject(columnName);
+
+                        String referencedColumnName = joinColumn.referencedColumnName();
+                        String referencedTableName = type.getAnnotation(Table.class).value();
+
+                        PreparedStatement select = connection.prepareStatement("select * from %s where %s=?;".formatted(referencedTableName, referencedColumnName));
+                        select.setObject(1, foreignKey);
+
+                        boolean hasResults = select.execute();
+
+                        Client client = null;
+                        if (hasResults) {
+                            ResultSet clientResult = select.getResultSet();
+                            clientResult.next();
+                        }
+                    } else {
+                        Agregated agregated = field.getAnnotation(Agregated.class);
+                        if (agregated != null) {
+
+                        }
+                    }
+                }
+            }
+
+           /* UUID id = result.getObject("id", UUID.class);
             String name = result.getString("name");
             Instant whenOpened = result.getTimestamp("whenopened").toInstant();
             Timestamp whenClosedParsedOpt = result.getTimestamp("whenclosed");
@@ -100,7 +144,7 @@ public class Main {
             account1.setBalance(balance);
             account1.setCreator(client);
 
-            accountList.add(account1);
+            accountList.add(account1);*/
         }
 
         accountList.forEach(Main::printAccount);
