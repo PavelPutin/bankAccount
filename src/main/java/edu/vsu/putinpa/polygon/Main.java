@@ -55,36 +55,43 @@ public class Main {
         connection.commit();
 
         Statement statement = connection.createStatement();
-        statement.execute("select * from account account1 left join client client1 on account1.creator_id=client1.id;");
+        statement.execute("select * from account account1");
         ResultSet result = statement.getResultSet();
 
         List<Account> accountList = new ArrayList<>();
         while (result.next()) {
             Account account1 = new Account();
-            for (int i = 1; i <= 11; i++) {
-                String columnName = result.getMetaData().getColumnName(i);
-                System.out.println(columnName);
-            }
 
-            UUID id = result.getObject("account1.id", UUID.class);
-            String name = result.getString("account1.name");
-            Instant whenOpened = result.getTimestamp("account1.whenopened").toInstant();
-            Instant whenClosed = result.getTimestamp("account1.whenclosed").toInstant();
+            UUID id = result.getObject("id", UUID.class);
+            String name = result.getString("name");
+            Instant whenOpened = result.getTimestamp("whenopened").toInstant();
+            Timestamp whenClosedParsedOpt = result.getTimestamp("whenclosed");
+            Instant whenClosed = whenClosedParsedOpt == null ? null : whenClosedParsedOpt.toInstant();
 
-            BigDecimal value = result.getBigDecimal("account1.balance");
-            String currency = result.getString("account1.currency_id");
+            BigDecimal value = result.getBigDecimal("balance");
+            String currency = result.getString("currency_id");
             Money balance = new Money(currency, value);
 
-            UUID creatorId = result.getObject("client1.id", UUID.class);
-            String creatorName = result.getString("client1.name");
-            String creatorPassword = result.getString("client1.password");
-            Instant creatorWhenCreated = result.getTimestamp("client1.whencreated").toInstant();
+            UUID creatorId = result.getObject("creator_id", UUID.class);
+            PreparedStatement select = connection.prepareStatement("select * from client where id=?;");
+            select.setObject(1, creatorId);
+            boolean hasResults = select.execute();
 
-            Client client = new Client();
-            client.setUUID(creatorId);
-            client.setName(creatorName);
-            client.setPassword(creatorPassword);
-            client.setWhenCreated(creatorWhenCreated);
+            Client client = null;
+            if (hasResults) {
+                ResultSet clientResult = select.getResultSet();
+                clientResult.next();
+
+                String creatorName = clientResult.getString("name");
+                String creatorPassword = clientResult.getString("password");
+                Instant creatorWhenCreated = clientResult.getTimestamp("whencreated").toInstant();
+
+                client = new Client();
+                client.setUUID(creatorId);
+                client.setName(creatorName);
+                client.setPassword(creatorPassword);
+                client.setWhenCreated(creatorWhenCreated);
+            }
 
             account1.setUUID(id);
             account1.setName(name);
@@ -124,5 +131,6 @@ public class Main {
                 account.getCreator().getPassword(),
                 account.getCreator().getWhenCreated()
         );
+        System.out.println(value);
     }
 }
