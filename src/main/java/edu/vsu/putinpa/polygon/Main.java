@@ -23,7 +23,7 @@ import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.getC
 
 public class Main {
     public static Connection connection;
-    public static void main(String[] args) throws SQLException, ReflectiveOperationException {
+    public static void main(String[] args) throws Exception {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
@@ -126,7 +126,7 @@ public class Main {
             for (Field field : getAllDeclaredNonStaticFieldsFromClassHierarchy(clazz)) {
                 field.setAccessible(true);
                 Object value = processMember(result, field, field.getType());
-                field.set(value, object);
+                field.set(object, value);
             }
             return object;
         }
@@ -142,36 +142,37 @@ public class Main {
             } else {
                 return result.getObject(columnName, type);
             }
-        } else {
-            ManyToOne manyToOne = member.getAnnotation(ManyToOne.class);
-            JoinColumn joinColumn = member.getAnnotation(JoinColumn.class);
-            if (manyToOne != null && joinColumn != null) {
-                String columnName = joinColumn.name();
-                Object foreignKey = result.getObject(columnName);
-
-                String referencedColumnName = joinColumn.referencedColumnName();
-                String referencedTableName = type.getAnnotation(Table.class).value();
-
-                PreparedStatement select = connection.prepareStatement("select * from %s where %s=?;".formatted(referencedTableName, referencedColumnName));
-                select.setObject(1, foreignKey);
-
-                boolean hasResults = select.execute();
-
-                if (hasResults) {
-                    ResultSet foreignResult = select.getResultSet();
-                    foreignResult.next();
-                    return relationToObject(type, foreignResult);
-                }
-                return null;
-            } else {
-                Agregated agregated = member.getAnnotation(Agregated.class);
-                if (agregated != null) {
-                    return relationToObject(type, result);
-                } else {
-                    return null;
-                }
-            }
         }
+
+        ManyToOne manyToOne = member.getAnnotation(ManyToOne.class);
+        JoinColumn joinColumn = member.getAnnotation(JoinColumn.class);
+        if (manyToOne != null && joinColumn != null) {
+            String columnName = joinColumn.name();
+            Object foreignKey = result.getObject(columnName);
+
+            String referencedColumnName = joinColumn.referencedColumnName();
+            Table referenced = type.getAnnotation(Table.class);
+            String referencedTableName = referenced == null ? manyToOne.tableName() : referenced.value();
+
+            PreparedStatement select = connection.prepareStatement("select * from %s where %s=?;".formatted(referencedTableName, referencedColumnName));
+            select.setObject(1, foreignKey);
+
+            boolean hasResults = select.execute();
+
+            if (hasResults) {
+                ResultSet foreignResult = select.getResultSet();
+                foreignResult.next();
+                return relationToObject(type, foreignResult);
+            }
+            return null;
+        }
+
+        Agregated agregated = member.getAnnotation(Agregated.class);
+        if (agregated != null) {
+            return relationToObject(type, result);
+        }
+
+        return null;
     }
 
     private static void printAccount(Account account) {

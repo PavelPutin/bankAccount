@@ -7,8 +7,7 @@ import edu.vsu.putinpa.infrastructure.orm.api.ManyToOne;
 import java.math.BigDecimal;
 
 public record Money(
-        @ManyToOne(tableName = "currency")
-        @JoinColumn(name = "currency_id", referencedColumnName = "id")
+        @Column("currency_id")
         String currency,
         @Column("balance")
         BigDecimal value) {
