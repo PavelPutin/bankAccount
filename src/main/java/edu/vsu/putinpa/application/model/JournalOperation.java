@@ -1,9 +1,6 @@
 package edu.vsu.putinpa.application.model;
 
-import edu.vsu.putinpa.infrastructure.orm.api.Column;
-import edu.vsu.putinpa.infrastructure.orm.api.JoinColumn;
-import edu.vsu.putinpa.infrastructure.orm.api.ManyToOne;
-import edu.vsu.putinpa.infrastructure.orm.api.Table;
+import edu.vsu.putinpa.infrastructure.orm.api.*;
 
 import java.time.Instant;
 
@@ -20,9 +17,12 @@ public class JournalOperation extends EntityWithUUID {
     @ManyToOne
     @JoinColumn(name = "recipient_id", referencedColumnName = "id")
     private Account recipient;
+    @Agregated
     private Money money;
     @Column("type")
     private OperationType type;
+
+    public JournalOperation() {}
 
     public JournalOperation(Instant whenCreated, Client client, OperationType type) {
         this.whenCreated = whenCreated;

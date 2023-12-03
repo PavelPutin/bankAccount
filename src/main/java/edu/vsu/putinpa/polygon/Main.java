@@ -2,6 +2,7 @@ package edu.vsu.putinpa.polygon;
 
 import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
+import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.application.model.Money;
 import edu.vsu.putinpa.infrastructure.orm.api.*;
 
@@ -36,37 +37,37 @@ public class Main {
                 "postgres");
         connection.setAutoCommit(false);
 
-        Client creator = new Client();
-        creator.setUUID(UUID.fromString("604fcde4-437a-4f9e-b3ad-f55d63decf78"));
-        creator.setName("test");
-        creator.setPassword("qwerty");
-        creator.setWhenCreated(Timestamp.valueOf("2023-11-28 16:00:00.715301").toInstant());
-
-        Account account = new Account("account1", "ru", creator);
-
-        PreparedStatement insert = connection.prepareStatement(
-                "insert into account(id, name, whenopened, whenclosed, balance, currency_id, creator_id)" +
-                        "values(?, ?, ?, ?, ?, ?, ?)"
-        );
-        insert.setObject(1, account.getUuid());
-        insert.setString(2, account.getName());
-        insert.setTimestamp(3, Timestamp.from(account.getWhenOpened()));
-        Timestamp whenClosedOpt = account.getWhenClosed() == null ? null : Timestamp.from(account.getWhenClosed());
-        insert.setTimestamp(4, whenClosedOpt);
-        insert.setBigDecimal(5, account.getBalance().value());
-        insert.setString(6, account.getBalance().currency());
-        insert.setObject(7, account.getCreator().getUuid());
-
-        insert.execute();
-        connection.commit();
+//        Client creator = new Client();
+//        creator.setUUID(UUID.fromString("604fcde4-437a-4f9e-b3ad-f55d63decf78"));
+//        creator.setName("test");
+//        creator.setPassword("qwerty");
+//        creator.setWhenCreated(Timestamp.valueOf("2023-11-28 16:00:00.715301").toInstant());
+//
+//        Account account = new Account("account1", "ru", creator);
+//
+//        PreparedStatement insert = connection.prepareStatement(
+//                "insert into account(id, name, whenopened, whenclosed, balance, currency_id, creator_id)" +
+//                        "values(?, ?, ?, ?, ?, ?, ?)"
+//        );
+//        insert.setObject(1, account.getUuid());
+//        insert.setString(2, account.getName());
+//        insert.setTimestamp(3, Timestamp.from(account.getWhenOpened()));
+//        Timestamp whenClosedOpt = account.getWhenClosed() == null ? null : Timestamp.from(account.getWhenClosed());
+//        insert.setTimestamp(4, whenClosedOpt);
+//        insert.setBigDecimal(5, account.getBalance().value());
+//        insert.setString(6, account.getBalance().currency());
+//        insert.setObject(7, account.getCreator().getUuid());
+//
+//        insert.execute();
+//        connection.commit();
 
         Statement statement = connection.createStatement();
-        statement.execute("select * from account account1");
+        statement.execute("select * from journal_operation");
         ResultSet result = statement.getResultSet();
 
-        List<Account> accountList = new ArrayList<>();
+        List<JournalOperation> accountList = new ArrayList<>();
         while (result.next()) {
-            Account account1 = relationToObject(Account.class, result);
+            JournalOperation account1 = relationToObject(JournalOperation.class, result);
             accountList.add(account1);
 
            /* UUID id = result.getObject("id", UUID.class);
@@ -110,7 +111,7 @@ public class Main {
             accountList.add(account1);*/
         }
 
-        accountList.forEach(Main::printAccount);
+//        accountList.forEach(Main::printAccount);
     }
 
     private static <T> T relationToObject(Class<T> clazz, ResultSet result) throws Exception {
@@ -139,6 +140,9 @@ public class Main {
             if (type.equals(Instant.class)) {
                 Timestamp time = result.getTimestamp(columnName);
                 return time == null ? null : time.toInstant();
+            } else if (type.isEnum()) {
+                String value = result.getString(columnName);
+                return Enum.valueOf((Class<? extends Enum>) type, value);
             } else {
                 return result.getObject(columnName, type);
             }
