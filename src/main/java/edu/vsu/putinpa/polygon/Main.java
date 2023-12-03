@@ -7,6 +7,7 @@ import edu.vsu.putinpa.infrastructure.orm.api.*;
 
 import javax.xml.transform.Result;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.RecordComponent;
@@ -112,58 +113,62 @@ public class Main {
         accountList.forEach(Main::printAccount);
     }
 
-    private static <T> T relationToObject(Class<T> clazz, ResultSet result) throws SQLException, ReflectiveOperationException {
+    private static <T> T relationToObject(Class<T> clazz, ResultSet result) throws Exception {
         if (clazz.isRecord()) {
             Constructor<T> constructor = getCanonicalConstructor(clazz);
             List<Object> parameters = new ArrayList<>();
             for (RecordComponent recordComponent : clazz.getRecordComponents()) {
-
+                parameters.add(processMember(result, recordComponent, recordComponent.getType()));
             }
-            T object = constructor.newInstance(parameters.toArray(new Object[0]));
+            return constructor.newInstance(parameters.toArray(new Object[0]));
         } else {
             T object = clazz.getConstructor().newInstance();
             for (Field field : getAllDeclaredNonStaticFieldsFromClassHierarchy(clazz)) {
                 field.setAccessible(true);
-                Class<?> type = field.getType();
-                Column column = field.getAnnotation(Column.class);
-                if (column != null) {
-                    String columnName = column.value();
-                    Object value;
-                    if (type.equals(Instant.class)) {
-                        Timestamp time = result.getTimestamp(columnName);
-                        value = time == null ? null : time.toInstant();
-                    } else {
-                        value = result.getObject(columnName, type);
-                    }
-                    field.set(object, value);
+                Object value = processMember(result, field, field.getType());
+                field.set(value, object);
+            }
+            return object;
+        }
+    }
+
+    private static Object processMember(ResultSet result, AnnotatedElement member, Class<?> type) throws Exception {
+        Column column = member.getAnnotation(Column.class);
+        if (column != null) {
+            String columnName = column.value();
+            if (type.equals(Instant.class)) {
+                Timestamp time = result.getTimestamp(columnName);
+                return time == null ? null : time.toInstant();
+            } else {
+                return result.getObject(columnName, type);
+            }
+        } else {
+            ManyToOne manyToOne = member.getAnnotation(ManyToOne.class);
+            JoinColumn joinColumn = member.getAnnotation(JoinColumn.class);
+            if (manyToOne != null && joinColumn != null) {
+                String columnName = joinColumn.name();
+                Object foreignKey = result.getObject(columnName);
+
+                String referencedColumnName = joinColumn.referencedColumnName();
+                String referencedTableName = type.getAnnotation(Table.class).value();
+
+                PreparedStatement select = connection.prepareStatement("select * from %s where %s=?;".formatted(referencedTableName, referencedColumnName));
+                select.setObject(1, foreignKey);
+
+                boolean hasResults = select.execute();
+
+                if (hasResults) {
+                    ResultSet foreignResult = select.getResultSet();
+                    foreignResult.next();
+                    return relationToObject(type, foreignResult);
+                }
+                return null;
+            } else {
+                Agregated agregated = member.getAnnotation(Agregated.class);
+                if (agregated != null) {
+                    return relationToObject(type, result);
                 } else {
-                    ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
-                    JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
-                    if (manyToOne != null && joinColumn != null) {
-                        String columnName = joinColumn.name();
-                        Object foreignKey = result.getObject(columnName);
-
-                        String referencedColumnName = joinColumn.referencedColumnName();
-                        String referencedTableName = type.getAnnotation(Table.class).value();
-
-                        PreparedStatement select = connection.prepareStatement("select * from %s where %s=?;".formatted(referencedTableName, referencedColumnName));
-                        select.setObject(1, foreignKey);
-
-                        boolean hasResults = select.execute();
-
-                        Object foreign = null;
-                        if (hasResults) {
-                            ResultSet foreignResult = select.getResultSet();
-                            foreignResult.next();
-                            foreign = relationToObject(type, foreignResult);
-                        }
-                        field.set(foreign, object);
-                    } else {
-                        Agregated agregated = field.getAnnotation(Agregated.class);
-                        if (agregated != null) {
-
-                        }
-                    }
+                    return null;
                 }
             }
         }
