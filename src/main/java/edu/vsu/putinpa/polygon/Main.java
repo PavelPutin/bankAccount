@@ -7,7 +7,9 @@ import edu.vsu.putinpa.infrastructure.orm.api.*;
 
 import javax.xml.transform.Result;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.RecordComponent;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.Instant;
@@ -16,16 +18,18 @@ import java.util.List;
 import java.util.UUID;
 
 import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.getAllDeclaredNonStaticFieldsFromClassHierarchy;
+import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.getCanonicalConstructor;
 
 public class Main {
-    public static void main(String[] args) throws SQLException, IllegalAccessException {
+    public static Connection connection;
+    public static void main(String[] args) throws SQLException, ReflectiveOperationException {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Can't find driver class %s.".formatted("org.postgresql.Driver"), e);
         }
 
-        Connection connection = DriverManager.getConnection(
+        connection = DriverManager.getConnection(
                 "jdbc:postgresql://localhost:5432/bank_account",
                 "postgres",
                 "postgres");
@@ -61,50 +65,8 @@ public class Main {
 
         List<Account> accountList = new ArrayList<>();
         while (result.next()) {
-            Account account1 = new Account();
-
-            for (Field field : getAllDeclaredNonStaticFieldsFromClassHierarchy(Account.class)) {
-                field.setAccessible(true);
-                Class<?> type = field.getType();
-                Column column = field.getAnnotation(Column.class);
-                if (column != null) {
-                    String columnName = column.value();
-                    Object value;
-                    if (type.equals(Instant.class)) {
-                        Timestamp time = result.getTimestamp(columnName);
-                        value = time == null ? null : time.toInstant();
-                    } else {
-                        value = result.getObject(columnName, type);
-                    }
-                    field.set(account1, value);
-                } else {
-                    ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
-                    JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
-                    if (manyToOne != null && joinColumn != null) {
-                        String columnName = joinColumn.name();
-                        Object foreignKey = result.getObject(columnName);
-
-                        String referencedColumnName = joinColumn.referencedColumnName();
-                        String referencedTableName = type.getAnnotation(Table.class).value();
-
-                        PreparedStatement select = connection.prepareStatement("select * from %s where %s=?;".formatted(referencedTableName, referencedColumnName));
-                        select.setObject(1, foreignKey);
-
-                        boolean hasResults = select.execute();
-
-                        Client client = null;
-                        if (hasResults) {
-                            ResultSet clientResult = select.getResultSet();
-                            clientResult.next();
-                        }
-                    } else {
-                        Agregated agregated = field.getAnnotation(Agregated.class);
-                        if (agregated != null) {
-
-                        }
-                    }
-                }
-            }
+            Account account1 = relationToObject(Account.class, result);
+            accountList.add(account1);
 
            /* UUID id = result.getObject("id", UUID.class);
             String name = result.getString("name");
@@ -148,6 +110,63 @@ public class Main {
         }
 
         accountList.forEach(Main::printAccount);
+    }
+
+    private static <T> T relationToObject(Class<T> clazz, ResultSet result) throws SQLException, ReflectiveOperationException {
+        if (clazz.isRecord()) {
+            Constructor<T> constructor = getCanonicalConstructor(clazz);
+            List<Object> parameters = new ArrayList<>();
+            for (RecordComponent recordComponent : clazz.getRecordComponents()) {
+
+            }
+            T object = constructor.newInstance(parameters.toArray(new Object[0]));
+        } else {
+            T object = clazz.getConstructor().newInstance();
+            for (Field field : getAllDeclaredNonStaticFieldsFromClassHierarchy(clazz)) {
+                field.setAccessible(true);
+                Class<?> type = field.getType();
+                Column column = field.getAnnotation(Column.class);
+                if (column != null) {
+                    String columnName = column.value();
+                    Object value;
+                    if (type.equals(Instant.class)) {
+                        Timestamp time = result.getTimestamp(columnName);
+                        value = time == null ? null : time.toInstant();
+                    } else {
+                        value = result.getObject(columnName, type);
+                    }
+                    field.set(object, value);
+                } else {
+                    ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
+                    JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
+                    if (manyToOne != null && joinColumn != null) {
+                        String columnName = joinColumn.name();
+                        Object foreignKey = result.getObject(columnName);
+
+                        String referencedColumnName = joinColumn.referencedColumnName();
+                        String referencedTableName = type.getAnnotation(Table.class).value();
+
+                        PreparedStatement select = connection.prepareStatement("select * from %s where %s=?;".formatted(referencedTableName, referencedColumnName));
+                        select.setObject(1, foreignKey);
+
+                        boolean hasResults = select.execute();
+
+                        Object foreign = null;
+                        if (hasResults) {
+                            ResultSet foreignResult = select.getResultSet();
+                            foreignResult.next();
+                            foreign = relationToObject(type, foreignResult);
+                        }
+                        field.set(foreign, object);
+                    } else {
+                        Agregated agregated = field.getAnnotation(Agregated.class);
+                        if (agregated != null) {
+
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private static void printAccount(Account account) {

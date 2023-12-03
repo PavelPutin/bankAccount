@@ -87,4 +87,13 @@ public class ReflectionUtil {
         }
         return result;
     }
+
+    public static <T> Constructor<T> getCanonicalConstructor(Class<T> cls)
+            throws NoSuchMethodException {
+        Class<?>[] paramTypes =
+                Arrays.stream(cls.getRecordComponents())
+                        .map(RecordComponent::getType)
+                        .toArray(Class<?>[]::new);
+        return cls.getDeclaredConstructor(paramTypes);
+    }
 }
