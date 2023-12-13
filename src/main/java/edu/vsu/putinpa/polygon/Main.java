@@ -37,30 +37,6 @@ public class Main {
                 "postgres");
         connection.setAutoCommit(false);
 
-//        Client creator = new Client();
-//        creator.setUUID(UUID.fromString("604fcde4-437a-4f9e-b3ad-f55d63decf78"));
-//        creator.setName("test");
-//        creator.setPassword("qwerty");
-//        creator.setWhenCreated(Timestamp.valueOf("2023-11-28 16:00:00.715301").toInstant());
-//
-//        Account account = new Account("account1", "ru", creator);
-//
-//        PreparedStatement insert = connection.prepareStatement(
-//                "insert into account(id, name, whenopened, whenclosed, balance, currency_id, creator_id)" +
-//                        "values(?, ?, ?, ?, ?, ?, ?)"
-//        );
-//        insert.setObject(1, account.getUuid());
-//        insert.setString(2, account.getName());
-//        insert.setTimestamp(3, Timestamp.from(account.getWhenOpened()));
-//        Timestamp whenClosedOpt = account.getWhenClosed() == null ? null : Timestamp.from(account.getWhenClosed());
-//        insert.setTimestamp(4, whenClosedOpt);
-//        insert.setBigDecimal(5, account.getBalance().value());
-//        insert.setString(6, account.getBalance().currency());
-//        insert.setObject(7, account.getCreator().getUuid());
-//
-//        insert.execute();
-//        connection.commit();
-
         Statement statement = connection.createStatement();
         statement.execute("select * from journal_operation");
         ResultSet result = statement.getResultSet();
@@ -69,49 +45,7 @@ public class Main {
         while (result.next()) {
             JournalOperation account1 = relationToObject(JournalOperation.class, result);
             accountList.add(account1);
-
-           /* UUID id = result.getObject("id", UUID.class);
-            String name = result.getString("name");
-            Instant whenOpened = result.getTimestamp("whenopened").toInstant();
-            Timestamp whenClosedParsedOpt = result.getTimestamp("whenclosed");
-            Instant whenClosed = whenClosedParsedOpt == null ? null : whenClosedParsedOpt.toInstant();
-
-            BigDecimal value = result.getBigDecimal("balance");
-            String currency = result.getString("currency_id");
-            Money balance = new Money(currency, value);
-
-            UUID creatorId = result.getObject("creator_id", UUID.class);
-            PreparedStatement select = connection.prepareStatement("select * from client where id=?;");
-            select.setObject(1, creatorId);
-            boolean hasResults = select.execute();
-
-            Client client = null;
-            if (hasResults) {
-                ResultSet clientResult = select.getResultSet();
-                clientResult.next();
-
-                String creatorName = clientResult.getString("name");
-                String creatorPassword = clientResult.getString("password");
-                Instant creatorWhenCreated = clientResult.getTimestamp("whencreated").toInstant();
-
-                client = new Client();
-                client.setUUID(creatorId);
-                client.setName(creatorName);
-                client.setPassword(creatorPassword);
-                client.setWhenCreated(creatorWhenCreated);
-            }
-
-            account1.setUUID(id);
-            account1.setName(name);
-            account1.setWhenOpened(whenOpened);
-            account1.setWhenClosed(whenClosed);
-            account1.setBalance(balance);
-            account1.setCreator(client);
-
-            accountList.add(account1);*/
         }
-
-//        accountList.forEach(Main::printAccount);
     }
 
     private static <T> T relationToObject(Class<T> clazz, ResultSet result) throws Exception {

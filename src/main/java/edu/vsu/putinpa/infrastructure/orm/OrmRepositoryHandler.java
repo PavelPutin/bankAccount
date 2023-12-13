@@ -1,19 +1,19 @@
 package edu.vsu.putinpa.infrastructure.orm;
 
-import edu.vsu.putinpa.infrastructure.orm.api.Column;
-import edu.vsu.putinpa.infrastructure.orm.api.JoinColumn;
-import edu.vsu.putinpa.infrastructure.orm.api.ManyToOne;
-import edu.vsu.putinpa.infrastructure.orm.api.Table;
+import edu.vsu.putinpa.infrastructure.orm.api.*;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.getAllDeclaredFieldsFromClassHierarchy;
-import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.getAllDeclaredNonStaticFieldsFromClassHierarchy;
+import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.*;
 
 public class OrmRepositoryHandler implements InvocationHandler {
     private OrmConnectionWrapper ormConnectionWrapper;
@@ -52,6 +52,71 @@ public class OrmRepositoryHandler implements InvocationHandler {
         } else {
             System.out.println("unknown method type: " + method.getName());
         }
+        return null;
+    }
+
+    private <T> T relationToObject(Class<T> clazz, ResultSet result) throws Exception {
+        if (clazz.isRecord()) {
+            Constructor<T> constructor = getCanonicalConstructor(clazz);
+            List<Object> parameters = new ArrayList<>();
+            for (RecordComponent recordComponent : clazz.getRecordComponents()) {
+                parameters.add(processMember(result, recordComponent, recordComponent.getType()));
+            }
+            return constructor.newInstance(parameters.toArray(new Object[0]));
+        } else {
+            T object = clazz.getConstructor().newInstance();
+            for (Field field : getAllDeclaredNonStaticFieldsFromClassHierarchy(clazz)) {
+                field.setAccessible(true);
+                Object value = processMember(result, field, field.getType());
+                field.set(object, value);
+            }
+            return object;
+        }
+    }
+
+    private Object processMember(ResultSet result, AnnotatedElement member, Class<?> type) throws Exception {
+        Column column = member.getAnnotation(Column.class);
+        if (column != null) {
+            String columnName = column.value();
+            if (type.equals(Instant.class)) {
+                Timestamp time = result.getTimestamp(columnName);
+                return time == null ? null : time.toInstant();
+            } else if (type.isEnum()) {
+                String value = result.getString(columnName);
+                return Enum.valueOf((Class<? extends Enum>) type, value);
+            } else {
+                return result.getObject(columnName, type);
+            }
+        }
+
+        ManyToOne manyToOne = member.getAnnotation(ManyToOne.class);
+        JoinColumn joinColumn = member.getAnnotation(JoinColumn.class);
+        if (manyToOne != null && joinColumn != null) {
+            String columnName = joinColumn.name();
+            Object foreignKey = result.getObject(columnName);
+
+            String referencedColumnName = joinColumn.referencedColumnName();
+            Table referenced = type.getAnnotation(Table.class);
+            String referencedTableName = referenced == null ? manyToOne.tableName() : referenced.value();
+
+            PreparedStatement select = ormConnectionWrapper.getConnection().prepareStatement("select * from %s where %s=?;".formatted(referencedTableName, referencedColumnName));
+            select.setObject(1, foreignKey);
+
+            boolean hasResults = select.execute();
+
+            if (hasResults) {
+                ResultSet foreignResult = select.getResultSet();
+                foreignResult.next();
+                return relationToObject(type, foreignResult);
+            }
+            return null;
+        }
+
+        Agregated agregated = member.getAnnotation(Agregated.class);
+        if (agregated != null) {
+            return relationToObject(type, result);
+        }
+
         return null;
     }
 }
