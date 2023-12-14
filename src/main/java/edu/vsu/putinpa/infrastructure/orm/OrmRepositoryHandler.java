@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.*;
 
@@ -48,6 +49,13 @@ public class OrmRepositoryHandler implements InvocationHandler {
         if (method.getName().startsWith("find")) {
 
         } else if (method.getName().startsWith("save")) {
+            InsertMappingBy insertMappingBy = entityClass.getAnnotation(InsertMappingBy.class);
+            if (insertMappingBy == null) {
+                throw new RuntimeException("Insert mapping must be declared for " + entityClass.getName() + ".");
+            }
+
+            Function<Object, InsertMappingInfo> insertMapper = (Function<Object, InsertMappingInfo>) insertMappingBy.value().getConstructor().newInstance();
+            InsertMappingInfo insertMappingInfo = insertMapper.apply(args[0]);
 
         } else {
             System.out.println("unknown method type: " + method.getName());
