@@ -4,6 +4,7 @@ import edu.vsu.putinpa.infrastructure.orm.api.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -57,6 +58,15 @@ public class OrmRepositoryHandler implements InvocationHandler {
             Function<Object, InsertMappingInfo> insertMapper = (Function<Object, InsertMappingInfo>) insertMappingBy.value().getConstructor().newInstance();
             InsertMappingInfo insertMappingInfo = insertMapper.apply(args[0]);
 
+            Connection connection = ormConnectionWrapper.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(insertMappingInfo.sql());
+
+            int i = 1;
+            for (Object value : insertMappingInfo.values()) {
+                preparedStatement.setObject(i++, value);
+            }
+            preparedStatement.executeUpdate();
+            return args[0];
         } else {
             System.out.println("unknown method type: " + method.getName());
         }
