@@ -16,8 +16,8 @@ public class JournalOperationInsertMapper implements Function<JournalOperation, 
                 insert into journal_operation
                 (id, whencreated, client_id, sender_id, recipient_id, currency_id, balance, type)
                 values (?, ?, ?, ?, ?, ?, ?, ?)
-                on duplicate key
-                update whencreated=?, client_id=?, sender_id=?, recipient_id=?, currency_id=?, balance=?, type=?;""";
+                on conflict (id) do update set
+                whencreated=?, client_id=?, sender_id=?, recipient_id=?, currency_id=?, balance=?, type=?;""";
 
         Timestamp whenCreated = instantToTimestamp(journalOperation.getWhenCreated());
         List<Object> values = List.of(

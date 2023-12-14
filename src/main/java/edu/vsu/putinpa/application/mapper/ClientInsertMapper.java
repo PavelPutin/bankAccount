@@ -16,8 +16,8 @@ public class ClientInsertMapper implements Function<Client, InsertMappingInfo> {
                 insert into client
                 (id, name, password, whencreated)
                 values (?, ?, ?, ?)
-                on duplicate key
-                update name=?, password=?, whencreated=?;""";
+                on conflict (id) do update set
+                name=?, password=?, whencreated=?;""";
 
         Timestamp whenCreated = instantToTimestamp(client.getWhenCreated());
         List<Object> values = List.of(
