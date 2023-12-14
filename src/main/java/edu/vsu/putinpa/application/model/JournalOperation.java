@@ -1,10 +1,12 @@
 package edu.vsu.putinpa.application.model;
 
+import edu.vsu.putinpa.application.mapper.JournalOperationInsertMapper;
 import edu.vsu.putinpa.infrastructure.orm.api.*;
 
 import java.time.Instant;
 
 @Table("journal_operation")
+@InsertMappingBy(JournalOperationInsertMapper.class)
 public class JournalOperation extends EntityWithUUID {
     @Column("whencreated")
     private Instant whenCreated;
