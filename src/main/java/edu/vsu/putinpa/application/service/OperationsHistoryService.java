@@ -10,5 +10,4 @@ public interface OperationsHistoryService {
     void add(Operation<?> operation);
     List<JournalOperation> getAll();
     List<JournalOperation> getAllByClient(Client client);
-    List<JournalOperation> getAllByClientAndAccount(Client client, Account account);
 }

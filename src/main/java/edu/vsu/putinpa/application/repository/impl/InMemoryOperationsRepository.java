@@ -39,15 +39,6 @@ public class InMemoryOperationsRepository implements OperationsRepository {
     }
 
     @Override
-    public List<JournalOperation> findByClientAndAccount(Client client, Account account) {
-        return data.values().stream()
-                .filter(journalOperation ->
-                        journalOperation.getClient().equals(client) &&
-                                (journalOperation.getSender().equals(account) || journalOperation.getRecipient().equals(account)))
-                .toList();
-    }
-
-    @Override
     public List<JournalOperation> findAll() {
         return List.copyOf(data.values());
     }

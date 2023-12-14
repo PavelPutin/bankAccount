@@ -50,9 +50,4 @@ public class OperationsHistoryServiceImpl implements OperationsHistoryService {
     public List<JournalOperation> getAllByClient(Client client) {
         return operationsRepository.findByClient(client);
     }
-
-    @Override
-    public List<JournalOperation> getAllByClientAndAccount(Client client, Account account) {
-        return operationsRepository.findByClientAndAccount(client, account);
-    }
 }

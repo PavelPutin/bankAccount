@@ -1,5 +1,6 @@
 package edu.vsu.putinpa.infrastructure.orm;
 
+import edu.vsu.putinpa.application.model.EntityWithUUID;
 import edu.vsu.putinpa.infrastructure.orm.api.*;
 
 import javax.swing.text.html.Option;
@@ -58,7 +59,13 @@ public class OrmRepositoryHandler implements InvocationHandler {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             for (int i = 1; args != null && i <= args.length; i++) {
-                preparedStatement.setObject(i, args[i - 1]);
+                Object value = null;
+                if (args[i - 1].getClass().isAnnotationPresent(Table.class)) {
+                    value = ((EntityWithUUID) args[i - 1]).getUuid();
+                } else {
+                    value = args[i - 1];
+                }
+                preparedStatement.setObject(i, value);
             }
 
             preparedStatement.execute();
