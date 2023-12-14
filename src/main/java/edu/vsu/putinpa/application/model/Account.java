@@ -1,11 +1,13 @@
 package edu.vsu.putinpa.application.model;
 
+import edu.vsu.putinpa.application.mapper.AccountInsertMapper;
 import edu.vsu.putinpa.infrastructure.orm.api.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
 @Table("account")
+@InsertMappingBy(AccountInsertMapper.class)
 public class Account extends EntityWithUUID {
     @Column("name")
     private String name;

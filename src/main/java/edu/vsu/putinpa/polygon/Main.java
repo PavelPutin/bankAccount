@@ -48,6 +48,10 @@ public class Main {
         }
     }
 
+    private static <T> T save(Class<T> clazz) throws Exception {
+
+    }
+
     private static <T> T relationToObject(Class<T> clazz, ResultSet result) throws Exception {
         if (clazz.isRecord()) {
             Constructor<T> constructor = getCanonicalConstructor(clazz);
