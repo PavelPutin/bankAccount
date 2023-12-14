@@ -17,7 +17,7 @@ public class AccountInsertMapper implements Function<Account, InsertMappingInfo>
                 (id, name, whenopened, whenClosed, creator_id, balance, currency_id)
                 values (?, ?, ?, ?, ?, ?, ?)
                 on duplicate key
-                update name=?, whenopened=?, whenClosed=?, creator_id=?, balance=?, currency_id=?""";
+                update name=?, whenopened=?, whenClosed=?, creator_id=?, balance=?, currency_id=?;""";
 
         Timestamp whenOpened = instantToTimestamp(account.getWhenOpened());
         Timestamp whenClosed = instantToTimestamp(account.getWhenClosed());
