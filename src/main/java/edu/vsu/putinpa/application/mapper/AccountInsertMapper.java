@@ -31,7 +31,6 @@ public class AccountInsertMapper implements Function<Account, InsertMappingInfo>
             values.add(account.getCreator().getUuid());
             values.add(account.getBalance().value());
             values.add(account.getBalance().currency());
-            values.add(account.getName());
         }
         return new InsertMappingInfo(sql, values);
     }

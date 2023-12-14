@@ -26,11 +26,11 @@ public class JournalOperationInsertMapper implements Function<JournalOperation, 
         for (int i = 0; i < 2; i++) {
             values.add(whenCreated);
             values.add(journalOperation.getClient().getUuid());
-            values.add(journalOperation.getSender().getUuid());
-            values.add(journalOperation.getRecipient().getUuid());
+            values.add(journalOperation.getSender() == null ? null : journalOperation.getSender().getUuid());
+            values.add(journalOperation.getRecipient() == null ? null : journalOperation.getRecipient().getUuid());
             values.add(journalOperation.getMoney().currency());
             values.add(journalOperation.getMoney().value());
-            values.add(journalOperation.getType());
+            values.add(journalOperation.getType().toString());
         }
         return new InsertMappingInfo(sql, values);
     }
