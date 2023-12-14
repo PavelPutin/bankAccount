@@ -2,6 +2,7 @@ package edu.vsu.putinpa.infrastructure.orm;
 
 import edu.vsu.putinpa.infrastructure.orm.api.*;
 
+import javax.swing.text.html.Option;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.sql.Connection;
@@ -48,6 +49,33 @@ public class OrmRepositoryHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (method.getName().startsWith("find")) {
+            Query query = method.getAnnotation(Query.class);
+            if (query == null) {
+                throw new RuntimeException("Method " + method.getName() + " of repository for " + entityClass.getName() + " must be annotated with @Query.");
+            }
+            String sql = query.value();
+            Connection connection = ormConnectionWrapper.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            for (int i = 1; args != null && i <= args.length; i++) {
+                preparedStatement.setObject(i, args[i - 1]);
+            }
+
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.getResultSet();
+
+            if (method.getReturnType().equals(Optional.class)) {
+                boolean hasResult = resultSet.next();
+                return Optional.ofNullable(hasResult ? relationToObject(entityClass, resultSet) : null);
+            } else if (method.getReturnType().equals(List.class)) {
+                List<Object> result = new ArrayList<>();
+                while (resultSet.next()) {
+                    result.add(relationToObject(entityClass, resultSet));
+                }
+                return result;
+            } else {
+                return null;
+            }
 
         } else if (method.getName().startsWith("save")) {
             InsertMappingBy insertMappingBy = entityClass.getAnnotation(InsertMappingBy.class);
