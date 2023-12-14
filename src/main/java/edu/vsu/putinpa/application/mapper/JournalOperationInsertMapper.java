@@ -4,6 +4,7 @@ import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.infrastructure.orm.InsertMappingInfo;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -20,12 +21,17 @@ public class JournalOperationInsertMapper implements Function<JournalOperation, 
                 whencreated=?, client_id=?, sender_id=?, recipient_id=?, currency_id=?, balance=?, type=?;""";
 
         Timestamp whenCreated = instantToTimestamp(journalOperation.getWhenCreated());
-        List<Object> values = List.of(
-                journalOperation.getUuid(), whenCreated, journalOperation.getClient().getUuid(), journalOperation.getSender().getUuid(),
-                                            journalOperation.getRecipient().getUuid(), journalOperation.getMoney().currency(), journalOperation.getMoney().value(), journalOperation.getType(),
-                                            whenCreated, journalOperation.getClient().getUuid(), journalOperation.getSender().getUuid(),
-                                            journalOperation.getRecipient().getUuid(), journalOperation.getMoney().currency(), journalOperation.getMoney().value(), journalOperation.getType()
-        );
+        List<Object> values = new ArrayList<>();
+        values.add(journalOperation.getUuid());
+        for (int i = 0; i < 2; i++) {
+            values.add(whenCreated);
+            values.add(journalOperation.getClient().getUuid());
+            values.add(journalOperation.getSender().getUuid());
+            values.add(journalOperation.getRecipient().getUuid());
+            values.add(journalOperation.getMoney().currency());
+            values.add(journalOperation.getMoney().value());
+            values.add(journalOperation.getType());
+        }
         return new InsertMappingInfo(sql, values);
     }
 }

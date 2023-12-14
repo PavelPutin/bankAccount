@@ -4,6 +4,7 @@ import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.infrastructure.orm.InsertMappingInfo;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -21,10 +22,17 @@ public class AccountInsertMapper implements Function<Account, InsertMappingInfo>
 
         Timestamp whenOpened = instantToTimestamp(account.getWhenOpened());
         Timestamp whenClosed = instantToTimestamp(account.getWhenClosed());
-        List<Object> values = List.of(
-                account.getUuid(), account.getName(), whenOpened, whenClosed, account.getCreator().getUuid(), account.getBalance().value(), account.getBalance().currency(),
-                                   account.getName(), whenOpened, whenClosed, account.getCreator().getUuid(), account.getBalance().value(), account.getBalance().currency()
-        );
+        List<Object> values = new ArrayList<>();
+        values.add(account.getUuid());
+        for (int i = 0; i < 2; i++) {
+            values.add(account.getName());
+            values.add(whenOpened);
+            values.add(whenClosed);
+            values.add(account.getCreator().getUuid());
+            values.add(account.getBalance().value());
+            values.add(account.getBalance().currency());
+            values.add(account.getName());
+        }
         return new InsertMappingInfo(sql, values);
     }
 }

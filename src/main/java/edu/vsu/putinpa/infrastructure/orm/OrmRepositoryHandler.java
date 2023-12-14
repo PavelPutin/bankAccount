@@ -48,7 +48,7 @@ public class OrmRepositoryHandler implements InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
         if (method.getName().startsWith("find")) {
             Query query = method.getAnnotation(Query.class);
             if (query == null) {
