@@ -28,23 +28,6 @@ public class OrmRepositoryHandler implements InvocationHandler {
         this.ormConnectionWrapper = ormConnectionWrapper;
         this.entityClass = entityClass;
         this.entityIdClass = entityIdClass;
-
-        System.out.println("created repository for " + entityClass.getName() + " for table " + entityClass.getAnnotation(Table.class).value());
-        System.out.println("with id class " + entityIdClass.getName());
-        System.out.println("=== fields ===");
-
-        for (Field f : getAllDeclaredNonStaticFieldsFromClassHierarchy(entityClass)) {
-            String name = f.getName();
-            String column = Optional.ofNullable(f.getAnnotation(Column.class)).map(Column::value).orElse("-");
-            String manyToOne = Optional.ofNullable(f.getAnnotation(ManyToOne.class))
-                    .map(ManyToOne::tableName)
-                    .orElse("-");
-            String joinColumnName = Optional.ofNullable(f.getAnnotation(JoinColumn.class)).map(JoinColumn::name).orElse("-");
-            String joinColumnRef = Optional.ofNullable(f.getAnnotation(JoinColumn.class)).map(JoinColumn::referencedColumnName).orElse("-");
-
-            System.out.printf("%s, %s, %s, %s, %s%n", name, column, manyToOne, joinColumnName, joinColumnRef);
-        }
-        System.out.println();
     }
 
     @Override
