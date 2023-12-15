@@ -22,7 +22,7 @@ create table account (
 create table journal_operation (
     id uuid default gen_random_uuid() primary key,
     whenCreated timestamp not null,
-    balance float not null check (balance > 0),
+    balance float not null check (balance >= 0),
     currency_id varchar(2) not null references currency (id),
     type varchar(256) not null,
     client_id uuid not null references client (id),

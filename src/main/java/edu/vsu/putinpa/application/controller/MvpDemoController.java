@@ -81,6 +81,7 @@ public class MvpDemoController {
                 }
             } catch (Exception e) {
                 out.println(e.getMessage());
+                e.printStackTrace(out);
             }
         }
     }
