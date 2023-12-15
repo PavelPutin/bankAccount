@@ -91,7 +91,7 @@ public class MvpDemoController {
      */
     public void registerClient(String... tokens) {
         if (tokens.length != 3)
-            throw new IllegalArgumentException("usage: registration <name> <password>");
+            throw new IllegalArgumentException("usage: register <name> <password>");
 
         String name = tokens[1];
         String password = tokens[2];
@@ -148,7 +148,7 @@ public class MvpDemoController {
             throw new IllegalStateException("NEED AUTHORIZATION");
 
         if (tokens.length != 4)
-            throw new IllegalArgumentException("usage: replenish <recipient name> <money value> <currency>");
+            throw new IllegalArgumentException("usage: replenish <recipient id> <money value> <currency>");
 
         UUID recipientUUID = UUID.fromString(tokens[1]);
         Account recipient = accountsService.getBy(recipientUUID).orElseThrow();

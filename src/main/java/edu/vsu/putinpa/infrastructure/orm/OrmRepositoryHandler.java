@@ -155,11 +155,10 @@ public class OrmRepositoryHandler implements InvocationHandler {
             PreparedStatement select = ormConnectionWrapper.getConnection().prepareStatement("select * from %s where %s=?;".formatted(referencedTableName, referencedColumnName));
             select.setObject(1, foreignKey);
 
-            boolean hasResults = select.execute();
+            select.execute();
+            ResultSet foreignResult = select.getResultSet();
 
-            if (hasResults) {
-                ResultSet foreignResult = select.getResultSet();
-                foreignResult.next();
+            if (foreignResult.next()) {
                 return relationToObject(type, foreignResult);
             }
             return null;
