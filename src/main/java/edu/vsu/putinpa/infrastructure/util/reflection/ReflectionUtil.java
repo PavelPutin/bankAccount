@@ -1,5 +1,11 @@
 package edu.vsu.putinpa.infrastructure.util.reflection;
 
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
+
 import javax.lang.model.util.Types;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,7 +55,7 @@ public class ReflectionUtil {
     }
 
     public static Set<Class<?>> findAllClassesUsingClassLoader(String packageName) {
-        InputStream stream = ClassLoader.getSystemClassLoader()
+        InputStream stream = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream(packageName.replaceAll("[.]", "/"));
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
@@ -66,6 +72,13 @@ public class ReflectionUtil {
             throw  new RuntimeException(e);
         }
         return result;
+//        var config = new ConfigurationBuilder()
+//                .forPackages(packageName)
+//                .setScanners(new SubTypesScanner())
+//                .filterInputsBy(new FilterBuilder().includePackage(packageName));
+//
+//        var reflections = new Reflections(config);
+//        return reflections.getSubTypesOf(Object.class);
     }
 
     public static Class<?> getClass(String className, String packageName) {
