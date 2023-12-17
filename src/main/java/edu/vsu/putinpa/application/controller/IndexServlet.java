@@ -23,7 +23,7 @@ public class IndexServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         clientsService = ((AnnotationContext) config.getServletContext().getAttribute("ComponentContext"))
-                .getComponent("ClientsService", ClientsService.class);
+                .getComponent("ClientsServiceImpl", ClientsService.class);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class IndexServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
         out.println("<html><body>");
         out.println("Hello");
-        out.println(clientsService.getAll().get(0).getName());
+        out.println(clientsService.getAll());
         out.println("</body></html>");
     }
 }

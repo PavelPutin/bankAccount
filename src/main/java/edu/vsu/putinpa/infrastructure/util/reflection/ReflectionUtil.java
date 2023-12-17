@@ -55,10 +55,16 @@ public class ReflectionUtil {
     }
 
     public static Set<Class<?>> findAllClassesUsingClassLoader(String packageName) {
-        InputStream stream = Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream(packageName.replaceAll("[.]", "/"));
+        InputStream stream;
+        try {
+            stream = Thread.currentThread().getContextClassLoader()
+                    .getResources(packageName.replaceAll("[.]", "/"))
+                    .nextElement().openStream();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-
+//        Thread.currentThread().getContextClassLoader().getResources("edu/vsu/putinpa").nextElement().getContent()
         Set<Class<?>> result = new HashSet<>();
         try {
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
