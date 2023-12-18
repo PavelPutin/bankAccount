@@ -19,7 +19,13 @@
 <h1><%= message %></h1>
 <%
     if (user == null) {
-        out.println("<a href=\"/login.jsp\">Войти</a>");
+        out.println("<a href=\"login.jsp\">Войти</a>");
+    }
+%>
+
+<%
+    if (user != null) {
+        out.println("<a href=\"logout\"> Выйти</a>");
     }
 %>
 
