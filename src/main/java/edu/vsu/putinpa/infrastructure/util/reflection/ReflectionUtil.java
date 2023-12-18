@@ -64,7 +64,7 @@ public class ReflectionUtil {
             throw new RuntimeException(e);
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-//        Thread.currentThread().getContextClassLoader().getResources("edu/vsu/putinpa").nextElement().getContent()
+//        ClassLoader.getSystemClassloader().getResourceAsStream("edu/vsu/putinpa")
         Set<Class<?>> result = new HashSet<>();
         try {
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
