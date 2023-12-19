@@ -3,7 +3,9 @@
 <%@ page import="edu.vsu.putinpa.application.service.AccountsService" %>
 <%@ page import="edu.vsu.putinpa.infrastructure.di.AnnotationContext" %>
 <%@ page import="edu.vsu.putinpa.application.model.Account" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="edu.vsu.putinpa.application.model.JournalOperation" %>
+<%@ page import="edu.vsu.putinpa.application.service.OperationsHistoryService" %><%--
   Created by IntelliJ IDEA.
   User: RobotComp.ru
   Date: 18.12.2023
@@ -13,9 +15,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%!
     private AccountsService accountsService;
+    private OperationsHistoryService operationsHistoryService;
     public void jspInit() {
         accountsService = ((AnnotationContext) getServletContext().getAttribute("ComponentContext"))
                 .getComponent("AccountsServiceImpl", AccountsService.class);
+        operationsHistoryService = ((AnnotationContext) getServletContext().getAttribute("ComponentContext"))
+                .getComponent("OperationsHistoryServiceImpl", OperationsHistoryService.class);
     }
 %>
 <html>
@@ -76,6 +81,58 @@
                         <td><c:out value="${account.getWhenClosed()}"/></td>
                         <td><c:out value="${account.getBalance().value()}"/></td>
                         <td><c:out value="${account.getBalance().currency()}"/></td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </c:if>
+    </div>
+
+    <div>
+        <h2>История операций</h2>
+        <%
+            List<JournalOperation> journalOperations = operationsHistoryService.getAllByClient(user);
+            pageContext.setAttribute("history", journalOperations);
+        %>
+        <c:if test="${history.isEmpty()}">
+            <p><c:out value="Вы не сделали ни одной операции"/></p>
+        </c:if>
+        <c:if test="${!history.isEmpty()}">
+            <table>
+                <thead>
+                <tr>
+                    <th>uuid</th>
+                    <th>client</th>
+                    <th>sender</th>
+                    <th>recipient</th>
+                    <th>type</th>
+                    <th>money</th>
+                    <th>currency</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach var="operation" items="${history}">
+                    <tr>
+                        <td><c:out value="${operation.getUuid()}"/></td>
+                        <td><c:out value="${operation.getClient().getUuid()}"/></td>
+
+                        <c:if test="${operation.getSender() != null}">
+                            <td><c:out value="${operation.getSender().getUuid()}"/></td>
+                        </c:if>
+                        <c:if test="${operation.getSender() == null}">
+                            <td>-</td>
+                        </c:if>
+
+                        <c:if test="${operation.getRecipient() != null}">
+                            <td><c:out value="${operation.getRecipient().getUuid()}"/></td>
+                        </c:if>
+                        <c:if test="${operation.getRecipient() == null}">
+                            <td>-</td>
+                        </c:if>
+
+                        <td><c:out value="${operation.getType()}"/></td>
+                        <td><c:out value="${operation.getMoney().value()}"/></td>
+                        <td><c:out value="${operation.getMoney().currency()}"/></td>
                     </tr>
                 </c:forEach>
                 </tbody>
