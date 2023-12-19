@@ -37,6 +37,16 @@
 <c:if test="${user != null}">
     <a href="logout"> Выйти</a>
     <div>
+        <h2>Операции со счетами</h2>
+        <ul>
+            <li><a href="openOperation.jsp">Открыть новый счёт</a></li>
+            <li><a href="closeOperation.jsp">Закрыть счёт</a></li>
+            <li><a href="replenishOperation.jsp">Пополнить счёт</a></li>
+            <li><a href="withdrawOperation.jsp">Снять со счёта</a></li>
+            <li><a href="transferOperation.jsp">Перевод между счетами</a></li>
+        </ul>
+    </div>
+    <div>
         <h2>Ваши счета:</h2>
         <%
             List<Account> accounts = accountsService.getBy(user);
