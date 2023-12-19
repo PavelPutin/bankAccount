@@ -83,7 +83,7 @@
     </div>
     <div>
         <label for="name">Название счёта</label>
-        <input type="text" name="name" id="name">
+        <input type="text" name="name" id="name" required>
     </div>
     <div>
         <label for="replenish">Пополнить счёт: </label>
@@ -103,7 +103,7 @@
             </c:forEach>
         </select>
     </div>
-    
+
     <div>
         <label for="balance">Сумма пополнения: </label>
         <input type="text" id="balance" name="balance" disabled/>
