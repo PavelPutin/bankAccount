@@ -50,7 +50,7 @@
         <h2>Ваши счета:</h2>
         <%
             List<Account> accounts = accountsService.getBy(user);
-            request.setAttribute("accounts", accounts);
+            pageContext.setAttribute("accounts", accounts);
         %>
         <c:if test="${accounts.isEmpty()}">
             <p><c:out value="У вас пока не открыто ни одного счёта"/></p>

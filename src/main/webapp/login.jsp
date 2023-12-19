@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="edu.vsu.putinpa.infrastructure.di.AnnotationContext" %>
 <%@ page import="edu.vsu.putinpa.application.service.ClientsService" %>
 <%@ page import="edu.vsu.putinpa.application.model.Client" %>
@@ -11,7 +12,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%!
     private ClientsService clientsService;
-    private String errorMessage;
     public void jspInit() {
         clientsService = ((AnnotationContext) getServletContext().getAttribute("ComponentContext"))
                 .getComponent("ClientsServiceImpl", ClientsService.class);
@@ -33,7 +33,7 @@
             response.sendRedirect("/hello.jsp");
 
         } catch (ClientNotFoundException e) {
-            errorMessage = "Can't login: invalid name or password";
+            request.setAttribute("errorMessage", "Can't login: invalid name or password");
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         }
     }
@@ -57,7 +57,7 @@
 
         <div>
             <%=response.getStatus()%>
-            <%= errorMessage != null ? errorMessage : ""%>
+            <c:out value="${errorMessage}"/>
         </div>
 
         <input type="submit" value="Войти">
