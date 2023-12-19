@@ -10,6 +10,7 @@
 <%@ page import="edu.vsu.putinpa.application.service.OperationsService" %>
 <%@ page import="edu.vsu.putinpa.application.service.operation.impl.OpenAccount" %>
 <%@ page import="java.util.Arrays" %>
+<%@ page import="java.rmi.RemoteException" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%--
   Created by IntelliJ IDEA.
@@ -43,7 +44,7 @@
     if (request.getMethod().equals("POST")) {
         try {
             String name = request.getParameter("name");
-            boolean replenish = Boolean.valueOf(request.getParameter("replenish"));
+            boolean replenish = request.getParameter("replenish").equals("on");
 
             Account sender = null;
             Money money = null;

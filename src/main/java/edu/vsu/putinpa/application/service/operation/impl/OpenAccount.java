@@ -24,6 +24,7 @@ public class OpenAccount extends Operation<OpeningAccountInfo> {
         if (getInfo().getSender() != null && getInfo().getMoney() != null) {
             created.replenishment(getInfo().getMoney());
             getInfo().getSender().withdrawal(getInfo().getMoney());
+            getService().getAccountsService().save(getInfo().getSender());
         }
 
         if (getInfo().getMoney() == null) {
