@@ -29,6 +29,7 @@
 <h1><%= message %></h1>
 <%
     if (user == null) {
+        out.println("<a href=\"registration.jsp\">Зарегистрироваться</a>");
         out.println("<a href=\"login.jsp\">Войти</a>");
     }
 %>
