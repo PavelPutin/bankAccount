@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page import="edu.vsu.putinpa.application.model.Client" %>
 <%@ page import="edu.vsu.putinpa.application.service.AccountsService" %>
 <%@ page import="edu.vsu.putinpa.infrastructure.di.AnnotationContext" %>
@@ -27,43 +28,50 @@
     String message = user == null ? "You have not logged in" : "You have logged in, " + user.getName();
 %>
 <h1><%= message %></h1>
-<%
-    if (user == null) {
-        out.println("<a href=\"registration.jsp\">Зарегистрироваться</a>");
-        out.println("<a href=\"login.jsp\">Войти</a>");
-    }
-%>
 
-<%
-    if (user != null) {
-        out.println("<a href=\"logout\"> Выйти</a>");
-    }
-%>
+<c:if test="${user == null}">
+    <a href="registration.jsp">Зарегистрироваться</a>
+    <a href="login.jsp">Войти</a>
+</c:if>
 
-<%
-    if (user != null) {
-        out.println("<h2>Ваши счета:</h2>");
-        List<Account> accounts = accountsService.getBy(user);
-        if (accounts.isEmpty()) {
-            out.println("У вас пока не открыто ни одного счёта");
-        } else {
-            out.println("<table><thead>");
-            out.println("<tr><th>uuid</th><th>name</th><th>created</th><th>closed</th><th>balance</th></tr>");
-            out.println("</thead><tbody>");
-            for (Account account : accounts) {
-                out.println("<tr>" +
-                            "<td>" + account.getUuid() + "</td>" +
-                            "<td>" + account.getName() + "</td>" +
-                            "<td>" + account.getWhenOpened() + "</td>" +
-                            "<td>" + account.getWhenClosed() + "</td>" +
-                            "<td>" + account.getBalance() + "</td>" +
-                            "</tr>");
-            }
-
-            out.println("</tbody></table>");
-        }
-    }
-%>
-
+<c:if test="${user != null}">
+    <a href="logout"> Выйти</a>
+    <div>
+        <h2>Ваши счета:</h2>
+        <%
+            List<Account> accounts = accountsService.getBy(user);
+            request.setAttribute("accounts", accounts);
+        %>
+        <c:if test="${accounts.isEmpty()}">
+            <p><c:out value="У вас пока не открыто ни одного счёта"/></p>
+        </c:if>
+        <c:if test="${!accounts.isEmpty()}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>uuid</th>
+                        <th>name</th>
+                        <th>created</th>
+                        <th>closed</th>
+                        <th>balance</th>
+                        <th>currency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <c:forEach var="account" items="${accounts}">
+                    <tr>
+                        <td><c:out value="${account.getUuid()}"/></td>
+                        <td><c:out value="${account.getName()}"/></td>
+                        <td><c:out value="${account.getWhenOpened()}"/></td>
+                        <td><c:out value="${account.getWhenClosed()}"/></td>
+                        <td><c:out value="${account.getBalance().value()}"/></td>
+                        <td><c:out value="${account.getBalance().currency()}"/></td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </c:if>
+    </div>
+</c:if>
 </body>
 </html>
