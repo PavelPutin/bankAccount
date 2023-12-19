@@ -44,7 +44,7 @@
     if (request.getMethod().equals("POST")) {
         try {
             String name = request.getParameter("name");
-            boolean replenish = request.getParameter("replenish").equals("on");
+            boolean replenish = request.getParameter("replenish") != null;
 
             Account sender = null;
             Money money = null;
