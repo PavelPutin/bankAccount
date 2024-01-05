@@ -1,6 +1,4 @@
-<%@ page import="edu.vsu.putinpa.application.service.ClientsService" %>
-<%@ page import="edu.vsu.putinpa.infrastructure.di.AnnotationContext" %>
-<%@ page import="edu.vsu.putinpa.application.model.Client" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: RobotComp.ru
   Date: 19.12.2023
@@ -9,29 +7,6 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<%!
-    private ClientsService clientsService;
-    private String errorMessage;
-    public void jspInit() {
-        clientsService = ((AnnotationContext) getServletContext().getAttribute("ComponentContext"))
-                .getComponent("ClientsServiceImpl", ClientsService.class);
-    }
-%>
-
-<%
-    if (request.getMethod().equals("POST")) {
-        String name = request.getParameter("username");
-        String password = request.getParameter("password");
-
-        try {
-            Client client = clientsService.register(name, password);
-            session.setAttribute("user", client);
-            response.sendRedirect("/hello.jsp");
-        } catch (IllegalArgumentException e) {
-            errorMessage = e.getMessage();
-        }
-    }
-%>
 <html>
 <html>
 <head>
@@ -39,7 +14,7 @@
 </head>
 <body>
 <h1>Регистрация</h1>
-<form action="registration.jsp" method="post">
+<form action="registration" method="post">
     <div>
         <label for="username">Имя пользователя</label>
         <input type="text" name="username" id="username" required
@@ -53,7 +28,7 @@
 
     <div>
         <%=response.getStatus()%>
-        <%= errorMessage != null ? errorMessage : ""%>
+        <%=request.getAttribute("errorMessage") != null ? request.getAttribute("errorMessage") : ""%>
     </div>
 
     <input type="submit" value="Войти">

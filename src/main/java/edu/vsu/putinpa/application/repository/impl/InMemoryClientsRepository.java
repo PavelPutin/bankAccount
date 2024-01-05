@@ -2,7 +2,6 @@ package edu.vsu.putinpa.application.repository.impl;
 
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.repository.ClientsRepository;
-import edu.vsu.putinpa.infrastructure.di.api.Component;
 
 import java.util.*;
 

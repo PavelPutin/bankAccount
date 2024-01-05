@@ -1,11 +1,8 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page import="edu.vsu.putinpa.application.model.Client" %>
-<%@ page import="edu.vsu.putinpa.application.service.AccountsService" %>
-<%@ page import="edu.vsu.putinpa.infrastructure.di.AnnotationContext" %>
 <%@ page import="edu.vsu.putinpa.application.model.Account" %>
 <%@ page import="java.util.List" %>
-<%@ page import="edu.vsu.putinpa.application.model.JournalOperation" %>
-<%@ page import="edu.vsu.putinpa.application.service.OperationsHistoryService" %><%--
+<%@ page import="edu.vsu.putinpa.application.model.JournalOperation" %><%--
   Created by IntelliJ IDEA.
   User: RobotComp.ru
   Date: 18.12.2023
@@ -13,49 +10,39 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%!
-    private AccountsService accountsService;
-    private OperationsHistoryService operationsHistoryService;
-    public void jspInit() {
-        accountsService = ((AnnotationContext) getServletContext().getAttribute("ComponentContext"))
-                .getComponent("AccountsServiceImpl", AccountsService.class);
-        operationsHistoryService = ((AnnotationContext) getServletContext().getAttribute("ComponentContext"))
-                .getComponent("OperationsHistoryServiceImpl", OperationsHistoryService.class);
-    }
+<%
+    Client user = (Client) request.getAttribute("user");
 %>
 <html>
 <head>
     <title>Hello</title>
 </head>
 <body>
-<%
-    Client user = (Client) session.getAttribute("user");
-    String message = user == null ? "You have not logged in" : "You have logged in, " + user.getName();
-%>
-<h1><%= message %></h1>
+<h1><%= user == null ? "You have not logged in" : "You have logged in, " + user.getName() %></h1>
 
 <c:if test="${user == null}">
-    <a href="registration.jsp">Зарегистрироваться</a>
-    <a href="login.jsp">Войти</a>
+    <a href="registration">Зарегистрироваться</a>
+    <a href="login">Войти</a>
 </c:if>
 
 <c:if test="${user != null}">
-    <a href="logout"> Выйти</a>
+    <form action="logout" method="post">
+        <button type="submit">Выйти</button>
+    </form>
     <div>
         <h2>Операции со счетами</h2>
         <ul>
-            <li><a href="openOperation.jsp">Открыть новый счёт</a></li>
-            <li><a href="closeOperation.jsp">Закрыть счёт</a></li>
-            <li><a href="replenishOperation.jsp">Пополнить счёт</a></li>
-            <li><a href="withdrawOperation.jsp">Снять со счёта</a></li>
-            <li><a href="transferOperation.jsp">Перевод между счетами</a></li>
+            <li><a href="open">Открыть новый счёт</a></li>
+            <li><a href="close">Закрыть счёт</a></li>
+            <li><a href="replenish">Пополнить счёт</a></li>
+            <li><a href="withdraw">Снять со счёта</a></li>
+            <li><a href="transfer">Перевод между счетами</a></li>
         </ul>
     </div>
     <div>
         <h2>Ваши счета:</h2>
         <%
-            List<Account> accounts = accountsService.getBy(user);
-            pageContext.setAttribute("accounts", accounts);
+            List<Account> accounts = (List<Account>) request.getAttribute("accounts");
         %>
         <c:if test="${accounts.isEmpty()}">
             <p><c:out value="У вас пока не открыто ни одного счёта"/></p>
@@ -91,8 +78,7 @@
     <div>
         <h2>История операций</h2>
         <%
-            List<JournalOperation> journalOperations = operationsHistoryService.getAllByClient(user);
-            pageContext.setAttribute("history", journalOperations);
+            List<JournalOperation> journalOperations = (List<JournalOperation>) request.getAttribute("history");
         %>
         <c:if test="${history.isEmpty()}">
             <p><c:out value="Вы не сделали ни одной операции"/></p>

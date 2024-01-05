@@ -1,6 +1,5 @@
 package edu.vsu.putinpa.application.repository;
 
-import edu.vsu.putinpa.application.model.Account;
 import edu.vsu.putinpa.application.model.Client;
 import edu.vsu.putinpa.application.model.JournalOperation;
 import edu.vsu.putinpa.infrastructure.di.api.Component;

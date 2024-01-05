@@ -3,7 +3,6 @@ package edu.vsu.putinpa.infrastructure.di;
 import edu.vsu.putinpa.infrastructure.di.api.ComponentFactoryPostProcessor;
 import edu.vsu.putinpa.infrastructure.di.api.ComponentPostProcessor;
 import edu.vsu.putinpa.infrastructure.di.api.IComponentDefinition;
-import edu.vsu.putinpa.infrastructure.di.defaultimpl.AutoInjectAnnotationComponentFactoryPostProcessorImpl;
 
 import java.util.*;
 import java.util.stream.Collectors;

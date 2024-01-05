@@ -1,6 +1,5 @@
 package edu.vsu.putinpa.infrastructure.di.defaultimpl;
 
-import edu.vsu.putinpa.infrastructure.di.ComponentDefinition;
 import edu.vsu.putinpa.infrastructure.di.ConfigurableListableComponentFactory;
 import edu.vsu.putinpa.infrastructure.di.api.*;
 

@@ -6,8 +6,6 @@ import edu.vsu.putinpa.infrastructure.orm.api.InsertMappingBy;
 import edu.vsu.putinpa.infrastructure.orm.api.Table;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 @Table("client")
 @InsertMappingBy(ClientInsertMapper.class)

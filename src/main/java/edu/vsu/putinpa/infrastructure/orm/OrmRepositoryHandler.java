@@ -3,8 +3,6 @@ package edu.vsu.putinpa.infrastructure.orm;
 import edu.vsu.putinpa.application.model.EntityWithUUID;
 import edu.vsu.putinpa.infrastructure.orm.api.*;
 
-import javax.swing.text.html.Option;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,12 +10,12 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.*;
+import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.getAllDeclaredNonStaticFieldsFromClassHierarchy;
+import static edu.vsu.putinpa.infrastructure.util.reflection.ReflectionUtil.getCanonicalConstructor;
 
 public class OrmRepositoryHandler implements InvocationHandler {
     private OrmConnectionWrapper ormConnectionWrapper;

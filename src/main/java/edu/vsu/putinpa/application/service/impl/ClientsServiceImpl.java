@@ -10,7 +10,6 @@ import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class ClientsServiceImpl implements ClientsService {

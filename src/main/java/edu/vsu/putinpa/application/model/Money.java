@@ -1,8 +1,6 @@
 package edu.vsu.putinpa.application.model;
 
 import edu.vsu.putinpa.infrastructure.orm.api.Column;
-import edu.vsu.putinpa.infrastructure.orm.api.JoinColumn;
-import edu.vsu.putinpa.infrastructure.orm.api.ManyToOne;
 
 import java.math.BigDecimal;
 

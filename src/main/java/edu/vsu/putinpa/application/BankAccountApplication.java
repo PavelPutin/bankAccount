@@ -1,7 +1,6 @@
 package edu.vsu.putinpa.application;
 
 import edu.vsu.putinpa.application.controller.MvpDemoController;
-import edu.vsu.putinpa.application.service.AccountsService;
 import edu.vsu.putinpa.infrastructure.di.AnnotationContext;
 import edu.vsu.putinpa.infrastructure.di.api.AutoInjected;
 import edu.vsu.putinpa.infrastructure.di.api.Component;

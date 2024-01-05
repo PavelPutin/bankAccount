@@ -5,6 +5,6 @@
          version="5.0">
 
     <welcome-file-list>
-        <welcome-file>hello.jsp</welcome-file>
+        <welcome-file>hello</welcome-file>
     </welcome-file-list>
 </web-app>

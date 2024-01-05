@@ -1,8 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="edu.vsu.putinpa.infrastructure.di.AnnotationContext" %>
-<%@ page import="edu.vsu.putinpa.application.service.ClientsService" %>
-<%@ page import="edu.vsu.putinpa.application.model.Client" %>
-<%@ page import="edu.vsu.putinpa.application.service.ClientNotFoundException" %><%--
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %><%--
   Created by IntelliJ IDEA.
   User: RobotComp.ru
   Date: 17.12.2023
@@ -10,40 +6,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%!
-    private ClientsService clientsService;
-    public void jspInit() {
-        clientsService = ((AnnotationContext) getServletContext().getAttribute("ComponentContext"))
-                .getComponent("ClientsServiceImpl", ClientsService.class);
-    }
-%>
-
-<%
-    if (request.getMethod().equals("POST")) {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-
-        try {
-            Client client = clientsService.getByName(username);
-            if (!client.getPassword().equals(password)) {
-                throw new ClientNotFoundException();
-            }
-
-            session.setAttribute("user", client);
-            response.sendRedirect("/hello.jsp");
-
-        } catch (ClientNotFoundException e) {
-            request.setAttribute("errorMessage", "Can't login: invalid name or password");
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        }
-    }
-%>
 <html>
 <head>
     <title>Title</title>
 </head>
 <body>
-    <form action="login.jsp" method="post">
+    <form action="login" method="post">
         <div>
             <label for="username">Имя пользователя</label>
             <input type="text" name="username" id="username" required
